@@ -183,7 +183,7 @@ function App() {
             <ConfigPanel />
           </div>
           {config.configurations?.length > 0 && (
-            <div className="wrapper-config">
+            <div className="wrapper-config cards">
               <ConfigCards />
             </div>
           )}

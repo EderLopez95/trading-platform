@@ -63,14 +63,14 @@
 
 .signals-table {
     border-collapse: separate;
-    border-spacing: 0 8px;
+    border-spacing: 0 4px;
     color: $text-color;
     text-align: left;
     width: 99%;
 }
 
 .signals-table th {
-    padding: 12px 20px;
+    padding: 10px 10px;
     font-size: 13px;
     box-shadow: 0 0.2px 0 0 $text-color;
 }
@@ -110,7 +110,7 @@
 }
 
 .signals-table td {
-    padding: 18px 12px;
+    padding: 10px 10px;
     border: 1px solid $panel;
     font-size: 13px;
 
@@ -128,7 +128,6 @@
 }
 
 .signals-table tbody tr:hover {
-    background-color: $bg-color;
-    transform: scale(1.005);
+    transform: scale(1.010);
     transition: all 0.2s ease;
 }

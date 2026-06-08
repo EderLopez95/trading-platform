@@ -95,6 +95,7 @@
         outline: 1px solid $text-color;
         color: $text-color;
         font-size: 13px;
+        padding: 1px;
         z-index: 10;
       }
 
@@ -107,7 +108,6 @@
         &::-webkit-scrollbar-track {
             background: $bg-color;
             border-radius: 8px;
-            margin-block: 10px;
         }
 
         &::-webkit-scrollbar-thumb {

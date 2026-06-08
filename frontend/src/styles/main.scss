@@ -6,30 +6,33 @@
 }
 
 .wrapper-config {
-  min-width: 250px;
+  min-width: 275px;
   max-width: 600px;
 
   @include desktop {
-    max-width: 250px;
-    max-height: calc(100vh - 60px);
-    overflow-y: auto;
-    
-    &::-webkit-scrollbar {
-      width: 16px;
-    }
+    max-width: 275px;
 
-    &::-webkit-scrollbar-track {
-      background: transparent;
-    }
+    &.cards {
+      max-height: calc(100vh - 60px);
+      overflow-y: auto;
 
-    &::-webkit-scrollbar-thumb {
-      background: $detail-color;
-      border-radius: 8px;
-      border-top: 4px solid transparent;
-      border-bottom: 4px solid transparent;
-      border-left: 4px solid transparent;
-      border-right: 4px solid transparent;
-      background-clip: padding-box;
+      &::-webkit-scrollbar {
+        width: 16px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: $detail-color;
+        border-radius: 8px;
+        border-top: 4px solid transparent;
+        border-bottom: 4px solid transparent;
+        border-left: 4px solid transparent;
+        border-right: 4px solid transparent;
+        background-clip: padding-box;
+      }
     }
   }
 }

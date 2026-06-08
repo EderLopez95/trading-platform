@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-import threading
+import threading, time
 from app.infrastructure.config.config_loader import load_config
 from app.infrastructure.data_provider.mt5_provider import MT5Provider
 from app.domain.services.strategy_engine import StrategyEngine
@@ -39,6 +39,8 @@ class BotRunner:
         self.stop_event.clear()
 
         while self.running:
+            cycle_start = time.time()
+
             try:
                 config = load_config()
                 active_configs = [c for c in config.configurations if c.enabled]
@@ -100,7 +102,17 @@ class BotRunner:
                         timestamp = datetime.now(timezone.utc).isoformat()
                     ))
 
-                if self.stop_event.wait(timeout=interval):
+                cycle_duration = time.time() - cycle_start
+                remaining = max(0, interval - cycle_duration)
+
+                if cycle_duration > interval:
+                    self._send_ws(LogEntry(
+                        level = LogType.INFO.value,
+                        message = f"Analysis duration exceeded interval: {cycle_duration:.2f}s > {interval}s",
+                        timestamp = datetime.now(timezone.utc).isoformat()
+                    ))
+
+                if self.stop_event.wait(timeout=remaining):
                     break
                 
             except Exception as e:
