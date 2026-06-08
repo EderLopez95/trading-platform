@@ -2,26 +2,41 @@
 
 .card {
     background: $panel;
-    padding: 20px;
+    padding: 15px;
     border-radius: 8px;
     margin-bottom: 20px;
-    border: 1px solid $text-color;
+    font-size: 13px;
+    position: relative;
 
-    &.disable {
-        background: $panel-disable;
+    &:last-child {
+        margin-bottom: 0;
     }
 }
 
+.delete {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNCMEIwQjAiIHN0cm9rZS13aWR0aD0iMC41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxsaW5lIHgxPSIxOCIgeTE9IjYiIHgyPSI2IiB5Mj0iMTgiLz48bGluZSB4MT0iNiIgeTE9IjYiIHgyPSIxOCIgeTI9IjE4Ii8+PC9zdmc+");
+}
+
 .label {
-    font-size: 16px;
     margin-bottom: 5px;
 }
 
 .label-data {
-    font-weight: 700;
-    margin-bottom: 8px;
-    font-size: 18px;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    padding-left: 15px;
+    color: $white-variant-1;
+    
+    &:last-child {
+        margin-bottom: 0;
+    }
 
     ul {
         list-style: none;
@@ -31,56 +46,89 @@
         flex-direction: column;
         gap: 4px;
 
-        li {
-            position: relative;
-            padding-left: 15px;
-
-            &::before {
-                content: "-";
-                position: absolute;
-                left: 0;
-                top: 0;
-            }
+        &.grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
         }
     }
-}
 
-.controls {
-    margin-top: 15px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    gap: 10px;
-}
+    &.temps {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        align-items: flex-start;
 
-button {
-    padding: 5px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 100%;
-    height: 40px;
-    background-repeat: no-repeat;
-    background-size: 30px 30px;
-    background-position: center;
+        .controls {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
 
-    &.enable {
-        background-color: $success-color;
-        background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2ZmZmZmZiI+PHBhdGggZD0iTTkgMTYuMTdMNC44MyAxMmwtMS40MiAxLjQxTDkgMTkgMjEgN2wtMS40MS0xLjQxeiIvPjwvc3ZnPg==");
-    }
+            .status {
+                position: relative;
+                display: inline-block;
+                width: 60px;
+                height: 10px;
+                cursor: pointer;
 
-    &.disable {
-        background-color: $text-color;
-        background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI0NGNjY3OSI+PHBhdGggZD0iTTE5IDYuNDFMMTcuNTkgNUwxMiAxMC41OSA2LjQxIDUgNSA2LjQxIDEwLjU5IDEyIDUgMTcuNTkgNi40MSAxOSAxMiAxMy40MSAxNy41OSAxOSAxOSAxNy41OSAxMy40MSAxMnoiLz48L3N2Zz4=");
-    }
+                input {
+                    opacity: 0;
+                    width: 0;
+                    height: 0;
+                }
 
-    &.edit {
-        background-color: $primary-color;
-        background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2ZmZmZmZiI+PHBhdGggZD0iTTMgMTcuMjVWMjFoMy43NUwxNy44MSA5Ljk0bC0zLjc1LTMuNzVMMyAxNy4yNXpNMjAuNzEgNy4wNGMuMzktLjM5LjM5LTEuMDIgMC0xLjQxbC0yLjM0LTIuMzRjLS4zOS0uMzktMS4wMi0uMzktMS40MSAwbC0xLjgzIDEuODMgMy43NSAzLjc1IDEuODMtMS44M3oiLz48L3N2Zz4=");
-    }
+                .slider {
+                    position: absolute;
+                    top: 50%;
+                    left: 0;
+                    right: 0;
+                    transform: translateY(-50%);
+                    height: 3px;
+                    background-color: $text-color;
+                    transition: background-color 0.25s ease;
 
-    &.delete {
-        background-color: $danger-color;
-        background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2ZmZmZmZiI+PHBhdGggZD0iTTE1LjUgNGwtMS0xaC01bC0xIDFINVYyaDE0VjRoLTMuNXpNNiAxOWMwIDEuMS45IDIgMiAzaDhjMS4xIDAgMi0uOSAyLTJWN0g2djEyeG0zLTloMS41djEwSDlWOXptMy4yNSAwaDEuNXYxMGgtMS41Vjl6bTMuMjUgMGgxLjV2MTBoLTEuNVY5eiIvPjwvc3ZnPg==");
+                    &::before {
+                        content: "";
+                        position: absolute;
+                        top: 50%;
+                        left: 0;
+                        transform: translateY(-50%);
+                        width: 20px;
+                        height: 20px;
+                        background-color: $text-color;
+                        border-radius: 50%;
+                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                        transition: left 0.25s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.25s ease;
+                    }
+                }
+
+                input:checked + .slider {
+                    background-color: $success-color;
+
+                    &::before {
+                        left: calc(100% - 20px);
+                        background-color: $success-color;
+                    }
+                }
+            }
+        }
+
+        button {
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 50px;
+            height: 31px;
+            background-repeat: no-repeat;
+            background-size: 20px 20px;
+            background-position: center;
+
+            &.edit {
+                background-color: $primary-color;
+                background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2ZmZmZmZiI+PHBhdGggZD0iTTMgMTcuMjVWMjFoMy43NUwxNy44MSA5Ljk0bC0zLjc1LTMuNzVMMyAxNy4yNXpNMjAuNzEgNy4wNGMuMzktLjM5LjM5LTEuMDIgMC0xLjQxbC0yLjM0LTIuMzRjLS4zOS0uMzktMS4wMi0uMzktMS40MSAwbC0xLjgzIDEuODMgMy43NSAzLjc1IDEuODMtMS44M3oiLz48L3N2Zz4=");
+            }
+        }
     }
 }

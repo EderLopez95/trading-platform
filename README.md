@@ -1,9 +1,9 @@
-## Trading Signals
+## Trading Integrated
 
 API -> fastapi con MetaTrader5 como proveedor
 - backend folder
 
-UI -> react
+UI -> react (señales)
 - frontend folder
 
 ## Local

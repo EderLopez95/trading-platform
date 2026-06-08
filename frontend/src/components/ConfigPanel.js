@@ -55,7 +55,7 @@ function ConfigPanel() {
     }
 
     if (!selectedConfig?.strategies || selectedConfig.strategies.length === 0) {
-      newErrors.strategies = "Select at least one strategy";
+      newErrors.strategies = "At least one strategy is required";
     }
 
     if (!selectedConfig?.timeframes?.trend) {
@@ -120,7 +120,7 @@ function ConfigPanel() {
       const response = await saveConfig(newConfig);
 
       if (response.success) {
-        showToast("info", "Configuration saved successfully");
+        showToast("info", "Configuration saved");
         setConfig(newConfig);
         setSelectedConfig(null);
       } else {
@@ -159,7 +159,7 @@ function ConfigPanel() {
       const response = await saveConfig(newConfig);
 
       if (response.success) {
-        showToast("info", "Interval saved successfully");
+        showToast("info", "Interval saved");
         setConfig(newConfig);
       } else {
         const msg = response.errors?.[0]?.msg || "Invalid interval";
@@ -178,7 +178,34 @@ function ConfigPanel() {
     <>
       <div className="config-panel">
         <div className="config-title">
-          Add or update configuration
+          Analysis interval
+        </div>
+        <div className="field">
+          <label>Execution (seconds):</label>
+          <input
+            type="number"
+            min={30}
+            value={config.execution_interval || ""}
+            onChange={(e) => {
+              setConfig({
+                ...config,
+                execution_interval: parseInt(e.target.value) || 0
+              });
+            }}
+          />
+          {errors.execution_interval && (
+            <span className="error">{errors.execution_interval}</span>
+          )}
+        </div>
+        <div className="actions">
+          <button onClick={handleSaveInterval}>
+            Save
+          </button>
+        </div>
+      </div>
+      <div className="config-panel">
+        <div className="config-title">
+          Add or edit configuration
         </div>
         <div className="field">
           <label>Symbols:</label>
@@ -203,7 +230,7 @@ function ConfigPanel() {
           <label>Strategies:</label>
           <AsyncSelect
               isMulti
-              closeMenuOnSelect={false}
+              isSearchable
               defaultOptions={strategyOptions}
               value={strategyOptions.filter(opt =>
                 selectedConfig?.strategies?.includes(opt.value)
@@ -224,10 +251,14 @@ function ConfigPanel() {
             onChange={(e) =>
               setSelectedConfig({
                 ...selectedConfig,
-                timeframes: { ...selectedConfig.timeframes, trend: e.target.value }
+                timeframes: {
+                  ...(selectedConfig?.timeframes || {}),
+                  trend: e.target.value
+                }
               })
             }
           >
+            <option value="">Select trend...</option>
             <option value="M5">M5</option>
             <option value="M15">M15</option>
             <option value="H1">H1</option>
@@ -244,10 +275,14 @@ function ConfigPanel() {
             onChange={(e) =>
               setSelectedConfig({
                 ...selectedConfig,
-                timeframes: { ...selectedConfig.timeframes, entry: e.target.value }
+                timeframes: {
+                  ...(selectedConfig?.timeframes || {}),
+                  entry: e.target.value
+                }
               })
             }
           >
+            <option value="">Select entry...</option>
             <option value="M5">M5</option>
             <option value="M15">M15</option>
             <option value="H1">H1</option>
@@ -259,33 +294,6 @@ function ConfigPanel() {
         </div>
         <div className="actions">
           <button onClick={handleSaveConfig}>
-            Save
-          </button>
-        </div>
-      </div>
-      <div className="config-panel">
-        <div className="config-title">
-          Update interval
-        </div>
-        <div className="field">
-          <label>Execution interval (seconds):</label>
-          <input
-            type="number"
-            min={30}
-            value={config.execution_interval || ""}
-            onChange={(e) => {
-              setConfig({
-                ...config,
-                execution_interval: parseInt(e.target.value) || 0
-              });
-            }}
-          />
-          {errors.execution_interval && (
-            <span className="error">{errors.execution_interval}</span>
-          )}
-        </div>
-        <div className="actions">
-          <button onClick={handleSaveInterval}>
             Save
           </button>
         </div>

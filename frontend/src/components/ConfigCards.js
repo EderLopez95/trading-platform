@@ -41,11 +41,12 @@ function ConfigCards() {
         <>
             {config.configurations.map(c => (
                 <div key={c.id} className={`card ${!c.enabled ? 'disable' : ''}`}>
+                    <div className="delete" onClick={() => handleDelete(c.id)}></div>
                     <div className="label">
                         Symbols
                     </div>
                     <div className="label-data">
-                        <ul>
+                        <ul className="grid">
                             {c.symbols.map((symbol, index) => (
                                 <li key={index}>{symbol}</li>
                             ))}
@@ -70,17 +71,20 @@ function ConfigCards() {
                     <div className="label">
                         Temporalities
                     </div>
-                    <div className="label-data">
+                    <div className="label-data temps">
                         <ul>
                             <li>Trend: {c.timeframes.trend}</li>
                             <li>Entry: {c.timeframes.entry}</li>
                         </ul>
-                    </div>
-                    <div className="label">
                         <div className="controls">
-                            <button className="delete" onClick={() => handleDelete(c.id)}></button>
                             <button className="edit" onClick={() => setSelectedConfig(c)}></button>
-                            <button className={c.enabled ? "enable" : "disable"} onClick={() => handleToggle(c.id)}></button>
+                            <label className="status">
+                                <input type="checkbox"
+                                    checked={c.enabled}
+                                    onChange={() => handleToggle(c.id)}
+                                />
+                                <span className="slider"></span>
+                            </label>
                         </div>
                     </div>
                 </div>

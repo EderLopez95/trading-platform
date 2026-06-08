@@ -1,4 +1,4 @@
-# Trading S API
+# Trading Integrated API
 
 ## Dependencias
 - python 3.11.9

@@ -25,7 +25,6 @@
                 "TSLA"
             ],
             "strategies": [
-                "rsi_cross_trend",
                 "multi_sma"
             ],
             "timeframes": {

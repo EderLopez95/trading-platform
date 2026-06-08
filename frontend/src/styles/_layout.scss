@@ -11,24 +11,6 @@ body {
   box-sizing: border-box;
 }
 
-::-webkit-scrollbar {
-  width: 12px;
-  height: 12px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-  border-width: 2px 8px 2px 2px;
-  border-style: solid;
-  border-color: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: $panel;
-  border-radius: 8px;
-  background-clip: padding-box;
-}
-
-::-webkit-scrollbar-corner {
-  background: $bg-color;
+button {
+  font-family: Arial, Helvetica, sans-serif;
 }

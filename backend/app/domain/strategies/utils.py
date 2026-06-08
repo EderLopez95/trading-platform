@@ -2,7 +2,7 @@ import pandas as pd
 
 class Utils:
     def __init__(self):
-        self.MIN_DISTANCE = 0.25 # minimum distance between two series to consider a crossover valid
+        self.MIN_DISTANCE = 1.5 # minimum distance between two series to consider a crossover valid
 
     def calculate_rsi(self, series, period=14):
         delta = series.diff() # price change between candles
