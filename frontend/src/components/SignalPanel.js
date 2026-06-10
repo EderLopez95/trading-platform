@@ -31,9 +31,10 @@ function SignalPanel({ signals }) {
                                     <td>{signal.temporality}</td>
                                     <td>{signal.price}</td>
                                     <td>
-                                        {signal.strategy === StrategyType.MULTI_SMA ? StrategyType.MULTI_SMA_value
-                                        : signal.strategy === StrategyType.RSI_CROSS_TREND ? StrategyType.RSI_CROSS_TREND_value
-                                        : "Unknown"}
+                                        { signal.strategy === StrategyType.RSI_CROSS_TREND ? StrategyType.RSI_CROSS_TREND_value
+                                        : signal.strategy === StrategyType.MULTI_SMAS_MOMENTUM ? StrategyType.MULTI_SMAS_MOMENTUM_value
+                                        : signal.strategy === StrategyType.RSI_DIP_ACCUMULATION ? StrategyType.RSI_DIP_ACCUMULATION_value
+                                        : "Unknown" }
                                     </td>
                                     <td>
                                         {(() => {

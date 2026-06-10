@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
-from app.domain.strategies.multi_sma_strategy import MultiSMAStrategy
+from app.domain.strategies.multi_smas_momentum_strategy import MultiSMAsMomentumStrategy
 from app.domain.strategies.rsi_cross_trend_strategy import RSICrossTrendStrategy
+from app.domain.strategies.rsi_dip_accumulation_strategy import RSIDipAccumulationStrategy
 from app.domain.enums.enums import StrategyType, SignalType, LogType
 from app.domain.models.models import LogEntry
 
@@ -8,10 +9,11 @@ class StrategyEngine:
     def __init__(self):
         # add strategies from strategies folder, they must implement an execute method that returns a signal
         self.strategies = {
-            StrategyType.MULTI_SMA: MultiSMAStrategy(),
-            StrategyType.RSI_CROSS_TREND: RSICrossTrendStrategy()
+            StrategyType.RSI_CROSS_TREND: RSICrossTrendStrategy(),
+            StrategyType.MULTI_SMAS_MOMENTUM: MultiSMAsMomentumStrategy(),
+            StrategyType.RSI_DIP_ACCUMULATION: RSIDipAccumulationStrategy()
         }
-        self.default_strategy = StrategyType.MULTI_SMA
+        self.default_strategy = StrategyType.RSI_CROSS_TREND
 
     def _add_log(self, logs, level, message):
         logs.append(LogEntry(

@@ -39,11 +39,27 @@
                 "TSLA.NAS"
             ],
             "strategies": [
-                "multi_sma"
+                "multi_smas_momentum"
             ],
             "timeframes": {
                 "trend": "H1",
                 "entry": "M15"
+            }
+        },
+        {
+            "id": "32362022",
+            "enabled": true,
+            "symbols": [
+                "QQQ.NAS",
+                "SPY.NYSE",
+                "US500"
+            ],
+            "strategies": [
+                "rsi_dip_accumulation"
+            ],
+            "timeframes": {
+                "trend": "D1",
+                "entry": "H1"
             }
         }
     ]

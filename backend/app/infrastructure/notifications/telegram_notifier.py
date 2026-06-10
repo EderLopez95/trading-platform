@@ -11,8 +11,10 @@ class TelegramNotifier:
         match strategy:
             case StrategyType.RSI_CROSS_TREND:
                 strategy_text = StrategyNameType.RSI_CROSS_TREND_value.value
-            case StrategyType.MULTI_SMA:
-                strategy_text = StrategyNameType.MULTI_SMA_value.value
+            case StrategyType.MULTI_SMAS_MOMENTUM:
+                strategy_text = StrategyNameType.MULTI_SMAS_MOMENTUM_value.value
+            case StrategyType.RSI_DIP_ACCUMULATION:
+                strategy_text = StrategyNameType.RSI_DIP_ACCUMULATION_value.value
             case _:
                 strategy_text = strategy.value
 

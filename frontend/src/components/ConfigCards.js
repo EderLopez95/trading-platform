@@ -60,8 +60,9 @@ function ConfigCards() {
                             {c.strategies.map((strategy, index) => (
                                 <li key={index}>
                                     {
-                                        strategy === StrategyType.MULTI_SMA ? StrategyType.MULTI_SMA_value
-                                        : strategy === StrategyType.RSI_CROSS_TREND ? StrategyType.RSI_CROSS_TREND_value
+                                        strategy === StrategyType.RSI_CROSS_TREND ? StrategyType.RSI_CROSS_TREND_value
+                                        : strategy === StrategyType.MULTI_SMAS_MOMENTUM ? StrategyType.MULTI_SMAS_MOMENTUM_value
+                                        : strategy === StrategyType.RSI_DIP_ACCUMULATION ? StrategyType.RSI_DIP_ACCUMULATION_value
                                         : "Unknown"
                                     }
                                 </li>

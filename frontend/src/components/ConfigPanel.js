@@ -43,8 +43,9 @@ function ConfigPanel() {
   };
 
   const strategyOptions = [
-    { value: StrategyType.MULTI_SMA, label: StrategyType.MULTI_SMA_value },
-    { value: StrategyType.RSI_CROSS_TREND, label: StrategyType.RSI_CROSS_TREND_value }
+    { value: StrategyType.RSI_CROSS_TREND, label: StrategyType.RSI_CROSS_TREND_value },
+    { value: StrategyType.MULTI_SMAS_MOMENTUM, label: StrategyType.MULTI_SMAS_MOMENTUM_value },
+    { value: StrategyType.RSI_DIP_ACCUMULATION, label: StrategyType.RSI_DIP_ACCUMULATION_value }
   ];
 
   const validateConfig = () => {

@@ -7,7 +7,7 @@ class RSICrossTrendStrategy:
         self.utils = Utils()
 
     def execute(self, data: MarketData):
-        # data from provider
+        # data from provider, only by trend
         df_trend = data.trend
 
         # minimum data points to calculate RSI and its moving average

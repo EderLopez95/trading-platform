@@ -8,5 +8,5 @@ UI -> react (señales)
 
 ## Local
 - en cada folder esta otro README con pasos
-- cd backend -> ejecutar
+- cd backend -> iniciar
 - cd frontend -> iniciar
