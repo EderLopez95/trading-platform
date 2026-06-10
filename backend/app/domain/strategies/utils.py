@@ -1,8 +1,8 @@
 import pandas as pd
 
 class Utils:
-    def __init__(self):
-        self.MIN_DISTANCE = 0.25 # minimum distance between two series to consider a crossover valid
+    def __init__(self, rsi_min_distance=2): # minimum distance between two series to consider a crossover valid
+        self.rsi_min_distance = rsi_min_distance
 
     def calculate_rsi(self, series, period=14):
         delta = series.diff() # price change between candles
@@ -25,7 +25,7 @@ class Utils:
             a.iloc[-2] <= b.iloc[-2] and
             a.iloc[-1] > b.iloc[-1]
         )
-        distance = abs(a.iloc[-1] - b.iloc[-1]) > self.MIN_DISTANCE # check for enough min distance
+        distance = abs(a.iloc[-1] - b.iloc[-1]) > self.rsi_min_distance # check for enough min distance
         return crossed and distance # only valid if both are true
 
     # same as crossover but backwards validation
@@ -40,5 +40,5 @@ class Utils:
             a.iloc[-2] >= b.iloc[-2] and
             a.iloc[-1] < b.iloc[-1]
         )
-        distance = abs(a.iloc[-1] - b.iloc[-1]) > self.MIN_DISTANCE
+        distance = abs(a.iloc[-1] - b.iloc[-1]) > self.rsi_min_distance
         return crossed and distance

@@ -1,6 +1,5 @@
 import { useState, useEffect, createContext, useRef } from "react";
 import { getStatus } from "./services/api";
-import StatusBar from "./components/StatusBar";
 import BotControl from "./components/BotControl";
 import ConfigPanel from "./components/ConfigPanel";
 import LogPanel from "./components/LogPanel";
@@ -30,7 +29,7 @@ function App() {
     setAlerts(prev => [newAlert, ...prev]);
     setTimeout(() => {
       setAlerts(prev => prev.filter(alert => alert.id !== id));
-    }, 10000);
+    }, 2000);
   };
 
   const loadConfig = async () => {
@@ -179,19 +178,18 @@ function App() {
         <div className="wrapper">
           <div className="wrapper-config">
             <div className="wrapper-bot">
-              <StatusBar status={status} />
-              <BotControl />
+              <BotControl status={status} />
             </div>
             <ConfigPanel />
           </div>
           {config.configurations?.length > 0 && (
-            <div className="wrapper-config">
+            <div className="wrapper-config cards">
               <ConfigCards />
             </div>
           )}
           <div className="wrapper-tables">
             <SignalPanel signals={signals} />
-            {logs.length > 0 && <LogPanel logs={logs} />}
+            <LogPanel logs={logs} />
           </div>
         </div>
       </div>

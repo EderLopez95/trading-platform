@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-import threading
+import threading, time
 from app.infrastructure.config.config_loader import load_config
 from app.infrastructure.data_provider.mt5_provider import MT5Provider
 from app.domain.services.strategy_engine import StrategyEngine
@@ -18,98 +18,135 @@ class BotRunner:
         self.telegram_notifier = TelegramNotifier()
         self.local_notifier = LocalNotifier()
         self.last_signal_candle = {}
-
-    def _send_ws(self, message):
-        ws_manager.send(message.model_dump())
-
-    def _send_signal(self, signal, symbol, temporality, strategy, price=0):
-        self._send_ws(
-            SignalResult(
-                symbol = symbol,
-                strategy = strategy.value,
-                timestamp = datetime.now(timezone.utc).isoformat(),
-                signal = signal.value,
-                temporality = temporality.value,
-                price = round(price, 2)
-            )
-        )
+        self.interval = 30
 
     def start(self):
         self.running = True
         self.stop_event.clear()
 
         while self.running:
+            cycle_start = time.time()
+
             try:
-                config = load_config()
-                active_configs = [c for c in config.configurations if c.enabled]
-                interval = max(30, config.execution_interval) # ensure minimum interval of 30 seconds to prevent overload
-
-                if active_configs and len(active_configs) > 0:
-                    for configuration in active_configs:
-                        symbols = configuration.symbols
-
-                        if len(symbols) == 0:
-                            self._send_ws(LogEntry(
-                                level = LogType.ERROR.value,
-                                message = f"No symbols configured, skipping cycle. id: {configuration.id}",
-                                timestamp = datetime.now(timezone.utc).isoformat()
-                            ))
-                        else:
-                            for symbol in symbols:
-                                # fetch market data from provider for specific symbol and timeframes
-                                data = MarketData(
-                                    trend = self.provider.get_data(symbol, configuration.timeframes.trend),
-                                    entry = self.provider.get_data(symbol, configuration.timeframes.entry, 50) # minimum data required
-                                )
-                                try:
-                                    for strategy in configuration.strategies:
-                                        # execute analysis and strategy
-                                        signal, logs = self.engine.run(strategy, data)
-                                        
-                                        # in case of logs or signals, send to ws and notifier
-                                        if logs:
-                                            for log in logs:
-                                                self._send_ws(log)
-                                        
-                                        if signal != SignalType.HOLD:
-                                            # send signal only if it is a new candle to prevent duplicates
-                                            candle_time = data.trend.index[-1]
-                                            last_candle = self.last_signal_candle.get(symbol)
-                                            
-                                            if last_candle == candle_time:
-                                                continue
-                                            
-                                            self.last_signal_candle[symbol] = candle_time
-                                            price = data.entry["close"].iloc[-1]
-                                            
-                                            # notifications
-                                            self.telegram_notifier.send(signal, symbol, configuration.timeframes.trend, strategy, price)
-                                            self.local_notifier.send(signal, symbol)
-                                            self._send_signal(signal, symbol, configuration.timeframes.trend, strategy, price)
-
-                                except Exception as e:
-                                    self._send_ws(LogEntry(
-                                        level = LogType.ERROR.value,
-                                        message = f"Error processing symbol {symbol} id: {configuration.id} - {str(e)}",
-                                        timestamp = datetime.now(timezone.utc).isoformat()
-                                    ))
-                else:
-                    self._send_ws(LogEntry(
-                        level = LogType.INFO.value,
-                        message = "No configurations, add new one",
-                        timestamp = datetime.now(timezone.utc).isoformat()
-                    ))
-
-                if self.stop_event.wait(timeout=interval):
-                    break
-                
+                self._run_cycle()
             except Exception as e:
-                self._send_ws(LogEntry(
-                    level = LogType.ERROR.value,
-                    message = f"Error in bot runner: {str(e)}",
-                    timestamp = datetime.now(timezone.utc).isoformat()
-                ))
+                self._log_error(f"Error in bot runner: {e}")
+
+            self._handle_cycle_timing(cycle_start)
 
     def stop(self):
         self.running = False
         self.stop_event.set()
+
+    def _run_cycle(self):
+        config = load_config()
+        self.interval = max(30, config.execution_interval)
+        active_configs = [c for c in config.configurations if c.enabled]
+
+        if not active_configs:
+            self._log_info("No active configurations, add or enable one")
+            return
+
+        for configuration in active_configs:
+            self._process_configuration(configuration)
+
+    def _process_configuration(self, configuration):
+        if not configuration.symbols:
+            self._log_info(f"No symbols configured, skipping configuration. id: {configuration.id}")
+            return
+
+        for symbol in configuration.symbols:
+            self._process_symbol(symbol, configuration)
+
+    def _process_symbol(self, symbol, configuration):
+        try:
+            data = self._fetch_market_data(symbol, configuration)
+
+            for strategy in configuration.strategies:
+                self._execute_strategy(strategy, symbol, configuration, data)
+
+        except Exception as e:
+            self._log_error(f"Error processing symbol {symbol} id: {configuration.id} - {str(e)}")
+
+    def _fetch_market_data(self, symbol, configuration):
+        return MarketData(
+            trend = self.provider.get_data(symbol, configuration.timeframes.trend),
+            entry = self.provider.get_data(symbol, configuration.timeframes.entry, 50)
+        )
+    
+    def _execute_strategy(self, strategy, symbol, configuration, data):
+        signal, logs = self.engine.run(strategy, data)
+        self._send_logs(logs)
+
+        if signal == SignalType.HOLD:
+            return
+
+        candle_time = data.trend.index[-1]
+        price = data.entry["close"].iloc[-1]
+
+        if self._is_duplicate_signal(symbol, candle_time):
+            return
+        
+        self._send_notifications(signal, symbol, configuration, strategy, price)
+
+    def _send_notifications(self, signal, symbol, configuration, strategy, price):
+        self.telegram_notifier.send(signal, symbol, configuration.timeframes.trend, strategy, price)
+        self.local_notifier.send(signal, symbol)
+        self._send_signal(signal, symbol, configuration.timeframes.trend, strategy, price)
+
+    def _is_duplicate_signal(self, symbol, candle_time):
+        last_candle = self.last_signal_candle.get(symbol)
+
+        if last_candle == candle_time:
+            return True
+
+        self.last_signal_candle[symbol] = candle_time
+        return False
+
+    def _send_signal(self, signal, symbol, temporality, strategy, price=0):
+        self._send_ws(
+            SignalResult(
+                symbol=symbol,
+                strategy=strategy.value,
+                timestamp=datetime.now(timezone.utc).isoformat(),
+                signal=signal.value,
+                temporality=temporality.value,
+                price=round(price, 2)
+            )
+        )
+
+    def _log(self, level, message):
+        self._send_ws(
+            LogEntry(
+                level=level.value,
+                message=message,
+                timestamp=datetime.now(timezone.utc).isoformat()
+            )
+        )
+
+    def _log_info(self, message):
+        self._log(LogType.INFO, message)
+        
+    def _log_error(self, message):
+        self._log(LogType.ERROR, message)
+
+    def _send_logs(self, logs):
+        if not logs:
+            return
+
+        for log in logs:
+            self._send_ws(log)
+
+    def _send_ws(self, message):
+        ws_manager.send(message.model_dump())
+
+    def _handle_cycle_timing(self, cycle_start):
+        cycle_duration = (time.time() - cycle_start)
+
+        if cycle_duration > self.interval:
+            self._log_error(f"Analysis duration exceeded interval: {cycle_duration:.2f}s > {self.interval}s")
+
+        remaining = max(0, self.interval - cycle_duration)
+
+        if self.stop_event.wait(timeout=remaining):
+            self.running = False

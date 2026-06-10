@@ -4,46 +4,67 @@ import { useContext } from "react";
 import { AppContext } from "../App";
 import { BotStatus } from "../enums";
 
-function BotControl() {
-  const { showToast, setStatus } = useContext(AppContext);
-  
-  const handleStart = async () => {
-    try {
-      const response = await startBot();
+function BotControl({ status }) {
+  const { showToast, setStatus, setSignals, setLogs, setSelectedConfig } = useContext(AppContext);
+  const isRunning = status === BotStatus.RUNNING;
 
-      if (response.status === BotStatus.RUNNING) {
-        setStatus(BotStatus.RUNNING);
-        showToast("info", "Bot is running");
+  const handleToggle = async () => {
+    if (isRunning) {
+      try {
+        const response = await stopBot();
+
+        if (response.status === BotStatus.STOPPED) {
+          setStatus(BotStatus.STOPPED);
+          showToast("info", "Bot stopped");
+        }
+      } catch (err) {
+        console.error("Error stopping bot:", err);
+        showToast("error", "Error stopping bot");
       }
     }
-    catch (err) {
-      console.error("Error starting bot:", err);
-      showToast("error", "Error starting bot");
+    else {
+      try {
+        const response = await startBot();
+        
+        if (response.status === BotStatus.RUNNING) {
+          setStatus(BotStatus.RUNNING);
+          showToast("info", "Bot running");
+        }
+      } catch (err) {
+        console.error("Error starting bot:", err);
+        showToast("error", "Error starting bot");
+      }
     }
   };
 
-  const handleStop = async () => {
+  const handleClear = async () => {
     try {
-      const response = await stopBot();
-      
-      if (response.status === BotStatus.STOPPED) {
-        setStatus(BotStatus.STOPPED);
-        showToast("info", "Bot is stopped");
-      }
-    }
-    catch (err) {
-      console.error("Error stopping bot:", err);
-      showToast("error", "Error stopping bot");
+      localStorage.removeItem("signals");
+      localStorage.removeItem("logs");
+      setSignals([]);
+      setLogs([]);
+      setSelectedConfig(null);
+      showToast("info", "Configuration form and logs cleared");
+    } catch (err) {
+      console.error("Error resetting:", err);
+      showToast("error", "Error resetting");
     }
   };
 
   return (
     <div className="bot-controls">
-      <button className="stop" onClick={handleStop}>
-        Stop
-      </button>
-      <button className="start" onClick={handleStart}>
-        Start
+      <label className="switch">
+        <input
+          type="checkbox"
+          checked={isRunning}
+          onChange={handleToggle}
+        />
+        <span className="slider">
+          <span className="text-status">{isRunning ? "ON" : "OFF"}</span>
+        </span>
+      </label>
+      <button className="btn-reset" onClick={handleClear}>
+        Clear
       </button>
     </div>
   );

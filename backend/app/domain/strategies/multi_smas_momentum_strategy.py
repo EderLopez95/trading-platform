@@ -3,7 +3,7 @@ from app.domain.strategies.utils import Utils
 from app.domain.models.models import MarketData
 import pandas as pd
 
-class MultiSMAStrategy:
+class MultiSMAsMomentumStrategy:
     def __init__(self):
         self.utils = Utils()
 
@@ -39,7 +39,7 @@ class MultiSMAStrategy:
             sma40_v < sma100_v
         )
 
-        # calculate RSI
+        # calculate RSI entry
         rsi = self.utils.calculate_rsi(df_entry["close"], 14)
         rsi_ma = rsi.rolling(14).mean()
         bullish_cross = self.utils.crossover(rsi, rsi_ma)

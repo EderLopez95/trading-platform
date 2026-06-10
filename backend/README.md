@@ -1,4 +1,4 @@
-# Trading S API
+# Trading Integrated API
 
 ## Dependencias
 - python 3.11.9
@@ -63,4 +63,4 @@ plotshape(bearishCross, title="Señal SELL", style=shape.triangledown, location=
 
 - guardar script y agregarlo al grafico
 - poner la temporalidad en TV igual que el "Trend" de la UI
-- cuando se mande la notificacion, checar si coincide la señal con TV, considerar los 15 minutos de retraso de MT5
+- cuando se mande la notificacion, checar si coincide la señal con TV

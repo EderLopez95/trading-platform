@@ -2,11 +2,13 @@ from enum import Enum
 
 class StrategyType(str, Enum):
     RSI_CROSS_TREND = "rsi_cross_trend"
-    MULTI_SMA = "multi_sma"
+    MULTI_SMAS_MOMENTUM = "multi_smas_momentum"
+    RSI_DIP_ACCUMULATION = "rsi_dip_accumulation"
 
 class StrategyNameType(str, Enum):
-    RSI_CROSS_TREND_value = "RSI 14 Cross Trend"
-    MULTI_SMA_value = "Multi SMA (20,40,100,200) + Cross RSI 14 + Tick Volume"
+    RSI_CROSS_TREND_value = "RSI Cross Trend"
+    MULTI_SMAS_MOMENTUM_value = "Multi SMAs Momentum"
+    RSI_DIP_ACCUMULATION_value = "RSI Dip Accumulation"
 
 class SignalType(str, Enum):
     BUY = "BUY"

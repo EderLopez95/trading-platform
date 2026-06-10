@@ -3,7 +3,7 @@ import pandas as pd
 
 mt5.initialize()
 
-symbol = "AAPL"
+symbol = "AAPL.NAS"
 
 rates = mt5.copy_rates_from_pos(
     symbol,

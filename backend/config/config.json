@@ -2,35 +2,64 @@
     "execution_interval": 60,
     "configurations": [
         {
-            "id": "2223125e",
+            "id": "14798318",
             "enabled": true,
             "symbols": [
-                "AAL",
-                "AAPL",
-                "AMD",
-                "AMZN",
-                "BAC",
-                "COST",
-                "F",
-                "GOOGL",
-                "INTC",
-                "JPM",
-                "META",
-                "MSFT",
-                "NFLX",
-                "NVDA",
-                "ORCL",
-                "QCOM",
-                "SOFI",
-                "TSLA"
+                "BTCUSD"
             ],
             "strategies": [
-                "rsi_cross_trend",
-                "multi_sma"
+                "rsi_cross_trend"
+            ],
+            "timeframes": {
+                "trend": "D1",
+                "entry": "H1"
+            }
+        },
+        {
+            "id": "23f51978",
+            "enabled": true,
+            "symbols": [
+                "AAL.NAS",
+                "AAPL.NAS",
+                "AMD.NAS",
+                "AMZN.NAS",
+                "BAC.NYSE",
+                "COST.NAS",
+                "F.NYSE",
+                "GOOG.NAS",
+                "INTC.NAS",
+                "JPM.NYSE",
+                "MSFT.NAS",
+                "MVRS.NAS",
+                "NFLX.NAS",
+                "NVDA.NAS",
+                "ORCL.NYSE",
+                "QCOM.NAS",
+                "SOFI.NAS",
+                "TSLA.NAS"
+            ],
+            "strategies": [
+                "multi_smas_momentum"
             ],
             "timeframes": {
                 "trend": "H1",
                 "entry": "M15"
+            }
+        },
+        {
+            "id": "32362022",
+            "enabled": true,
+            "symbols": [
+                "QQQ.NAS",
+                "SPY.NYSE",
+                "US500"
+            ],
+            "strategies": [
+                "rsi_dip_accumulation"
+            ],
+            "timeframes": {
+                "trend": "D1",
+                "entry": "H1"
             }
         }
     ]
