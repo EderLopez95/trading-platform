@@ -1,6 +1,5 @@
 from datetime import datetime, timezone
 import threading, time
-from app.infrastructure.config.config_loader import load_config
 from app.infrastructure.data_provider.mt5_provider import MT5Provider
 from app.domain.services.strategy_engine import StrategyEngine
 from app.infrastructure.ws.ws_manager import ws_manager
@@ -8,6 +7,8 @@ from app.domain.enums.enums import LogType, SignalType
 from app.domain.models.models import SignalResult, LogEntry, MarketData
 from app.infrastructure.notifications.telegram_notifier import TelegramNotifier
 from app.infrastructure.notifications.local_notifier import LocalNotifier
+from app.infrastructure.data.signal_tracker import SignalTracker
+from app.infrastructure.config.config_loader import ConfigLoader
 
 class BotRunner:
     def __init__(self):
@@ -17,7 +18,8 @@ class BotRunner:
         self.engine = StrategyEngine()
         self.telegram_notifier = TelegramNotifier()
         self.local_notifier = LocalNotifier()
-        self.last_signal_candle = {}
+        self.signal_tracker = SignalTracker()
+        self.config_loader = ConfigLoader()
         self.interval = 30
 
     def start(self):
@@ -39,7 +41,7 @@ class BotRunner:
         self.stop_event.set()
 
     def _run_cycle(self):
-        config = load_config()
+        config = self.config_loader.load()
         self.interval = max(30, config.execution_interval)
         active_configs = [c for c in config.configurations if c.enabled]
 
@@ -84,7 +86,7 @@ class BotRunner:
         candle_time = data.trend.index[-1]
         price = data.entry["close"].iloc[-1]
 
-        if self._is_duplicate_signal(symbol, candle_time):
+        if self._is_duplicate_signal(symbol, strategy, configuration.timeframes.trend, candle_time):
             return
         
         self._send_notifications(signal, symbol, configuration, strategy, price)
@@ -94,15 +96,10 @@ class BotRunner:
         self.local_notifier.send(signal, symbol)
         self._send_signal(signal, symbol, configuration.timeframes.trend, strategy, price)
 
-    def _is_duplicate_signal(self, symbol, candle_time):
-        last_candle = self.last_signal_candle.get(symbol)
-
-        if last_candle == candle_time:
-            return True
-
-        self.last_signal_candle[symbol] = candle_time
-        return False
-
+    def _is_duplicate_signal(self, symbol, strategy, timeframe, candle_time):
+        key = f"{symbol}_{strategy}_{timeframe}"
+        return self.signal_tracker.is_duplicate(key, str(candle_time))
+    
     def _send_signal(self, signal, symbol, temporality, strategy, price=0):
         self._send_ws(
             SignalResult(
