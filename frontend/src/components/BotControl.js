@@ -3,6 +3,7 @@ import "./BotControl.scss";
 import { useContext } from "react";
 import { AppContext } from "../App";
 import { BotStatus } from "../enums";
+import StrategyTooltip from "./StrategyTooltip";
 
 function BotControl({ status }) {
   const { showToast, setStatus, setSignals, setLogs, setSelectedConfig } = useContext(AppContext);
@@ -66,6 +67,9 @@ function BotControl({ status }) {
       <button className="btn-reset" onClick={handleClear}>
         Clear
       </button>
+      <div className="tooltip-question tooltip-wrapper label-data">
+        <StrategyTooltip path="/help.md" />
+      </div>
     </div>
   );
 }

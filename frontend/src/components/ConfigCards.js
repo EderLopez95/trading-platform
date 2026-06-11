@@ -64,43 +64,37 @@ function ConfigCards() {
                     </div>
                     <div className="label-data">
                         <ul>
-                            {c.strategies.map((strategy, index) => (
-                                <li key={index}>
-                                    {
-                                        strategy === StrategyType.RSI_CROSS_TREND ?
-                                            <div className="strategy-row">
-                                                <span>
-                                                    {StrategyType.RSI_CROSS_TREND_value}
-                                                </span>
+                            {c.strategies.map((strategy, index) => {
+                                let label = "Unknown";
+                                let doc = "";
+                                
+                                if (strategy === StrategyType.RSI_CROSS_TREND) {
+                                    label = StrategyType.RSI_CROSS_TREND_value;
+                                    doc = strategyDocs[StrategyType.RSI_CROSS_TREND];
+                                }
+                                else if (strategy === StrategyType.MULTI_SMAS_MOMENTUM) {
+                                    label = StrategyType.MULTI_SMAS_MOMENTUM_value;
+                                    doc = strategyDocs[StrategyType.MULTI_SMAS_MOMENTUM];
+                                }
+                                else if (strategy === StrategyType.RSI_DIP_ACCUMULATION) {
+                                    label = StrategyType.RSI_DIP_ACCUMULATION_value;
+                                    doc = strategyDocs[StrategyType.RSI_DIP_ACCUMULATION];
+                                }
+
+                                return (
+                                    <li key={index}>
+                                        <div className="strategy-row">
+                                            <span>{label}</span>
+                                            {doc && (
                                                 <div className="tooltip-wrapper">
                                                     <span className="info-icon"></span>
-                                                    <StrategyTooltip file={strategyDocs[StrategyType.RSI_CROSS_TREND]} />
+                                                    <StrategyTooltip path={`/strategies/${doc}`} />
                                                 </div>
-                                            </div>
-                                        : strategy === StrategyType.MULTI_SMAS_MOMENTUM ?
-                                            <div className="strategy-row">
-                                                <span>
-                                                    {StrategyType.MULTI_SMAS_MOMENTUM_value}
-                                                </span>
-                                                <div className="tooltip-wrapper">
-                                                    <span className="info-icon"></span>
-                                                    <StrategyTooltip file={strategyDocs[StrategyType.MULTI_SMAS_MOMENTUM]} />
-                                                </div>
-                                            </div>
-                                        : strategy === StrategyType.RSI_DIP_ACCUMULATION ?
-                                            <div className="strategy-row">
-                                                <span>
-                                                    {StrategyType.RSI_DIP_ACCUMULATION_value}
-                                                </span>
-                                                <div className="tooltip-wrapper">
-                                                    <span className="info-icon"></span>
-                                                    <StrategyTooltip file={strategyDocs[StrategyType.RSI_DIP_ACCUMULATION]} />
-                                                </div>
-                                            </div>
-                                        : "Unknown"
-                                    }
-                                </li>
-                            ))}
+                                            )}
+                                        </div>
+                                    </li>
+                                );
+                            })}
                         </ul>
                     </div>
                     <div className="label">
