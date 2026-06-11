@@ -5,6 +5,7 @@
   justify-content: center;
   align-items: center;
   gap: 30px;
+  position: relative;
 
   .switch {
     position: relative;
@@ -84,5 +85,20 @@
     text-transform: uppercase;
     color: $white;
     background: $primary-color;
+  }
+
+  .tooltip-question {
+    position: absolute;
+    top: -7px;
+    right: -7px;
+    width: 21px;
+    height: 21px;
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNEY3MzlFIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48cGF0aCBkPSJNOS4xIDlhMi45IDIuOSAwIDAgMSA1LjggMGMwIDEuMi0uOCAxLjgtMS40IDIuMkMxMi45IDExLjYgMTIgMTIuMiAxMiAxM3YxIi8+PHBhdGggZD0iTTEyIDE3aC4wMSIvPjwvc3ZnPg==");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: inline-block;
+    cursor: pointer;
+    font-size: 13px;
   }
 }

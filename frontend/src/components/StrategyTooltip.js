@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 
-function StrategyTooltip({ file }) {
+function StrategyTooltip({ path }) {
   const [content, setContent] = useState("");
 
   useEffect(() => {
-    fetch(`/strategies/${file}`)
+    fetch(path)
       .then(res => res.text())
       .then(text => setContent(text));
-  }, [file]);
+  }, [path]);
 
   return (
     <div className="strategy-tooltip">
