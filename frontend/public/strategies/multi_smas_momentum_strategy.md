@@ -4,10 +4,11 @@ Trading strategy focused on buy/sell momentum (trend -> entry)
 
 ## Conditions
 
-- Considers trend SMAs (20, 40, 100) in order ascending or descending
-- Only check for entry RSI
-- RSI distance > 2
-- Last candle tick volume greater than tick volume average of 20 periods by 20%
+- Trend SMAs (20, 40, 100) in order ascending or descending
+- Distance between SMAs by 0.2% (avoid laterality)
+- SMA20 trend slope up to the 4 to last candle
+- Only check for entry RSI distance > 2 points
+- Tick volume greater than tick volume average of 20 periods by 20%
 
 ## Best For
 

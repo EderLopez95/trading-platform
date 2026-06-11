@@ -5,7 +5,7 @@ Trading strategy focused on detecting RSI 14 crossover and crossunder
 ## Conditions
 
 - Only trend temporality target
-- RSI distance > 2
+- RSI distance > 2 points
 
 ## Best For
 

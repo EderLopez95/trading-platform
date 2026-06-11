@@ -39,6 +39,19 @@ class MultiSMAsMomentumStrategy:
             sma40_v < sma100_v
         )
 
+        # trend strength, avoid laterality
+        min_distance = 0.002
+        distance_20_40 = abs(sma20_v - sma40_v) / sma40_v
+        distance_40_100 = abs(sma40_v - sma100_v) / sma100_v
+        trend_strength = (
+            distance_20_40 > min_distance and
+            distance_40_100 > min_distance
+        )
+
+        # trend slope
+        sma20_slope = sma20_v - sma20.iloc[-4]
+        trend_direction_ok = abs(sma20_slope) > 0
+
         # calculate RSI entry
         rsi = self.utils.calculate_rsi(df_entry["close"], 14)
         rsi_ma = rsi.rolling(14).mean()
@@ -53,10 +66,10 @@ class MultiSMAsMomentumStrategy:
         volume_avg_v = volume_avg.iloc[-1] # last tick volume
         volume_ok = volume_v > (volume_avg_v * 1.2) # considerable movement, increase it to filter more deeply
 
-        if bullish_trend and bullish_cross and volume_ok:
+        if bullish_trend and bullish_cross and trend_strength and trend_direction_ok and volume_ok:
             return SignalType.BUY
 
-        if bearish_trend and bearish_cross and volume_ok:
+        if bearish_trend and bearish_cross and trend_strength and trend_direction_ok and volume_ok:
             return SignalType.SELL
 
         return SignalType.HOLD
