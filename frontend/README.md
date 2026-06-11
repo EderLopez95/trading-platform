@@ -73,9 +73,11 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 - npx 11.13.0
 - sass@1.77.6
 - react-select
+- react-markdown
 
 ## instalar dependencias
 - npm install
+- npm config set strict-ssl false/true (por si falla react-markdown al instalarse)
 
 ## entorno
 - crear .env.local con la misma informacion del .env.example

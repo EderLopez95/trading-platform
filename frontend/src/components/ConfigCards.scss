@@ -132,3 +132,109 @@
         }
     }
 }
+
+.strategy-row {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    align-items: center;
+}
+
+.tooltip-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.info-icon {
+    display: block;
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiBmaWxsPSIjNEY3MzlFIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNEY3MzlFIiBzdHJva2Utd2lkdGg9IjIiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjciIHI9IjEuNSIvPjxwYXRoIGQ9Ik0xMiAxMHY3IiBzdHJva2U9IiM0RjczOUUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+}
+
+.strategy-tooltip {
+    visibility: hidden;
+    opacity: 0;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: $tooltip-panel;
+    color: $text-color;
+    border-radius: 8px;
+    z-index: 500;
+    outline: 1px solid $text-color;
+    transition: visibility 0.4s ease-in-out, opacity 0.4s ease-in-out;
+    
+    @include tablet {
+        left: 30px;
+        top: auto;
+        bottom: 30px;
+        transform: none;
+    }
+}
+
+.strategy-tooltip-wrapper {
+    overflow: auto;
+    padding: 15px;
+    max-height: calc(100vh - 120px);
+    min-width: 275px;
+
+    @include tablet {
+        width: 275px;
+        max-height: calc(100vh - 60px);
+    }
+
+    &::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: $bg-color;
+        border-radius: 8px;
+        margin-block: 8px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: $detail-color;
+        border-radius: 8px;
+    }
+
+    &::-webkit-scrollbar-corner {
+        background: $panel;
+    }
+
+    .md-title, .md-subtitle, .md-text, .md-list {
+        margin-bottom: 10px;
+    }
+
+    .md-title {
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .md-text, .md-list {
+        padding-left: 15px;
+    }
+
+    .md-list {
+        gap: 6px;
+    }
+
+    :last-child {
+        margin-bottom: 0;
+    }
+}
+
+.tooltip-wrapper:hover .strategy-tooltip {
+    visibility: visible;
+    opacity: 1;
+}

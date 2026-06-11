@@ -2,20 +2,6 @@
     "execution_interval": 60,
     "configurations": [
         {
-            "id": "14798318",
-            "enabled": true,
-            "symbols": [
-                "BTCUSD"
-            ],
-            "strategies": [
-                "rsi_cross_trend"
-            ],
-            "timeframes": {
-                "trend": "D1",
-                "entry": "H1"
-            }
-        },
-        {
             "id": "23f51978",
             "enabled": true,
             "symbols": [
@@ -56,6 +42,37 @@
             ],
             "strategies": [
                 "rsi_dip_accumulation"
+            ],
+            "timeframes": {
+                "trend": "D1",
+                "entry": "H1"
+            }
+        },
+        {
+            "id": "fe3cb7c1",
+            "enabled": true,
+            "symbols": [
+                "AAPL.NAS",
+                "AMZN.NAS",
+                "NVDA.NAS",
+                "SPY.NYSE"
+            ],
+            "strategies": [
+                "rsi_cross_trend"
+            ],
+            "timeframes": {
+                "trend": "H1",
+                "entry": "M15"
+            }
+        },
+        {
+            "id": "49fcc9d8",
+            "enabled": true,
+            "symbols": [
+                "BTCUSD"
+            ],
+            "strategies": [
+                "rsi_cross_trend"
             ],
             "timeframes": {
                 "trend": "D1",

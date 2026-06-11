@@ -3,9 +3,16 @@ import { AppContext } from "../App";
 import "./ConfigCards.scss";
 import { StrategyType } from "../enums";
 import { saveConfig } from "../services/api";
+import StrategyTooltip from "./StrategyTooltip";
 
 function ConfigCards() {
     const { config, setConfig, setSelectedConfig, showToast } = useContext(AppContext);
+
+    const strategyDocs = {
+        [StrategyType.RSI_CROSS_TREND]: "rsi_cross_trend_strategy.md",
+        [StrategyType.MULTI_SMAS_MOMENTUM]: "multi_smas_momentum_strategy.md",
+        [StrategyType.RSI_DIP_ACCUMULATION]: "rsi_dip_accumulation_strategy.md"
+    };
 
     const updateDeleteConfig = async (getUpdatedConfigs, successMessage) => {
         const newConfig = {
@@ -60,9 +67,36 @@ function ConfigCards() {
                             {c.strategies.map((strategy, index) => (
                                 <li key={index}>
                                     {
-                                        strategy === StrategyType.RSI_CROSS_TREND ? StrategyType.RSI_CROSS_TREND_value
-                                        : strategy === StrategyType.MULTI_SMAS_MOMENTUM ? StrategyType.MULTI_SMAS_MOMENTUM_value
-                                        : strategy === StrategyType.RSI_DIP_ACCUMULATION ? StrategyType.RSI_DIP_ACCUMULATION_value
+                                        strategy === StrategyType.RSI_CROSS_TREND ?
+                                            <div className="strategy-row">
+                                                <span>
+                                                    {StrategyType.RSI_CROSS_TREND_value}
+                                                </span>
+                                                <div className="tooltip-wrapper">
+                                                    <span className="info-icon"></span>
+                                                    <StrategyTooltip file={strategyDocs[StrategyType.RSI_CROSS_TREND]} />
+                                                </div>
+                                            </div>
+                                        : strategy === StrategyType.MULTI_SMAS_MOMENTUM ?
+                                            <div className="strategy-row">
+                                                <span>
+                                                    {StrategyType.MULTI_SMAS_MOMENTUM_value}
+                                                </span>
+                                                <div className="tooltip-wrapper">
+                                                    <span className="info-icon"></span>
+                                                    <StrategyTooltip file={strategyDocs[StrategyType.MULTI_SMAS_MOMENTUM]} />
+                                                </div>
+                                            </div>
+                                        : strategy === StrategyType.RSI_DIP_ACCUMULATION ?
+                                            <div className="strategy-row">
+                                                <span>
+                                                    {StrategyType.RSI_DIP_ACCUMULATION_value}
+                                                </span>
+                                                <div className="tooltip-wrapper">
+                                                    <span className="info-icon"></span>
+                                                    <StrategyTooltip file={strategyDocs[StrategyType.RSI_DIP_ACCUMULATION]} />
+                                                </div>
+                                            </div>
                                         : "Unknown"
                                     }
                                 </li>

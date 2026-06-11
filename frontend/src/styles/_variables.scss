@@ -5,18 +5,19 @@ $danger-color: #CF6679;
 $text-color: #B0B0B0;
 $bg-color: #0D1117;
 $panel: #21262D;
+$tooltip-panel: #30363D;
 $detail-color: #424952;
 $select-hover: #334155;
 $white: #FFFFFF;
 $white-variant-1: #e0e0e0;
 
 // breakpoints
-$breakpoint-lg: 1200px;
-$desktop: $breakpoint-lg;
+$breakpoint-md: 900px;
+$tablet: $breakpoint-md;
 
 //mixins
-@mixin desktop {
-  @media (min-width: $desktop) {
+@mixin tablet {
+  @media (min-width: $tablet) {
     @content;
   }
 }

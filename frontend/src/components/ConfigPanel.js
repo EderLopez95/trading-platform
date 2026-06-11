@@ -46,7 +46,7 @@ function ConfigPanel() {
     { value: StrategyType.RSI_CROSS_TREND, label: StrategyType.RSI_CROSS_TREND_value },
     { value: StrategyType.MULTI_SMAS_MOMENTUM, label: StrategyType.MULTI_SMAS_MOMENTUM_value },
     { value: StrategyType.RSI_DIP_ACCUMULATION, label: StrategyType.RSI_DIP_ACCUMULATION_value }
-  ];
+  ].sort((a, b) => a.label.localeCompare(b.label));
 
   const validateConfig = () => {
     const newErrors = {};

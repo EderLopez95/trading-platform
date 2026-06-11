@@ -7,9 +7,10 @@
 
 .wrapper-config {
   min-width: 275px;
-  max-width: 600px;
+  max-width: 450px;
+  flex: 1;
 
-  @include desktop {
+  @include tablet {
     max-width: 275px;
 
     &.cards {
@@ -46,12 +47,12 @@
 
 .wrapper {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   gap: 20px;
   width: 100%;
   
-  @include desktop {
-    flex-direction: row;
+  @include tablet {
     align-items: flex-start;
   }
 
@@ -60,6 +61,8 @@
     flex-direction: column;
     gap: 20px;
     width: 100%;
+    min-width: 275px;
+    flex: 1;
   }
 }
 
