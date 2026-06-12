@@ -6,7 +6,6 @@ from app.infrastructure.ws.ws_manager import ws_manager
 from app.domain.enums.enums import LogType, SignalType
 from app.domain.models.models import SignalResult, LogEntry, MarketData
 from app.infrastructure.notifications.telegram_notifier import TelegramNotifier
-from app.infrastructure.notifications.local_notifier import LocalNotifier
 from app.infrastructure.data.signal_tracker import SignalTracker
 from app.infrastructure.config.config_loader import ConfigLoader
 
@@ -17,7 +16,6 @@ class BotRunner:
         self.provider = MT5Provider()
         self.engine = StrategyEngine()
         self.telegram_notifier = TelegramNotifier()
-        self.local_notifier = LocalNotifier()
         self.signal_tracker = SignalTracker()
         self.config_loader = ConfigLoader()
         self.interval = 30
@@ -93,7 +91,6 @@ class BotRunner:
 
     def _send_notifications(self, signal, symbol, configuration, strategy, price):
         self.telegram_notifier.send(signal, symbol, configuration.timeframes.trend, strategy, price)
-        self.local_notifier.send(signal, symbol)
         self._send_signal(signal, symbol, configuration.timeframes.trend, strategy, price)
 
     def _is_duplicate_signal(self, symbol, strategy, timeframe, candle_time):
