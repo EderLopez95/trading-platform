@@ -2,7 +2,7 @@
 
 ## Local environment
 
-- install docker in windows
+    - install docker in windows
     - run postgresql instance inside docker
         - docker run --name postgres-trading -e POSTGRES_USER=trading -e POSTGRES_PASSWORD=trading -e POSTGRES_DB=trading_platform -p 5432:5432 -d postgres
     - verify docker container and connect DB
@@ -61,4 +61,8 @@
         - CREATE INDEX idx_signals_symbol ON signals.signals(symbol);
         - CREATE INDEX idx_signals_time ON signals.signals(time);
         - CREATE UNIQUE INDEX uq_signals_dedup ON signals.signals(user_id, dedup_key, candle_time);
+    - create .venv for each service and install dependencies (activate and deactivate)
+        - python -m venv .venv
+        - .venv/Scripts/activate
+        - python -m pip install -r requirements-dev.txt
         
