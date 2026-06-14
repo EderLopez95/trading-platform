@@ -1,18 +1,14 @@
-from sqlalchemy.orm import Session
-from app.infrastructure.database.user_repository import UserRepository
+from app.domain.repositories.user_repository import UserRepository
 from app.infrastructure.security.password_hasher import hash_password, verify_password
 from app.infrastructure.security.jwt_handler import create_token
 from app.domain.exceptions import UserAlreadyExistsException, InvalidCredentialsException
 
 class AuthService:
-    def __init__(self, db: Session):
-        self.db = db
-        self.user_repo = UserRepository(db)
+    def __init__(self, user_repo: UserRepository):
+        self.user_repo = user_repo
 
-    def register(self, email: str, password: str):
-        existing = self.user_repo.get_by_email(email)
-
-        if existing:
+    def register(self, email, password):
+        if self.user_repo.get_by_email(email):
             raise UserAlreadyExistsException()
 
         hashed = hash_password(password)
@@ -22,8 +18,8 @@ class AuthService:
             "user_id": str(user.id),
             "token": token
         }
-    
-    def login(self, email: str, password: str):
+
+    def login(self, email, password):
         user = self.user_repo.get_by_email(email)
 
         if not user:

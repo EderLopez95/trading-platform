@@ -4,3 +4,4 @@ passlib[bcrypt]
 python-jose[cryptography]
 grpcio
 grpcio-tools
+alembic==1.13.1
