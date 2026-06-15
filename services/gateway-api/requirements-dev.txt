@@ -1,8 +1,4 @@
 -r requirements.txt
 pytest
-black
-isort
-flake8
-mypy
 httpx
 python-dotenv

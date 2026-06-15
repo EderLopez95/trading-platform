@@ -33,3 +33,7 @@ dist/
 .coverage
 htmlcov/
 .pytest_cache/
+
+*.pem
+key.pem
+cert.pem
