@@ -16,3 +16,7 @@ class TokenInvalidException(AuthException):
 class EnvironmentVariableMissingException(AuthException):
     def __init__(self, var_name: str):
         super().__init__(f"Missing environment variable: {var_name}")
+
+class TLSMissingCertKeyException(AuthException):
+    def __init__(self, var_name: str):
+        super().__init__(f"Missing TLS configuration: {var_name}")

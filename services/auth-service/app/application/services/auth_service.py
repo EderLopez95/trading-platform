@@ -7,19 +7,21 @@ class AuthService:
     def __init__(self, user_repo: UserRepository):
         self.user_repo = user_repo
 
-    def register(self, email, password):
-        if self.user_repo.get_by_email(email):
+    def register(self, email: str, password: str):
+        existing = self.user_repo.get_by_email(email)
+        
+        if existing:
             raise UserAlreadyExistsException()
 
-        hashed = hash_password(password)
-        user = self.user_repo.create(email, hashed)
+        password_hash = hash_password(password)
+        user = self.user_repo.create(email, password_hash)
         token = create_token(str(user.id))
         return {
             "user_id": str(user.id),
             "token": token
         }
 
-    def login(self, email, password):
+    def login(self, email: str, password: str):
         user = self.user_repo.get_by_email(email)
 
         if not user:
@@ -33,3 +35,19 @@ class AuthService:
             "user_id": str(user.id),
             "token": token
         }
+
+    def validate_user(self, user_id: str):
+        user = self.user_repo.get_by_id(user_id)
+
+        if not user:
+            raise InvalidCredentialsException()
+
+        return user
+
+    def update_telegram(self, user_id: str, token: str, chat_id: str):
+        user = self.user_repo.get_by_id(user_id)
+
+        if not user:
+            raise InvalidCredentialsException()
+
+        return self.user_repo.update_telegram(user, token, chat_id)

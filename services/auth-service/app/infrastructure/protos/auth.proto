@@ -4,6 +4,7 @@ service AuthService {
   rpc Register (RegisterRequest) returns (AuthResponse);
   rpc Login (LoginRequest) returns (AuthResponse);
   rpc Validate (ValidateRequest) returns (UserResponse);
+  rpc UpdateTelegram(UpdateTelegramRequest) returns (UserResponse);
 }
 
 message RegisterRequest {
@@ -18,6 +19,12 @@ message LoginRequest {
 
 message ValidateRequest {
   string token = 1;
+}
+
+message UpdateTelegramRequest {
+  string user_id = 1;
+  string telegram_token = 2;
+  string telegram_chat_id = 3;
 }
 
 message AuthResponse {

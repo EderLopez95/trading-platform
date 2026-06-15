@@ -8,11 +8,14 @@
         - python -m venv .venv
         - .venv/Scripts/activate
         - python -m pip install -r requirements-dev.txt
-    - run postgresql instance inside docker
+    - create postgresql instance inside docker container
         - docker run --name postgres-trading -e POSTGRES_USER=trading -e POSTGRES_PASSWORD=trading -e POSTGRES_DB=trading_platform -p 5432:5432 -d postgres
+        - docker start postgres-trading
+        - docker stop postgres-trading
     - verify docker container and connect DB
         - docker ps
         - docker exec -it postgres-trading psql -U trading -d trading_platform
+        - CREATE DATABASE trading_platform;
         - docker rm -f postgres-trading (deletes container)
     - alembic process migration
         - alembic init migrations
@@ -22,6 +25,14 @@
         - python -m grpc_tools.protoc -I . --python_out=generated --grpc_python_out=generated auth.proto
     - run auth-service
         - python -m services.auth_service.main
+    - test certificates and save those in microservice root
+        - openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout key.pem -out cert.pem
+    - create test DB inside docker container
+        - CREATE DATABASE trading_platform_test;
+    - generate encrypted key, copy into .env.local
+        - python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+    - run tests
+        - pytest tests/unit, pytest tests/integration, pytest tests/grpc
         
 ## SQL commands for DB structure (do not run, alembic does migrations)
 

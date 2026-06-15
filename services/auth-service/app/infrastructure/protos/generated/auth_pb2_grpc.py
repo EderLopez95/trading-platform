@@ -3,7 +3,7 @@
 import grpc
 import warnings
 
-import app.infrastructure.protos.generated.auth_pb2 as auth__pb2
+from app.infrastructure.protos.generated import auth_pb2 as auth__pb2
 
 GRPC_GENERATED_VERSION = '1.81.1'
 GRPC_VERSION = grpc.__version__
@@ -49,6 +49,11 @@ class AuthServiceStub:
                 request_serializer=auth__pb2.ValidateRequest.SerializeToString,
                 response_deserializer=auth__pb2.UserResponse.FromString,
                 _registered_method=True)
+        self.UpdateTelegram = channel.unary_unary(
+                '/AuthService/UpdateTelegram',
+                request_serializer=auth__pb2.UpdateTelegramRequest.SerializeToString,
+                response_deserializer=auth__pb2.UserResponse.FromString,
+                _registered_method=True)
 
 
 class AuthServiceServicer:
@@ -72,6 +77,12 @@ class AuthServiceServicer:
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def UpdateTelegram(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_AuthServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -88,6 +99,11 @@ def add_AuthServiceServicer_to_server(servicer, server):
             'Validate': grpc.unary_unary_rpc_method_handler(
                     servicer.Validate,
                     request_deserializer=auth__pb2.ValidateRequest.FromString,
+                    response_serializer=auth__pb2.UserResponse.SerializeToString,
+            ),
+            'UpdateTelegram': grpc.unary_unary_rpc_method_handler(
+                    servicer.UpdateTelegram,
+                    request_deserializer=auth__pb2.UpdateTelegramRequest.FromString,
                     response_serializer=auth__pb2.UserResponse.SerializeToString,
             ),
     }
@@ -171,6 +187,33 @@ class AuthService:
             target,
             '/AuthService/Validate',
             auth__pb2.ValidateRequest.SerializeToString,
+            auth__pb2.UserResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def UpdateTelegram(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/AuthService/UpdateTelegram',
+            auth__pb2.UpdateTelegramRequest.SerializeToString,
             auth__pb2.UserResponse.FromString,
             options,
             channel_credentials,

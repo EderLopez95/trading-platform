@@ -2,6 +2,8 @@ from sqlalchemy.orm import Session
 from app.domain.repositories.user_repository import UserRepository
 from app.infrastructure.database.models.user_model import UserModel
 from app.domain.entities.user import User
+from datetime import datetime, timezone
+from app.infrastructure.security.encryption import encrypt
 import uuid
 
 class UserRepositoryImpl(UserRepository):
@@ -27,6 +29,23 @@ class UserRepositoryImpl(UserRepository):
             password_hash=password_hash
         )
         self.db.add(user)
+        self.db.commit()
+        self.db.refresh(user)
+        return user
+    
+    def update(self, user):
+        self.db.commit()
+        self.db.refresh(user)
+        return user
+        
+    def delete(self, user):
+        user.is_active = False
+        user.deleted_at = datetime.now(timezone.utc)
+        self.db.commit()
+
+    def update_telegram(self, user, token: str, chat_id: str):
+        user.telegram_token = encrypt(token)
+        user.telegram_chat_id = encrypt(chat_id)
         self.db.commit()
         self.db.refresh(user)
         return user
