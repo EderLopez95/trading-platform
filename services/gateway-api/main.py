@@ -2,7 +2,7 @@ from fastapi import FastAPI
 import uvicorn
 from app.api.routes.auth import router
 from app.core.errors.handlers import register_exception_handlers
-from app.config.settings import validate_settings, PORT, ENV, AUTH_SERVICE_HOST
+from app.config.settings import validate_settings, PORT, ENV
 from app.core.logging.middleware import logging_middleware
 from app.core.logging.config import setup_logging
 
@@ -16,7 +16,7 @@ register_exception_handlers(app)
 if __name__ == "__main__":
     uvicorn.run(
         "main:app",
-        host=AUTH_SERVICE_HOST,
+        host="0.0.0.0",
         port=PORT,
         reload=(ENV == "local"),
     )

@@ -1,0 +1,46 @@
+services:
+
+  postgres:
+    image: postgres:15
+    container_name: trading_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: trading
+      POSTGRES_PASSWORD: trading
+      POSTGRES_DB: trading_platform
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  auth_service:
+    build: ./services/auth-service
+    container_name: auth_service
+    depends_on:
+      - postgres
+    environment:
+      ENV: docker
+      GRPC_PORT: 5051
+      DATABASE_URL: postgresql://trading:trading@postgres:5432/trading_platform
+      JWT_SECRET: trading-secret-key
+      ENCRYPTION_KEY: 37iwsIZYfGJbWGWmldL4lXBAze-ESZpc7_ODD5AXzlc=
+    ports:
+      - "5051:5051"
+
+  gateway_api:
+    build: ./services/gateway-api
+    container_name: gateway_api
+    depends_on:
+      - auth_service
+    environment:
+      ENV: docker
+      AUTH_SERVICE_HOST: auth_service
+      AUTH_SERVICE_PORT: 5051
+      AUTH_SERVICE_SECURE: "false"
+      JWT_SECRET: trading-secret-key
+      PORT: 8080
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_data:

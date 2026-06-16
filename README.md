@@ -34,7 +34,7 @@
     - run auth-service
         - python -m main
         
-## gateway-api
+## gateway-api (microservice)
 
     - configure .env.local
     - test certificate and generate it in microservice root (only cert.pem)
@@ -46,6 +46,11 @@
         - pytest tests/unit, pytest tests/integration
     - run gateway-api
         - python -m main
+
+## run with docker
+    - docker-compose down -v
+    - docker-compose up --build
+    - docker exec -it trading_postgres psql -U trading -d trading_platform
 
 ## SQL commands for DB structure (do not run, alembic does migrations)
 
