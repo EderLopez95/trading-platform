@@ -20,8 +20,7 @@ def validate_settings():
         "ENV",
         "DATABASE_URL",
         "JWT_SECRET",
-        "ENCRYPTION_KEY",
-        "GRPC_PORT"
+        "ENCRYPTION_KEY"
     ]
 
     missing = [var for var in required if not os.getenv(var)]

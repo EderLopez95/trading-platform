@@ -23,17 +23,30 @@
         - alembic upgrade head
     - after create protos, generate grpcs in protos directory
         - python -m grpc_tools.protoc -I . --python_out=generated --grpc_python_out=generated auth.proto
-    - run auth-service
-        - python -m services.auth_service.main
     - test certificates and save those in microservice root
         - openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout key.pem -out cert.pem
     - create test DB inside docker container
         - CREATE DATABASE trading_platform_test;
     - generate encrypted key, copy into .env.local
         - python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
-    - run tests
+    - run tests (if running integration tests from gateway api, target database url to DB test)
         - pytest tests/unit, pytest tests/integration, pytest tests/grpc
+    - run auth-service
+        - python -m main
         
+## gateway-api
+
+    - configure .env.local
+    - test certificate and generate it in microservice root (only cert.pem)
+        - openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout key.pem -out cert.pem
+        - set AUTH_SERVICE_SECURE to true in .env.local
+    - copy auth.proto from auth_service to gateway-api and generate stubs
+        - python -m grpc_tools.protoc -I . --python_out=generated --grpc_python_out=generated auth.proto
+    - run tests
+        - pytest tests/unit, pytest tests/integration
+    - run gateway-api
+        - python -m main
+
 ## SQL commands for DB structure (do not run, alembic does migrations)
 
     - create schemas

@@ -6,4 +6,3 @@ flake8
 mypy
 types-passlib
 types-python-jose
-python-dotenv

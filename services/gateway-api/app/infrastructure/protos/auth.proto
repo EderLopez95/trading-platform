@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+service AuthService {
+  rpc Register (RegisterRequest) returns (AuthResponse);
+  rpc Login (LoginRequest) returns (AuthResponse);
+  rpc Validate (ValidateRequest) returns (UserResponse);
+  rpc UpdateTelegram(UpdateTelegramRequest) returns (UserResponse);
+}
+
+message RegisterRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message ValidateRequest {
+  string token = 1;
+}
+
+message UpdateTelegramRequest {
+  string user_id = 1;
+  string telegram_token = 2;
+  string telegram_chat_id = 3;
+}
+
+message AuthResponse {
+  string user_id = 1;
+  string token = 2;
+}
+
+message UserResponse {
+  string user_id = 1;
+  string email = 2;
+}
