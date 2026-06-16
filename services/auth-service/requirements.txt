@@ -7,3 +7,4 @@ grpcio
 grpcio-tools
 alembic==1.13.1
 python-dotenv
+python-json-logger

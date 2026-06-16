@@ -1,4 +1,4 @@
-import grpc
+import grpc, logging
 from concurrent import futures
 from app.infrastructure.protos.generated import auth_pb2, auth_pb2_grpc
 from app.application.services.auth_service import AuthService
@@ -9,8 +9,19 @@ from app.domain.exceptions import UserAlreadyExistsException, InvalidCredentials
 from app.config.settings import ENV, GRPC_PORT, GRPC_SSL_CERT, GRPC_SSL_KEY
 from app.domain.exceptions import TLSMissingCertKeyException
 
+logger = logging.getLogger("auth")
+
 class AuthServiceServicer(auth_pb2_grpc.AuthServiceServicer):
-    def Register(self, request, context):
+    def Register(self, request, context):    
+        request_id = _get_request_id(context)
+        logger.info(
+            "register_called",
+            extra={
+                "request_id": request_id,
+                "service": "auth",
+            }
+        )
+
         with SessionLocal() as db:
             repo = UserRepositoryImpl(db)
             service = AuthService(repo)
@@ -34,6 +45,15 @@ class AuthServiceServicer(auth_pb2_grpc.AuthServiceServicer):
                 return auth_pb2.AuthResponse()
             
     def Login(self, request, context):
+        request_id = _get_request_id(context)
+        logger.info(
+            "login_called",
+            extra={
+                "request_id": request_id,
+                "service": "auth",
+            }
+        )
+
         with SessionLocal() as db:
             repo = UserRepositoryImpl(db)
             service = AuthService(repo)
@@ -56,7 +76,16 @@ class AuthServiceServicer(auth_pb2_grpc.AuthServiceServicer):
                 context.set_details("Internal server error: " + str(e))
                 return auth_pb2.AuthResponse()
             
-    def Validate(self, request, context):
+    def Validate(self, request, context):    
+        request_id = _get_request_id(context)
+        logger.info(
+            "validate_called",
+            extra={
+                "request_id": request_id,
+                "service": "auth",
+            }
+        )
+
         try:
             payload = decode_token(request.token)
             user_id = payload["sub"]
@@ -80,6 +109,15 @@ class AuthServiceServicer(auth_pb2_grpc.AuthServiceServicer):
             return auth_pb2.UserResponse()
         
     def UpdateTelegram(self, request, context):
+        request_id = _get_request_id(context)
+        logger.info(
+            "update_telegram_called",
+            extra={
+                "request_id": request_id,
+                "service": "auth",
+            }
+        )
+
         with SessionLocal() as db:
             repo = UserRepositoryImpl(db)
             service = AuthService(repo)
@@ -134,3 +172,7 @@ def _add_secure_port(server, address):
         [(private_key, certificate_chain)]
     )
     server.add_secure_port(address, server_credentials)
+
+def _get_request_id(context):
+    metadata = dict(context.invocation_metadata())
+    return metadata.get("request-id")

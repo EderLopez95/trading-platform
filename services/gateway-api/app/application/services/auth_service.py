@@ -4,14 +4,14 @@ class AuthService:
     def __init__(self, auth_client: AuthPort):
         self.auth_client = auth_client
 
-    def register(self, email: str, password: str):
-        return self.auth_client.register(email, password)
+    def register(self, email: str, password: str, request_id=None):
+        return self.auth_client.register(email, password, request_id)
 
-    def login(self, email: str, password: str):
-        return self.auth_client.login(email, password)
+    def login(self, email: str, password: str, request_id=None):
+        return self.auth_client.login(email, password, request_id)
 
-    def validate(self, token: str):
-        return self.auth_client.validate(token)
+    def validate(self, token: str, request_id=None):
+        return self.auth_client.validate(token, request_id)
 
-    def update_telegram(self, user_id: str, token: str, chat_id: str):
-        return self.auth_client.update_telegram(user_id, token, chat_id)
+    def update_telegram(self, user_id: str, token: str, chat_id: str, request_id=None):
+        return self.auth_client.update_telegram(user_id, token, chat_id, request_id)
