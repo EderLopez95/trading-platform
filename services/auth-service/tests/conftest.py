@@ -1,6 +1,6 @@
 import os
 
-os.environ["DATABASE_URL"] = "postgresql://trading:trading@host.docker.internal:5432/trading_platform_test"
+os.environ["DATABASE_URL"] = "postgresql://trading:trading@postgres:5432/trading_platform_test"
 
 import pytest
 from unittest.mock import patch

@@ -12,12 +12,18 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U trading -d trading_platform"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      
   auth_service:
     build: ./services/auth-service
     container_name: auth_service
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     environment:
       ENV: docker
       GRPC_PORT: 5051
@@ -26,12 +32,18 @@ services:
       ENCRYPTION_KEY: 37iwsIZYfGJbWGWmldL4lXBAze-ESZpc7_ODD5AXzlc=
     ports:
       - "5051:5051"
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "5051"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   gateway_api:
     build: ./services/gateway-api
     container_name: gateway_api
     depends_on:
-      - auth_service
+      auth_service:
+        condition: service_healthy
     environment:
       ENV: docker
       AUTH_SERVICE_HOST: auth_service
@@ -41,6 +53,11 @@ services:
       PORT: 8080
     ports:
       - "8080:8080"
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "8080"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:

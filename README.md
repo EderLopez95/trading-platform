@@ -48,9 +48,14 @@
         - python -m main
 
 ## run with docker
+
     - docker-compose down -v
     - docker-compose up --build
     - docker exec -it trading_postgres psql -U trading -d trading_platform
+    - create test DB inside docker container
+        - CREATE DATABASE trading_platform_test;
+    - enter container
+        - docker exec -it auth_service bash
 
 ## SQL commands for DB structure (do not run, alembic does migrations)
 

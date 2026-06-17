@@ -1,16 +1,16 @@
 from app.application.services.auth_service import AuthService
 
 class DummyClient:
-    def register(self, email, password):
+    def register(self, email, password, request_id):
         return type("obj", (), {"user_id": "1", "token": "abc"})
 
-    def login(self, email, password):
+    def login(self, email, password, request_id):
         return type("obj", (), {"user_id": "1", "token": "abc"})
 
-    def validate(self, token):
+    def validate(self, token, request_id):
         return type("obj", (), {"user_id": "1", "email": "test@test.com"})
 
-    def update_telegram(self, user_id, token, chat_id):
+    def update_telegram(self, user_id, token, chat_id, request_id):
         return type("obj", (), {"user_id": user_id})
 
 def test_register():

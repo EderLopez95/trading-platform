@@ -1,13 +1,12 @@
-from fastapi import Header
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi import Depends
 from app.infrastructure.grpc.clients.auth_client import AuthClient
 from app.domain.exceptions import InvalidTokenException
 
-def get_current_user(authorization: str = Header(...)):
-    if not authorization.startswith("Bearer "):
-        raise InvalidTokenException("Invalid authorization header")
+security = HTTPBearer()
 
-    token = authorization.replace("Bearer ", "")
-
+def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    token = credentials.credentials
     try:
         client = AuthClient()
         user = client.validate(token)
