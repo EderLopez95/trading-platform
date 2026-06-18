@@ -15,7 +15,7 @@
     - verify docker container and connect DB
         - docker ps
         - docker exec -it postgres-trading psql -U trading -d trading_platform
-        - CREATE DATABASE trading_platform;
+        - CREATE DATABASE trading_platform; (if necessary)
         - docker rm -f postgres-trading (deletes container)
     - alembic process migration
         - alembic init migrations
@@ -57,6 +57,13 @@
     - enter container
         - docker exec -it auth_service bash
 
+## signal-service
+
+    - alembic process migration
+        - alembic init migrations
+        - alembic revision --autogenerate -m "create configurations and signals tables"
+        - alembic upgrade head
+
 ## SQL commands for DB structure (do not run, alembic does migrations)
 
     - create schemas
@@ -73,17 +80,17 @@
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             deleted_at TIMESTAMP NULL
           );
-        - CREATE TABLE signals.configs (
+        - CREATE TABLE signals.configurations (
             id UUID PRIMARY KEY,
             user_id UUID NOT NULL,
             symbols JSONB NOT NULL,
             strategies JSONB NOT NULL,
             params JSONB,
-            timeframes JSONB NOT NULL,
+            trend_timeframe VARCHAR(10) NOT NULL,
+            context_timeframe VARCHAR(10) NULL,
+            entry_timeframe VARCHAR(10) NOT NULL,
             enabled BOOLEAN DEFAULT TRUE,
-            execution_interval INTEGER DEFAULT 60,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
           );
         - CREATE TABLE signals.signals (
             id UUID PRIMARY KEY,
@@ -91,24 +98,18 @@
             symbol TEXT NOT NULL,
             strategy TEXT NOT NULL,
             signal TEXT NOT NULL,
-            timeframes TEXT NOT NULL,
+            trend_timeframe VARCHAR(10) NOT NULL,
+            context_timeframe VARCHAR(10) NULL,
+            entry_timeframe VARCHAR(10) NOT NULL,
             price NUMERIC,
-            time TIMESTAMP NOT NULL,
+            signal_time TIMESTAMP NOT NULL,
             candle_time TIMESTAMP NOT NULL,
             dedup_key TEXT NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE SET NULL
-          );
-        - CREATE TABLE signals.logs (
-            id UUID PRIMARY KEY,
-            user_id UUID NOT NULL,
-            level TEXT NOT NULL,
-            message TEXT NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
           );
     - create indexes
         - CREATE INDEX idx_signals_user_id ON signals.signals(user_id);
-        - CREATE INDEX idx_signals_user_time ON signals.signals(user_id, time DESC);
+        - CREATE INDEX idx_signals_user_time ON signals.signals(user_id, signal_time DESC);
         - CREATE INDEX idx_signals_symbol ON signals.signals(symbol);
-        - CREATE INDEX idx_signals_time ON signals.signals(time);
+        - CREATE INDEX idx_signals_time ON signals.signals(signal_time);
         - CREATE UNIQUE INDEX uq_signals_dedup ON signals.signals(user_id, dedup_key, candle_time);

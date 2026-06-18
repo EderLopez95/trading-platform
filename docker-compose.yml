@@ -38,6 +38,24 @@ services:
       timeout: 5s
       retries: 5
 
+  signal_service:
+    build: ./services/signal-service
+    container_name: signal_service
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ENV: docker
+      GRPC_PORT: 5052
+      DATABASE_URL: postgresql://trading:trading@postgres:5432/trading_platform
+    ports:
+      - "5052:5052"
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "5052"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   gateway_api:
     build: ./services/gateway-api
     container_name: gateway_api
