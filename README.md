@@ -23,8 +23,6 @@
         - alembic upgrade head
     - after create protos, generate grpcs in protos directory
         - python -m grpc_tools.protoc -I . --python_out=generated --grpc_python_out=generated auth.proto
-    - test certificates and save those in microservice root
-        - openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout key.pem -out cert.pem
     - create test DB inside docker container
         - CREATE DATABASE trading_platform_test;
     - generate encrypted key, copy into .env.local
@@ -37,8 +35,13 @@
 ## gateway-api (microservice)
 
     - configure .env.local
-    - test certificate and generate it in microservice root (only cert.pem)
-        - openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout key.pem -out cert.pem
+    - test certificate and generate it in microservice root
+        - openssl genrsa -out ca.key 4096
+        - openssl req -x509 -new -nodes -key ca.key -sha256 -days 365 -out cert.pem -subj "//CN=Local-CA"
+        - create msauth folder
+        - openssl req -new -nodes -newkey rsa:2048 -keyout msauth/key.pem -out msauth/ms1.csr -subj "//CN=msauth"
+        - openssl x509 -req -in msauth/ms1.csr -CA cert.pem -CAkey ca.key -CAcreateserial -out msauth/cert.pem -days 365 -sha256
+        - keep only ca.key and cert.pem (move files from msauth to MS root)
         - set AUTH_SERVICE_SECURE to true in .env.local
     - copy auth.proto from auth_service to gateway-api and generate stubs
         - python -m grpc_tools.protoc -I . --python_out=generated --grpc_python_out=generated auth.proto
