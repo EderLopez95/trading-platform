@@ -60,12 +60,27 @@
     - enter container
         - docker exec -it auth_service bash
 
-## signal-service
+## signal-service (microservice)
 
     - alembic process migration
         - alembic init migrations
         - alembic revision --autogenerate -m "create configurations and signals tables"
         - alembic upgrade head
+
+## web (React + TypeScript + Vite)
+
+    - install dependencies
+        - npm config set strict-ssl false / true (avoid ssl verification)
+        - npm create vite@latest web
+        - npm install
+        - npm install react-router-dom axios
+        - npm install @tanstack/react-query
+        - npm install react-hook-form
+        - npm install zod
+        - npm install @hookform/resolvers
+        - npm install uuid
+        - npm install react-hot-toast
+        - npm install --save-dev @types/react
 
 ## SQL commands for DB structure (do not run, alembic does migrations)
 
