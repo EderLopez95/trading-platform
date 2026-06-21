@@ -1,17 +1,24 @@
 import { createBrowserRouter } from "react-router-dom";
-import LoginPage from "../../modules/auth/pages/loginPage";
-import RegisterPage from "../../modules/auth/pages/registerPage";
-import DashboardPage from "../../shared/components/dashboardPage";
+import LoginPage from "@/modules/auth/pages/LoginPage";
+import RegisterPage from "@/modules/auth/pages/RegisterPage";
+import DashboardPage from "@/modules/dashboard/pages/DashboardPage";
+import ProtectedRoute from "@/shared/components/ProtectedRoute";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <DashboardPage />,
+    element: (
+      <ProtectedRoute>
+        <DashboardPage />
+      </ProtectedRoute>
+    ),
   },
+
   {
     path: "/login",
     element: <LoginPage />,
   },
+
   {
     path: "/register",
     element: <RegisterPage />,

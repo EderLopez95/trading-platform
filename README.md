@@ -81,6 +81,7 @@
         - npm install uuid
         - npm install react-hot-toast
         - npm install --save-dev @types/react
+        - npm install -D sass-embedded
 
 ## SQL commands for DB structure (do not run, alembic does migrations)
 

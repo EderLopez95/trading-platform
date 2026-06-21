@@ -1,3 +1,38 @@
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import AuthLayout from "@/shared/layouts/AuthLayout";
+import RegisterForm from "../components/RegisterForm";
+import { authApi } from "../api/authApi";
+import { type RegisterFormData } from "../services/registerSchema";
+
 export default function RegisterPage() {
-  return <h1>Register</h1>;
+  const navigate = useNavigate();
+
+  const handleRegister = async (
+    data: RegisterFormData
+  ) => {
+    try {
+      await authApi.register({
+        email: data.email,
+        password: data.password,
+      });
+      toast.success(
+        "User created successfully"
+      );
+      navigate("/login");
+    } catch (error) {
+      console.error(error);
+      toast.error(
+        "Failed to create user"
+      );
+    }
+  };
+
+  return (
+    <AuthLayout title="Register">
+      <RegisterForm
+        onSubmit={handleRegister}
+      />
+    </AuthLayout>
+  );
 }

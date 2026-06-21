@@ -9,7 +9,7 @@ export interface RegisterRequest {
 }
 
 export interface LoginResponse {
-  access_token: string;
+  token: string;
 }
 
 export interface User {
