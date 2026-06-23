@@ -1,0 +1,10 @@
+sqlalchemy==2.0.30
+psycopg2-binary==2.9.9
+grpcio
+grpcio-tools
+alembic==1.13.1
+python-dotenv
+python-json-logger
+MetaTrader5
+pandas==2.2.2
+numpy==1.26.4

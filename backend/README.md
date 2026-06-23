@@ -1,11 +1,10 @@
-# Trading Integrated API
+# Trading Platform API PENDING
 
 ## Dependencias
 - python 3.11.9
 - MetaTrader5
 - pandas==2.2.2
 - numpy==1.26.4
-- plyer==2.1.0
 - uvicorn[standard]==0.29.0
 - fastapi==0.110.0
 - requests

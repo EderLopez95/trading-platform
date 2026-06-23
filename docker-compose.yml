@@ -1,0 +1,105 @@
+services:
+
+  postgres:
+    image: postgres:15
+    container_name: trading_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: trading
+      POSTGRES_PASSWORD: trading
+      POSTGRES_DB: trading_platform
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U trading -d trading_platform"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      
+  auth_service:
+    build: ./services/auth-service
+    container_name: auth_service
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ENV: docker
+      DATABASE_URL: postgresql://trading:trading@postgres:5432/trading_platform
+      JWT_SECRET: trading-secret-key
+      ENCRYPTION_KEY: 37iwsIZYfGJbWGWmldL4lXBAze-ESZpc7_ODD5AXzlc=
+      GRPC_PORT: 5051
+      GRPC_SSL_CERT: cert.pem
+      GRPC_SSL_KEY: key.pem
+    ports:
+      - "5051:5051"
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "5051"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  signal_service:
+    build: ./services/signal-service
+    container_name: signal_service
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ENV: docker
+      DATABASE_URL: postgresql://trading:trading@postgres:5432/trading_platform
+      JWT_SECRET: trading-secret-key
+      ENCRYPTION_KEY: 37iwsIZYfGJbWGWmldL4lXBAze-ESZpc7_ODD5AXzlc=
+      GRPC_PORT: 5052
+      GRPC_SSL_CERT: cert.pem
+      GRPC_SSL_KEY: key.pem
+    ports:
+      - "5052:5052"
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "5052"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      
+  gateway_api:
+    build: ./services/gateway-api
+    container_name: gateway_api
+    depends_on:
+      auth_service:
+        condition: service_healthy
+    environment:
+      ENV: docker
+      PORT: 8080
+      AUTH_SERVICE_HOST: auth_service
+      AUTH_SERVICE_PORT: 5051
+      AUTH_SERVICE_SECURE: "false"
+      AUTH_SERVICE_CERT: cert.pem
+      JWT_SECRET: trading-secret-key
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/docs')"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: ./web
+    container_name: web
+    depends_on:
+      gateway_api:
+        condition: service_healthy
+    environment:
+      HOST: 0.0.0.0
+      VITE_API_URL: http://localhost:8080
+    ports:
+      - "3002:80"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:

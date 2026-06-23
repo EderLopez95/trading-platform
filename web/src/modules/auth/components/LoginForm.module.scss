@@ -1,0 +1,35 @@
+@use '../../../styles/variables' as *;
+
+.field {
+    position: relative;
+}
+
+.error {
+    position: absolute;
+    bottom: 0;
+    left: 5px;
+    color: $text-error-color;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+input {
+    margin-bottom: 20px;
+}
+
+button {
+    margin-top: 12px;
+}
+
+.linkWrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 32px;
+
+    p {
+        text-align: center;
+    }
+}

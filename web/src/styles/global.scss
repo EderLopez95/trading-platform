@@ -1,0 +1,94 @@
+@use 'variables' as *;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  color: $text-secondary-color;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+input {
+  font-family: inherit;
+  border: 1px solid $input-border-color;
+  border-radius: $button-border-radius;
+  padding: 15px 8px;
+  outline: none;
+  width: 100%;
+  background-color: $input-background-color;
+  color: $text-primary-color;
+
+  &:hover, &:focus {
+    border-color: $input-border-hover-color;
+  }
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px $input-background-color inset;
+  -webkit-text-fill-color: $text-primary-color;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  padding: 15px 0;
+  background-color: $button-primary-color;
+  color: $text-primary-color;
+  border-radius: $button-border-radius;
+  outline: 1px solid $input-border-color;
+  border: none;
+  width: 100%;
+  text-align: center;
+
+  &:hover, &:focus {
+    background-color: $button-primary-hover-color;
+    outline: 1px solid $button-primary-color;
+  }
+
+  &:active {
+    background-color: $button-primary-active-color;
+  }
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+
+  &:hover, &:focus {
+    color: $button-primary-hover-color;
+  }
+
+  &:active {
+    color: $button-primary-active-color;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  color: $text-primary-color;
+}
+
+h1 {
+  font-size: 32px;
+}
+
+h2 {
+  font-size: 26px;
+}
+
+.card {
+  background-color: $card-color;
+  color: $text-primary-color;
+  border-radius: $card-border-radius;
+  box-shadow: $card-box-shadow;
+}

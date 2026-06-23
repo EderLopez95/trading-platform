@@ -1,0 +1,29 @@
+@use '../../styles/variables' as *;
+
+.container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 32px;
+  background-color: $background-color;
+  padding: 32px;
+
+  .header {
+    color: $text-primary-color;
+  }
+}
+
+.card {
+  width: 100%;
+  min-width: 240px;
+  max-width: 400px;
+  padding: 32px;
+  text-align: left;
+
+  @include respond-to("tablet") {
+    width: 400px;
+  }
+}
