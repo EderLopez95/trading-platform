@@ -18,3 +18,8 @@ class AuthResponse(BaseModel):
 
 class UserResponse(BaseModel):
     user_id: str
+
+class CurrentUserResponse(BaseModel):
+    id: str
+    email: str
+    is_active: bool

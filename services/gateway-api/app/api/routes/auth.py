@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Request
 from app.infrastructure.grpc.clients.auth_client import AuthClient
 from app.application.services.auth_service import AuthService
 from app.api.dependencies.auth import get_current_user
-from app.api.schemas.auth import RegisterRequest, LoginRequest, UpdateTelegramRequest, AuthResponse, UserResponse
+from app.api.schemas.auth import RegisterRequest, LoginRequest, UpdateTelegramRequest, AuthResponse, UserResponse, CurrentUserResponse
 
 router = APIRouter()
 
@@ -51,3 +51,11 @@ def update_telegram(
         request_id
     )
     return UserResponse(user_id=res.user_id)
+
+@router.get("/me", response_model=CurrentUserResponse)
+def me(user=Depends(get_current_user)):
+    return CurrentUserResponse(
+        id=user.user_id,
+        email=user.email,
+        is_active=user.is_active
+    )

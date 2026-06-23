@@ -22,11 +22,25 @@ apiClient.interceptors.request.use((config) => {
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    const url = error.config?.url ?? "";
+    const authEndpoints = [
+      "/auth/login",
+      "/auth/register",
+    ];
+
+    const shouldIgnore =
+      authEndpoints.some(endpoint =>
+        url.includes(endpoint)
+      );
+
+    if (
+      error.response?.status === 401 &&
+      !shouldIgnore
+    ) {
       localStorage.removeItem("token");
       window.location.href = "/login";
     }
-    
+
     return Promise.reject(error);
   }
 );

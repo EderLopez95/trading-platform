@@ -101,7 +101,8 @@ class AuthServiceServicer(auth_pb2_grpc.AuthServiceServicer):
 
                 return auth_pb2.UserResponse(
                     user_id=str(user.id),
-                    email=user.email
+                    email=user.email,
+                    is_active=user.is_active
                 )
         except Exception as e:
             context.set_code(grpc.StatusCode.UNAUTHENTICATED)
@@ -130,7 +131,8 @@ class AuthServiceServicer(auth_pb2_grpc.AuthServiceServicer):
                 )
                 return auth_pb2.UserResponse(
                     user_id=str(user.id),
-                    email=user.email
+                    email=user.email,
+                    is_active=user.is_active
                 )
             except InvalidCredentialsException as e:
                 context.set_code(grpc.StatusCode.UNAUTHENTICATED)

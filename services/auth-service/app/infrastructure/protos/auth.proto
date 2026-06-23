@@ -5,7 +5,6 @@ service AuthService {
   rpc Login (LoginRequest) returns (AuthResponse);
   rpc Validate (ValidateRequest) returns (UserResponse);
   rpc UpdateTelegram(UpdateTelegramRequest) returns (UserResponse);
-  rpc GetMe(GetMeRequest) returns (GetMeResponse);
 }
 
 message RegisterRequest {
@@ -28,10 +27,6 @@ message UpdateTelegramRequest {
   string telegram_chat_id = 3;
 }
 
-message GetMeRequest {
-  string user_id = 1;
-}
-
 message AuthResponse {
   string user_id = 1;
   string token = 2;
@@ -39,11 +34,6 @@ message AuthResponse {
 
 message UserResponse {
   string user_id = 1;
-  string email = 2;
-}
-
-message GetMeResponse {
-  string id = 1;
   string email = 2;
   bool is_active = 3;
 }
