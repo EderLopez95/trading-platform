@@ -11,12 +11,14 @@ class UserRepositoryImpl(UserRepository):
         self.db = db
 
     def get_by_id(self, user_id: str):
+
         return self.db.query(UserModel).filter(
             UserModel.id == user_id,
             UserModel.is_active == True
         ).first()
 
     def get_by_email(self, email: str):
+
         return self.db.query(UserModel).filter(
             UserModel.email == email,
             UserModel.is_active == True
@@ -31,11 +33,13 @@ class UserRepositoryImpl(UserRepository):
         self.db.add(user)
         self.db.commit()
         self.db.refresh(user)
+
         return user
     
     def update(self, user):
         self.db.commit()
         self.db.refresh(user)
+
         return user
         
     def delete(self, user):
@@ -48,9 +52,11 @@ class UserRepositoryImpl(UserRepository):
         user.telegram_chat_id = encrypt(chat_id)
         self.db.commit()
         self.db.refresh(user)
+
         return user
     
     def _to_domain(self, model: UserModel) -> User:
+        
         return User(
             id=model.id,
             email=model.email,

@@ -9,12 +9,14 @@ class FakeUserRepository:
         user = self.users.get(email)
         if user and user.is_active:
             return user
+        
         return None
 
     def get_by_id(self, user_id: str):
         for user in self.users.values():
             if str(user.id) == str(user_id) and user.is_active:
                 return user
+            
         return None
 
     def create(self, email: str, password_hash: str):
@@ -25,10 +27,12 @@ class FakeUserRepository:
             is_active=True
         )
         self.users[email] = user
+
         return user
 
     def update(self, user: User):
         self.users[user.email] = user
+        
         return user
 
     def delete(self, user: User):

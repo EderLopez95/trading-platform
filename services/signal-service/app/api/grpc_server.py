@@ -2,15 +2,17 @@ import grpc
 from concurrent import futures
 from app.config.settings import ENV, GRPC_PORT, GRPC_SSL_CERT, GRPC_SSL_KEY
 from app.domain.exceptions.exceptions import TLSMissingCertKeyException
+from app.infrastructure.protos.generated import signals_pb2_grpc
+from app.api.signals_service import SignalsGrpcService
 
 def create_server():
     server = grpc.server(
         futures.ThreadPoolExecutor(max_workers=10)
     )
-    # auth_pb2_grpc.add_AuthServiceServicer_to_server(
-    #     AuthServiceServicer(),
-    #     server
-    # )
+    signals_pb2_grpc.add_SignalsServiceServicer_to_server(
+        SignalsGrpcService(),
+        server
+    )
     address = f"[::]:{GRPC_PORT}"
     
     if ENV == "prod":
@@ -19,6 +21,7 @@ def create_server():
     else:
         server.add_insecure_port(address)
         print(f"gRPC Insecure server running on {address}")
+
     return server
 
 def _add_secure_port(server, address):
@@ -34,7 +37,3 @@ def _add_secure_port(server, address):
         [(private_key, certificate_chain)]
     )
     server.add_secure_port(address, server_credentials)
-
-def _get_request_id(context):
-    metadata = dict(context.invocation_metadata())
-    return metadata.get("request-id")

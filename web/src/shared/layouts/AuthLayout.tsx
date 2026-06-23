@@ -10,6 +10,7 @@ export default function AuthLayout({
   title,
   children,
 }: Props) {
+  
   return (
     <div className={styles.container}>
       <div className={styles.header}>

@@ -10,6 +10,7 @@ type Props = {
 export default function DashboardLayout({
   children,
 }: Props) {
+  
   return (
     <>
       <Navbar />

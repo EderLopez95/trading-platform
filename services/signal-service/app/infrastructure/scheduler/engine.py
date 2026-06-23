@@ -12,13 +12,7 @@ class SignalEngine:
             for config in self.registry.all():                
                 if not config.enabled:
                     continue
-                if should_execute(
-                    config,
-                    now,
-                ):
-                    print(
-                        "EXECUTING",
-                        config.id,
-                    )
+                if should_execute(config, now):
+                    print("EXECUTING", config.id)
 
             await asyncio.sleep(1)

@@ -27,6 +27,7 @@ export default function LoginPage() {
       toast.error("Invalid credentials");
     }
   };
+  
   return (
     <AuthLayout title="Sign In">
       <LoginForm onSubmit={handleLogin} />

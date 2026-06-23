@@ -7,6 +7,7 @@ from app.api.schemas.auth import RegisterRequest, LoginRequest, UpdateTelegramRe
 router = APIRouter()
 
 def get_service():
+
     return AuthService(AuthClient())
 
 @router.post("/register", response_model=AuthResponse)
@@ -17,6 +18,7 @@ def register(
 ):
     request_id = request.state.request_id
     res = service.register(data.email, data.password, request_id)
+
     return AuthResponse(
         user_id=res.user_id,
         token=res.token
@@ -30,6 +32,7 @@ def login(
 ):
     request_id = request.state.request_id
     res = service.login(data.email, data.password, request_id)
+
     return AuthResponse(
         user_id=res.user_id,
         token=res.token
@@ -50,10 +53,12 @@ def update_telegram(
         data.telegram_chat_id,
         request_id
     )
+
     return UserResponse(user_id=res.user_id)
 
 @router.get("/me", response_model=CurrentUserResponse)
 def me(user=Depends(get_current_user)):
+    
     return CurrentUserResponse(
         id=user.user_id,
         email=user.email,

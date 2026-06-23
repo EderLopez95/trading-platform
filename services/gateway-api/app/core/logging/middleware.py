@@ -9,6 +9,7 @@ async def logging_middleware(request: Request, call_next):
     # avoid swagger docs logging
     if request.url.path == "/docs":
         return await call_next(request)
+    
     request_id = str(uuid.uuid4())
     request.state.request_id = request_id
     start_time = time.time()
@@ -31,7 +32,9 @@ async def logging_middleware(request: Request, call_next):
             },
         )
         response.headers["X-Request-ID"] = request_id
+
         return response
+    
     except Exception as e:
         duration_ms = (time.time() - start_time) * 1000
         user_id = getattr(request.state, "user_id", None)

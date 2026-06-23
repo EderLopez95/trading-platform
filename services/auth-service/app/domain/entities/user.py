@@ -13,3 +13,8 @@ class User:
     is_active: bool = True
     created_at: Optional[datetime] = None
     deleted_at: Optional[datetime] = None
+
+@dataclass
+class UserResponse:
+    user_id: str
+    token: str

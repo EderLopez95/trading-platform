@@ -9,6 +9,7 @@ export default function StatCard({
   title,
   value,
 }: Props) {
+  
   return (
     <div className={styles.card}>
       <span>{title}</span>

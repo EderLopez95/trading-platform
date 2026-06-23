@@ -66,6 +66,8 @@
         - alembic init migrations
         - alembic revision --autogenerate -m "create configurations and signals tables"
         - alembic upgrade head
+    - after create protos, generate grpcs in protos directory
+        - python -m grpc_tools.protoc -I . --python_out=generated --grpc_python_out=generated signals.proto
 
 ## web (React + TypeScript + Vite)
 

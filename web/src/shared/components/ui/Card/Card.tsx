@@ -7,6 +7,7 @@ type Props = {
 export default function Card({
   children,
 }: Props) {
+  
   return (
     <div>
       {children}

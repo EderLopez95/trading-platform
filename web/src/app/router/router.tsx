@@ -17,17 +17,14 @@ export const router = createBrowserRouter([
       </ProtectedRoute>
     ),
   },
-
   {
     path: "/login",
     element: <LoginPage />,
   },
-
   {
     path: "/register",
     element: <RegisterPage />,
   },
-
   {
     path: "/signals",
     element: (
@@ -36,7 +33,6 @@ export const router = createBrowserRouter([
       </ProtectedRoute>
     ),
   },
-
   {
     path: "/configurations",
     element: (
@@ -45,7 +41,6 @@ export const router = createBrowserRouter([
       </ProtectedRoute>
     ),
   },
-  
   {
     path: "/profile",
     element: (
@@ -54,7 +49,6 @@ export const router = createBrowserRouter([
       </ProtectedRoute>
     ),
   },
-
   {
     path: "/configurations/new",
     element: (

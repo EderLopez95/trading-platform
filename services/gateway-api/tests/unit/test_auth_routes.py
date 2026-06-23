@@ -4,18 +4,22 @@ from main import app
 import pytest
 
 class DummyService:
-    def register(self, email, password, request_id):
+    def register(self, email, password, request_id: str | None = None):
+
         return type("obj", (), {"user_id": "1", "token": "abc"})
 
-    def login(self, email, password, request_id):
+    def login(self, email, password, request_id: str | None = None):
+        
         return type("obj", (), {"user_id": "1", "token": "abc"})
 
 def override_get_service():
+
     return DummyService()
 
 @app.middleware("http")
 async def add_request_id_middleware(request, call_next):
     request.state.request_id = "test-request-id"
+
     return await call_next(request)
 
 @pytest.fixture

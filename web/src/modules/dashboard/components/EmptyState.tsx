@@ -7,6 +7,7 @@ export default function EmptyState({
   title,
   description,
 }: Props) {
+  
   return (
     <div>
       <span>{title}</span>

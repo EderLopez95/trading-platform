@@ -27,30 +27,35 @@ class AuthClient:
                 auth_pb2.RegisterRequest(email=email, password=password),
                 metadata=metadata
             )
+        
         except grpc.RpcError as e:
             map_grpc_error(e)
 
-    def login(self, email: str, password: str, request_id=None):
+    def login(self, email: str, password: str, request_id: str | None = None):
         try:
             metadata = [("request-id", request_id)] if request_id else []
+
             return self.stub.Login(
                 auth_pb2.LoginRequest(email=email, password=password),
                 metadata=metadata
             )
+        
         except grpc.RpcError as e:
             map_grpc_error(e)
 
-    def validate(self, token: str, request_id=None):
+    def validate(self, token: str, request_id: str | None = None):
         try:
             metadata = [("request-id", request_id)] if request_id else []
+
             return self.stub.Validate(
                 auth_pb2.ValidateRequest(token=token),
                 metadata=metadata
             )
+        
         except grpc.RpcError as e:
             map_grpc_error(e)
 
-    def update_telegram(self, user_id: str, token: str, chat_id: str, request_id=None):
+    def update_telegram(self, user_id: str, token: str, chat_id: str, request_id: str | None = None):
         try:
             metadata = [("request-id", request_id)] if request_id else []
             
@@ -65,5 +70,6 @@ class AuthClient:
                 ),
                 metadata=metadata
             )
+        
         except grpc.RpcError as e:
             map_grpc_error(e)

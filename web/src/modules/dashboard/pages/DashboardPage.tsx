@@ -4,6 +4,7 @@ import EmptyState from "../components/EmptyState";
 import styles from "./DashboardPage.module.scss";
 
 export default function DashboardPage() {
+  
   return (
     <DashboardLayout>
       <h1>Dashboard</h1>

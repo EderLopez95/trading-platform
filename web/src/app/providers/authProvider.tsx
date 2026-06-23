@@ -31,6 +31,7 @@ export function AuthProvider({ children }: Props) {
 
     if (!token) {
       setIsLoading(false);
+      
       return;
     }
 

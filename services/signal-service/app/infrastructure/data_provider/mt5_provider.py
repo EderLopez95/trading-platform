@@ -25,6 +25,7 @@ class MT5Provider:
             raise Exception(f"No data for {symbol}")
 
         df = pd.DataFrame(rates)
+
         return df
 
     def search_symbols(self, query: str = ""):
@@ -44,4 +45,5 @@ class MT5Provider:
             result,
             key=lambda x: (not x.startswith(query), len(x))
         )
+        
         return result[:20]

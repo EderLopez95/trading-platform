@@ -2,7 +2,8 @@ from app.api.dependencies.auth import get_current_user
 from app.api.routes.auth import get_service
 
 class FakeService:
-    def update_telegram(self, user_id, token, chat_id, request_id):
+    def update_telegram(self, user_id, token, chat_id, request_id: str | None = None):
+
         return type("obj", (), {"user_id": user_id})
     
 def test_update_telegram(client):

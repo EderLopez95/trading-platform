@@ -9,8 +9,8 @@ class StrategyNotFoundError(DomainError):
     def __init__(self, message: str = "Strategy not found"):
         super().__init__(message)
 
-class ConfigNotFoundError(DomainError):
-    def __init__(self, message: str = "Config not found"):
+class ConfigurationNotFoundError(DomainError):
+    def __init__(self, message: str = "Configuration not found"):
         super().__init__(message)
 
 class BotAlreadyRunningError(DomainError):
