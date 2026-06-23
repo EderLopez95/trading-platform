@@ -8,7 +8,7 @@
     position: absolute;
     bottom: 0;
     left: 5px;
-    color: $text-error;
+    color: $text-error-color;
 }
 
 label {
@@ -24,7 +24,7 @@ button {
     margin-top: 12px;
 }
 
-.register {
+.linkWrapper {
     display: flex;
     justify-content: center;
     margin-top: 32px;

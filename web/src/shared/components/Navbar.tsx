@@ -3,7 +3,7 @@ import { useAuth } from "@/app/providers/AuthProvider";
 
 export default function Navbar() {
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
 
   const handleLogout = () => {
     logout();
@@ -12,10 +12,17 @@ export default function Navbar() {
 
   return (
     <header>
-      <h2>Trading Platform</h2>
-      <button onClick={handleLogout}>
-        Logout
-      </button>
+      <div>
+        Trading Platform
+      </div>
+      <div>
+        <span>
+          {user?.email}
+        </span>
+        <button onClick={handleLogout}>
+          Logout
+        </button>
+      </div>
     </header>
   );
 }

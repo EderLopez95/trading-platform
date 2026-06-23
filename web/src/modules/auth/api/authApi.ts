@@ -4,6 +4,7 @@ import {
   type LoginResponse,
   type RegisterRequest
 } from "../types/auth.types";
+import { type User } from "../types/auth.types";
 
 export const authApi = {
   login: async (data: LoginRequest) => {
@@ -11,6 +12,7 @@ export const authApi = {
       "/auth/login",
       data
     );
+
     return response.data;
   },
 
@@ -19,6 +21,13 @@ export const authApi = {
       "/auth/register",
       data
     );
+
+    return response.data;
+  },
+
+  getMe: async () => {
+    const response = await apiClient.get<User>("/auth/me");
+
     return response.data;
   },
 };

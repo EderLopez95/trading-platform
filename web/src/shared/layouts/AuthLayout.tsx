@@ -12,8 +12,12 @@ export default function AuthLayout({
 }: Props) {
   return (
     <div className={styles.container}>
+      <div className={styles.header}>
+        <h1>Welcome to Trading Platform!</h1>
+        <p>{title === "Sign In" ? "Please log in to continue" : "Please sign up to continue"}</p>
+      </div>
       <div className={`card ${styles.card}`}>
-        <h1>{title}</h1>
+        <h2>{title}</h2>
         {children}
       </div>
     </div>

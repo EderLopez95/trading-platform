@@ -6,11 +6,11 @@ import {
 } from "../services/registerSchema";
 import styles from "./LoginForm.module.scss";
 import { Link } from 'react-router-dom';
+import Input from "@/shared/components/ui/Input/Input";
+import Button from "@/shared/components/ui/Button/Button";
 
 type Props = {
-  onSubmit: (
-    data: RegisterFormData
-  ) => Promise<void>;
+  onSubmit: (data: RegisterFormData) => Promise<void>;
 };
 
 export default function RegisterForm({
@@ -32,7 +32,7 @@ export default function RegisterForm({
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className={styles.field}>
           <label>Email</label>
-          <input
+          <Input
             autoComplete="email"
             {...register("email")}
           />
@@ -42,7 +42,7 @@ export default function RegisterForm({
         </div>
         <div className={styles.field}>
           <label>Password</label>
-          <input
+          <Input
             type="password"
             autoComplete="new-password"
             {...register("password")}
@@ -53,7 +53,7 @@ export default function RegisterForm({
         </div>
         <div className={styles.field}>
           <label>Confirm Password</label>
-          <input
+          <Input
             type="password"
             autoComplete="new-password"
             {...register("confirmPassword")}
@@ -62,14 +62,14 @@ export default function RegisterForm({
             {errors.confirmPassword?.message}
           </p>
         </div>
-        <button
+        <Button
           type="submit"
           disabled={isSubmitting}
         >
           {isSubmitting ? "Registering..." : "Register"}
-        </button>
+        </Button>
       </form>
-      <div className={styles.register}>
+      <div className={styles.linkWrapper}>
         <p>Already have an account? <Link to="/login">Login here</Link></p>
       </div>
     </>

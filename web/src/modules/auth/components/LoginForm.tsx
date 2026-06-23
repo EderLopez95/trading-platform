@@ -6,11 +6,11 @@ import {
 } from "../services/loginSchema";
 import styles from "./LoginForm.module.scss";
 import { Link } from 'react-router-dom';
+import Input from "@/shared/components/ui/Input/Input";
+import Button from "@/shared/components/ui/Button/Button";
 
 type Props = {
-  onSubmit: (
-    data: LoginFormData
-  ) => Promise<void>;
+  onSubmit: (data: LoginFormData) => Promise<void>;
 };
 
 export default function LoginForm({
@@ -32,7 +32,7 @@ export default function LoginForm({
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className={styles.field}>
           <label>Email</label>
-          <input
+          <Input
             type="email"
             autoComplete="email"
             {...register("email")}
@@ -43,7 +43,7 @@ export default function LoginForm({
         </div>
         <div className={styles.field}>
           <label>Password</label>
-          <input
+          <Input
             type="password"
             autoComplete="current-password"
             {...register("password")}
@@ -52,16 +52,14 @@ export default function LoginForm({
             {errors.password?.message}
           </p>
         </div>
-        <button
+        <Button
           type="submit"
           disabled={isSubmitting}
         >
-          {isSubmitting
-            ? "Logging in..."
-            : "Login"}
-        </button>
+          {isSubmitting ? "Logging in..." : "Login"}
+        </Button>
       </form>
-      <div className={styles.register}>
+      <div className={styles.linkWrapper}>
         <p>Don't have an account? <Link to="/register">Register here</Link></p>
       </div>
     </>

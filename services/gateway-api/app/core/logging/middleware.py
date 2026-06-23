@@ -6,6 +6,9 @@ from fastapi import Request
 logger = logging.getLogger("gateway")
 
 async def logging_middleware(request: Request, call_next):
+    # avoid swagger docs logging
+    if request.url.path == "/docs":
+        return await call_next(request)
     request_id = str(uuid.uuid4())
     request.state.request_id = request_id
     start_time = time.time()

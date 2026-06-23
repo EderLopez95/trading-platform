@@ -28,7 +28,7 @@ export default function LoginPage() {
     }
   };
   return (
-    <AuthLayout title="Login">
+    <AuthLayout title="Sign In">
       <LoginForm onSubmit={handleLogin} />
     </AuthLayout>
   );
