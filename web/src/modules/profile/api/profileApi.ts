@@ -14,7 +14,7 @@ export const profileApi = {
     data: UpdateProfileRequest
   ) => {
     const response = await apiClient.put(
-      "/auth/me",
+      "/auth/telegram",
       data
     );
 

@@ -6,6 +6,7 @@ import ProtectedRoute from "@/shared/components/ProtectedRoute";
 import ProfilePage from "@/modules/profile/pages/ProfilePage";
 import ConfigurationsPage from "@/modules/configurations/pages/ConfigurationsPage";
 import SignalsPage from "@/modules/signals/pages/SignalsPage";
+import NewConfigurationPage from "@/modules/configurations/pages/NewConfigurationPage";
 
 export const router = createBrowserRouter([
   {
@@ -50,6 +51,15 @@ export const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <ProfilePage />
+      </ProtectedRoute>
+    ),
+  },
+
+  {
+    path: "/configurations/new",
+    element: (
+      <ProtectedRoute>
+        <NewConfigurationPage />
       </ProtectedRoute>
     ),
   },

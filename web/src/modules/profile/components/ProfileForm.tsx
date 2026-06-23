@@ -39,21 +39,18 @@ export default function ProfileForm({
         value={email}
         disabled
       />
-      <br />
       <p>Telegram Token</p>
       <Input
         {...register(
           "telegram_token"
         )}
       />
-      <br />
       <p>Telegram Chat Id</p>
       <Input
         {...register(
           "telegram_chat_id"
         )}
       />
-      <br />
       <Button
         type="submit"
         disabled={isSubmitting}
