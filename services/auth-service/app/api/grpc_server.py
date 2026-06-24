@@ -33,8 +33,8 @@ class AuthServiceServicer(auth_pb2_grpc.AuthServiceServicer):
                 )
 
                 return auth_pb2.AuthResponse(
-                    user_id=result["user_id"],
-                    token=result["token"]
+                    user_id=result.user_id,
+                    token=result.token
                 )
             
             except UserAlreadyExistsException as e:
@@ -70,8 +70,8 @@ class AuthServiceServicer(auth_pb2_grpc.AuthServiceServicer):
                 )
 
                 return auth_pb2.AuthResponse(
-                    user_id=result["user_id"],
-                    token=result["token"]
+                    user_id=result.user_id,
+                    token=result.token
                 )
             
             except InvalidCredentialsException as e:

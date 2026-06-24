@@ -31,17 +31,32 @@
         - pytest tests/unit, pytest tests/integration, pytest tests/grpc
     - run auth-service
         - python -m main
-        
+
+## signal-service (microservice)
+
+    - alembic process migration
+        - alembic init migrations
+        - alembic revision --autogenerate -m "create configurations and signals tables"
+        - alembic upgrade head
+    - after create protos, generate grpcs in protos directory
+        - python -m grpc_tools.protoc -I . --python_out=generated --grpc_python_out=generated signals.proto
+
 ## gateway-api (microservice)
 
     - configure .env.local
-    - test certificate and generate it in microservice root
+    - certificates
         - openssl genrsa -out ca.key 4096
-        - openssl req -x509 -new -nodes -key ca.key -sha256 -days 365 -out cert.pem -subj "//CN=Local-CA"
-        - create msauth folder
-        - openssl req -new -nodes -newkey rsa:2048 -keyout msauth/key.pem -out msauth/ms1.csr -subj "//CN=msauth"
-        - openssl x509 -req -in msauth/ms1.csr -CA cert.pem -CAkey ca.key -CAcreateserial -out msauth/cert.pem -days 365 -sha256
-        - keep only ca.key and cert.pem (move files from msauth to MS root)
+        - openssl req -x509 -new -nodes -key ca.key -sha256 -days 365 -out ca.pem -subj "//CN=Local-CA"
+        - openssl genrsa -out gateway.key 2048
+        - openssl req -new -key gateway.key -out gateway.csr -subj "//CN=gateway_api"
+        - openssl x509 -req -in gateway.csr -CA ca.pem -CAkey ca.key -CAcreateserial -out gateway.pem -days 365 -sha256 -extfile gateway.ext
+        - openssl genrsa -out auth.key 2048
+        - openssl req -new -key auth.key -out auth.csr -subj "//CN=auth_service"
+        - openssl x509 -req -in auth.csr -CA ca.pem -CAkey ca.key -CAcreateserial -out auth.pem -days 365 -sha256 -extfile auth.ext
+        - openssl genrsa -out signal.key 2048
+        - openssl req -new -key signal.key -out signal.csr -subj "//CN=signal_service"
+        - openssl x509 -req -in signal.csr -CA ca.pem -CAkey ca.key -CAcreateserial -out signal.pem -days 365 -sha256 -extfile signal.ext
+        - delete .csr, .srl and move files to MS root
         - set AUTH_SERVICE_SECURE to true in .env.local
     - copy auth.proto from auth_service to gateway-api and generate stubs
         - python -m grpc_tools.protoc -I . --python_out=generated --grpc_python_out=generated auth.proto
@@ -59,15 +74,6 @@
         - CREATE DATABASE trading_platform_test;
     - enter container
         - docker exec -it auth_service bash
-
-## signal-service (microservice)
-
-    - alembic process migration
-        - alembic init migrations
-        - alembic revision --autogenerate -m "create configurations and signals tables"
-        - alembic upgrade head
-    - after create protos, generate grpcs in protos directory
-        - python -m grpc_tools.protoc -I . --python_out=generated --grpc_python_out=generated signals.proto
 
 ## web (React + TypeScript + Vite)
 
