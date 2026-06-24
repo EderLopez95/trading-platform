@@ -40,27 +40,27 @@ services:
       timeout: 5s
       retries: 5
 
-  # signal_service:
-  #   build: ./services/signal-service
-  #   container_name: signal_service
-  #   depends_on:
-  #     postgres:
-  #       condition: service_healthy
-  #   environment:
-  #     ENV: prod
-  #     DATABASE_URL: postgresql://trading:trading@postgres:5432/trading_platform
-  #     JWT_SECRET: trading-secret-key
-  #     ENCRYPTION_KEY: 37iwsIZYfGJbWGWmldL4lXBAze-ESZpc7_ODD5AXzlc=
-  #     GRPC_PORT: 5052
-  #     GRPC_SSL_CERT: signal.pem
-  #     GRPC_SSL_KEY: signal.key
-  #   ports:
-  #     - "5052:5052"
-  #   healthcheck:
-  #     test: ["CMD", "nc", "-z", "localhost", "5052"]
-  #     interval: 15s
-  #     timeout: 5s
-  #     retries: 5
+  signal_service:
+    build: ./services/signal-service
+    container_name: signal_service
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ENV: prod
+      DATABASE_URL: postgresql://trading:trading@postgres:5432/trading_platform
+      JWT_SECRET: trading-secret-key
+      ENCRYPTION_KEY: 37iwsIZYfGJbWGWmldL4lXBAze-ESZpc7_ODD5AXzlc=
+      GRPC_PORT: 5052
+      GRPC_SSL_CERT: signal.pem
+      GRPC_SSL_KEY: signal.key
+    ports:
+      - "5052:5052"
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "5052"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
   
   gateway_api:
     build: ./services/gateway-api

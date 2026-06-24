@@ -39,7 +39,7 @@
         - alembic revision --autogenerate -m "create configurations and signals tables"
         - alembic upgrade head
     - after create protos, generate grpcs in protos directory
-        - python -m grpc_tools.protoc -I . --python_out=generated --grpc_python_out=generated signals.proto
+        - python -m grpc_tools.protoc -I . --python_out=generated --grpc_python_out=generated signal.proto
 
 ## gateway-api (microservice)
 
@@ -60,6 +60,8 @@
         - set AUTH_SERVICE_SECURE to true in .env.local
     - copy auth.proto from auth_service to gateway-api and generate stubs
         - python -m grpc_tools.protoc -I . --python_out=generated --grpc_python_out=generated auth.proto
+    - copy signal.proto from signal_service to gateway-api and generate stubs
+        - python -m grpc_tools.protoc -I . --python_out=generated --grpc_python_out=generated signal.proto
     - run tests
         - pytest tests/unit, pytest tests/integration
     - run gateway-api

@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 import uvicorn
-from app.api.routes.auth import router
+from app.api.routes.auth import router as auth
+from app.api.routes.configurations import router as configurations
 from app.core.errors.handlers import register_exception_handlers
 from app.config.settings import validate_settings, PORT, ENV
 from app.core.logging.middleware import logging_middleware
@@ -8,9 +9,13 @@ from app.core.logging.config import setup_logging
 from fastapi.middleware.cors import CORSMiddleware
 
 validate_settings()
+
 setup_logging()
+
 app = FastAPI()
+
 app.middleware("http")(logging_middleware)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -20,7 +25,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-app.include_router(router, prefix="/auth")
+
+app.include_router(auth, prefix="/auth", tags=["Authentication"])
+
+app.include_router(configurations, prefix="/configurations", tags=["Configurations"])
+
 register_exception_handlers(app)
 
 if __name__ == "__main__":

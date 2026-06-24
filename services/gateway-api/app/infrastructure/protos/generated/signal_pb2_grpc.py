@@ -4,7 +4,7 @@ import grpc
 import warnings
 
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
-from app.infrastructure.protos.generated import signals_pb2 as signals__pb2
+from app.infrastructure.protos.generated import signal_pb2 as signal__pb2
 
 GRPC_GENERATED_VERSION = '1.81.1'
 GRPC_VERSION = grpc.__version__
@@ -19,14 +19,14 @@ except ImportError:
 if _version_not_supported:
     raise RuntimeError(
         f'The grpc package installed is at version {GRPC_VERSION},'
-        + ' but the generated code in signals_pb2_grpc.py depends on'
+        + ' but the generated code in signal_pb2_grpc.py depends on'
         + f' grpcio>={GRPC_GENERATED_VERSION}.'
         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
     )
 
 
-class SignalsServiceStub:
+class SignalServiceStub:
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -36,33 +36,33 @@ class SignalsServiceStub:
             channel: A grpc.Channel.
         """
         self.CreateConfiguration = channel.unary_unary(
-                '/SignalsService/CreateConfiguration',
-                request_serializer=signals__pb2.CreateConfigurationRequest.SerializeToString,
-                response_deserializer=signals__pb2.ConfigurationResponse.FromString,
+                '/SignalService/CreateConfiguration',
+                request_serializer=signal__pb2.CreateConfigurationRequest.SerializeToString,
+                response_deserializer=signal__pb2.ConfigurationResponse.FromString,
                 _registered_method=True)
         self.GetConfigurations = channel.unary_unary(
-                '/SignalsService/GetConfigurations',
-                request_serializer=signals__pb2.GetConfigurationsRequest.SerializeToString,
-                response_deserializer=signals__pb2.ConfigurationListResponse.FromString,
+                '/SignalService/GetConfigurations',
+                request_serializer=signal__pb2.GetConfigurationsRequest.SerializeToString,
+                response_deserializer=signal__pb2.ConfigurationListResponse.FromString,
                 _registered_method=True)
         self.DeleteConfiguration = channel.unary_unary(
-                '/SignalsService/DeleteConfiguration',
-                request_serializer=signals__pb2.DeleteConfigurationRequest.SerializeToString,
+                '/SignalService/DeleteConfiguration',
+                request_serializer=signal__pb2.DeleteConfigurationRequest.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
         self.ToggleConfiguration = channel.unary_unary(
-                '/SignalsService/ToggleConfiguration',
-                request_serializer=signals__pb2.ToggleConfigurationRequest.SerializeToString,
-                response_deserializer=signals__pb2.ConfigurationResponse.FromString,
+                '/SignalService/ToggleConfiguration',
+                request_serializer=signal__pb2.ToggleConfigurationRequest.SerializeToString,
+                response_deserializer=signal__pb2.ConfigurationResponse.FromString,
                 _registered_method=True)
         self.UpdateConfiguration = channel.unary_unary(
-                '/SignalsService/UpdateConfiguration',
-                request_serializer=signals__pb2.UpdateConfigurationRequest.SerializeToString,
-                response_deserializer=signals__pb2.ConfigurationResponse.FromString,
+                '/SignalService/UpdateConfiguration',
+                request_serializer=signal__pb2.UpdateConfigurationRequest.SerializeToString,
+                response_deserializer=signal__pb2.ConfigurationResponse.FromString,
                 _registered_method=True)
 
 
-class SignalsServiceServicer:
+class SignalServiceServicer:
     """Missing associated documentation comment in .proto file."""
 
     def CreateConfiguration(self, request, context):
@@ -96,42 +96,42 @@ class SignalsServiceServicer:
         raise NotImplementedError('Method not implemented!')
 
 
-def add_SignalsServiceServicer_to_server(servicer, server):
+def add_SignalServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'CreateConfiguration': grpc.unary_unary_rpc_method_handler(
                     servicer.CreateConfiguration,
-                    request_deserializer=signals__pb2.CreateConfigurationRequest.FromString,
-                    response_serializer=signals__pb2.ConfigurationResponse.SerializeToString,
+                    request_deserializer=signal__pb2.CreateConfigurationRequest.FromString,
+                    response_serializer=signal__pb2.ConfigurationResponse.SerializeToString,
             ),
             'GetConfigurations': grpc.unary_unary_rpc_method_handler(
                     servicer.GetConfigurations,
-                    request_deserializer=signals__pb2.GetConfigurationsRequest.FromString,
-                    response_serializer=signals__pb2.ConfigurationListResponse.SerializeToString,
+                    request_deserializer=signal__pb2.GetConfigurationsRequest.FromString,
+                    response_serializer=signal__pb2.ConfigurationListResponse.SerializeToString,
             ),
             'DeleteConfiguration': grpc.unary_unary_rpc_method_handler(
                     servicer.DeleteConfiguration,
-                    request_deserializer=signals__pb2.DeleteConfigurationRequest.FromString,
+                    request_deserializer=signal__pb2.DeleteConfigurationRequest.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
             'ToggleConfiguration': grpc.unary_unary_rpc_method_handler(
                     servicer.ToggleConfiguration,
-                    request_deserializer=signals__pb2.ToggleConfigurationRequest.FromString,
-                    response_serializer=signals__pb2.ConfigurationResponse.SerializeToString,
+                    request_deserializer=signal__pb2.ToggleConfigurationRequest.FromString,
+                    response_serializer=signal__pb2.ConfigurationResponse.SerializeToString,
             ),
             'UpdateConfiguration': grpc.unary_unary_rpc_method_handler(
                     servicer.UpdateConfiguration,
-                    request_deserializer=signals__pb2.UpdateConfigurationRequest.FromString,
-                    response_serializer=signals__pb2.ConfigurationResponse.SerializeToString,
+                    request_deserializer=signal__pb2.UpdateConfigurationRequest.FromString,
+                    response_serializer=signal__pb2.ConfigurationResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'SignalsService', rpc_method_handlers)
+            'SignalService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('SignalsService', rpc_method_handlers)
+    server.add_registered_method_handlers('SignalService', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class SignalsService:
+class SignalService:
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
@@ -148,9 +148,9 @@ class SignalsService:
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/SignalsService/CreateConfiguration',
-            signals__pb2.CreateConfigurationRequest.SerializeToString,
-            signals__pb2.ConfigurationResponse.FromString,
+            '/SignalService/CreateConfiguration',
+            signal__pb2.CreateConfigurationRequest.SerializeToString,
+            signal__pb2.ConfigurationResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -175,9 +175,9 @@ class SignalsService:
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/SignalsService/GetConfigurations',
-            signals__pb2.GetConfigurationsRequest.SerializeToString,
-            signals__pb2.ConfigurationListResponse.FromString,
+            '/SignalService/GetConfigurations',
+            signal__pb2.GetConfigurationsRequest.SerializeToString,
+            signal__pb2.ConfigurationListResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -202,8 +202,8 @@ class SignalsService:
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/SignalsService/DeleteConfiguration',
-            signals__pb2.DeleteConfigurationRequest.SerializeToString,
+            '/SignalService/DeleteConfiguration',
+            signal__pb2.DeleteConfigurationRequest.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,
@@ -229,9 +229,9 @@ class SignalsService:
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/SignalsService/ToggleConfiguration',
-            signals__pb2.ToggleConfigurationRequest.SerializeToString,
-            signals__pb2.ConfigurationResponse.FromString,
+            '/SignalService/ToggleConfiguration',
+            signal__pb2.ToggleConfigurationRequest.SerializeToString,
+            signal__pb2.ConfigurationResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -256,9 +256,9 @@ class SignalsService:
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/SignalsService/UpdateConfiguration',
-            signals__pb2.UpdateConfigurationRequest.SerializeToString,
-            signals__pb2.ConfigurationResponse.FromString,
+            '/SignalService/UpdateConfiguration',
+            signal__pb2.UpdateConfigurationRequest.SerializeToString,
+            signal__pb2.ConfigurationResponse.FromString,
             options,
             channel_credentials,
             insecure,

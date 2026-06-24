@@ -13,12 +13,15 @@ AUTH_SERVICE_HOST = os.getenv("AUTH_SERVICE_HOST")
 AUTH_SERVICE_PORT = int(os.getenv("AUTH_SERVICE_PORT", 5051))
 AUTH_SERVICE_SECURE = (os.getenv("AUTH_SERVICE_SECURE", "false").strip().lower() == "true")
 AUTH_SERVICE_CERT = os.getenv("AUTH_SERVICE_CERT")
+SIGNAL_SERVICE_HOST = os.getenv("SIGNAL_SERVICE_HOST")
+SIGNAL_SERVICE_PORT = int(os.getenv("SIGNAL_SERVICE_PORT", 5052))
 JWT_SECRET = os.getenv("JWT_SECRET")
 
 def validate_settings():
     required = [
         "ENV",
         "AUTH_SERVICE_HOST",
+        "SIGNAL_SERVICE_HOST",
         "JWT_SECRET"
     ]
 

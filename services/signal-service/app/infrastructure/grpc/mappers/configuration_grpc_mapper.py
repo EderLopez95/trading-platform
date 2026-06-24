@@ -1,9 +1,9 @@
-from app.infrastructure.protos.generated import signals_pb2
+from app.infrastructure.protos.generated import signal_pb2
 
 class ConfigurationGrpcMapper:
     @staticmethod
     def to_proto(configuration):
-        return signals_pb2.ConfigurationDto(
+        return signal_pb2.ConfigurationDto(
             id=configuration.id,
             user_id=configuration.user_id,
             symbols=configuration.symbols,

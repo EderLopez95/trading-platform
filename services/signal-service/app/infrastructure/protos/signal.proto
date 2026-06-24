@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+service SignalService {
+  rpc CreateConfiguration(CreateConfigurationRequest) returns (ConfigurationResponse);
+  rpc GetConfigurations(GetConfigurationsRequest) returns (ConfigurationListResponse);
+  rpc DeleteConfiguration(DeleteConfigurationRequest) returns (google.protobuf.Empty);
+  rpc ToggleConfiguration(ToggleConfigurationRequest) returns (ConfigurationResponse);
+  rpc UpdateConfiguration(UpdateConfigurationRequest) returns (ConfigurationResponse);
+}
+
+message ConfigurationDto {
+  string id = 1;
+  string user_id = 2;
+  repeated string symbols = 3;
+  repeated string strategies = 4;
+  string trend_timeframe = 5;
+  string context_timeframe = 6;
+  string entry_timeframe = 7;
+  bool enabled = 8;
+}
+
+message CreateConfigurationRequest {
+  string user_id = 1;
+  repeated string symbols = 2;
+  repeated string strategies = 3;
+  string trend_timeframe = 4;
+  string context_timeframe = 5;
+  string entry_timeframe = 6;
+}
+
+message GetConfigurationsRequest {
+  string user_id = 1;
+}
+
+message DeleteConfigurationRequest {
+  string configuration_id = 1;
+}
+
+message ToggleConfigurationRequest {
+  string configuration_id = 1;
+  bool enabled = 2;
+}
+
+message UpdateConfigurationRequest {
+  string configuration_id = 1;
+  repeated string symbols = 2;
+  repeated string strategies = 3;
+  string trend_timeframe = 4;
+  string context_timeframe = 5;
+  string entry_timeframe = 6;
+}
+
+message ConfigurationListResponse {
+  repeated ConfigurationDto configurations = 1;
+}
+
+message ConfigurationResponse {
+  ConfigurationDto configuration = 1;
+}

@@ -1,11 +1,11 @@
 from google.protobuf.empty_pb2 import Empty
 from app.infrastructure.database.connection import SessionLocal
-from app.infrastructure.protos.generated import signals_pb2, signals_pb2_grpc
+from app.infrastructure.protos.generated import signal_pb2, signal_pb2_grpc
 from app.infrastructure.database.repositories.configuration_repository import ConfigurationRepositoryImpl
 from app.infrastructure.grpc.mappers.configuration_grpc_mapper import ConfigurationGrpcMapper
 from app.application.services.configuration_service import ConfigurationService
 
-class SignalsGrpcService(signals_pb2_grpc.SignalsServiceServicer):
+class SignalGrpcService(signal_pb2_grpc.SignalServiceServicer):
     def CreateConfiguration(
         self,
         request,
@@ -27,7 +27,7 @@ class SignalsGrpcService(signals_pb2_grpc.SignalsServiceServicer):
             )
 
             return (
-                signals_pb2.ConfigurationResponse(
+                signal_pb2.ConfigurationResponse(
                     configuration=ConfigurationGrpcMapper.to_proto(configuration)
                 )
             )
@@ -46,7 +46,7 @@ class SignalsGrpcService(signals_pb2_grpc.SignalsServiceServicer):
             )
 
             return (
-                signals_pb2.ConfigurationListResponse(
+                signal_pb2.ConfigurationListResponse(
                     configurations=[
                         ConfigurationGrpcMapper.to_proto(
                             configuration
@@ -84,7 +84,7 @@ class SignalsGrpcService(signals_pb2_grpc.SignalsServiceServicer):
             )
 
             return (
-                signals_pb2.ConfigurationResponse(
+                signal_pb2.ConfigurationResponse(
                     configuration=ConfigurationGrpcMapper.to_proto(configuration)
                 )
             )

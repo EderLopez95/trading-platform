@@ -2,7 +2,7 @@ syntax = "proto3";
 
 import "google/protobuf/empty.proto";
 
-service SignalsService {
+service SignalService {
   rpc CreateConfiguration(CreateConfigurationRequest) returns (ConfigurationResponse);
   rpc GetConfigurations(GetConfigurationsRequest) returns (ConfigurationListResponse);
   rpc DeleteConfiguration(DeleteConfigurationRequest) returns (google.protobuf.Empty);
