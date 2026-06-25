@@ -28,3 +28,11 @@ class SignalService:
     def toggle_configuration(self, configuration_id, enabled):
         
         return self.client.toggle_configuration(configuration_id, enabled)
+
+    def get_analysis_status(self, user_id: str):
+        
+        return self.client.get_analysis_status(user_id)
+    
+    def toggle_analysis(self, user_id: str, enabled: bool):
+        
+        return self.client.toggle_analysis(user_id, enabled)

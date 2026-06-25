@@ -4,6 +4,8 @@ from app.infrastructure.protos.generated import signal_pb2, signal_pb2_grpc
 from app.infrastructure.database.repositories.configuration_repository import ConfigurationRepositoryImpl
 from app.infrastructure.grpc.mappers.configuration_grpc_mapper import ConfigurationGrpcMapper
 from app.application.services.configuration_service import ConfigurationService
+from app.application.services.user_settings_service import UserSettingsService
+from app.infrastructure.database.repositories.user_settings_repository import UserSettingsRepositoryImpl
 
 class SignalGrpcService(signal_pb2_grpc.SignalServiceServicer):
     def CreateConfiguration(
@@ -86,5 +88,43 @@ class SignalGrpcService(signal_pb2_grpc.SignalServiceServicer):
             return (
                 signal_pb2.ConfigurationResponse(
                     configuration=ConfigurationGrpcMapper.to_proto(configuration)
+                )
+            )
+
+    def GetAnalysisStatus(
+        self,
+        request,
+        context,
+    ):
+        with SessionLocal() as db:
+            repository = UserSettingsRepositoryImpl(db)
+            service = UserSettingsService(repository)
+            settings = service.get_status(request.user_id)
+
+            return (
+                signal_pb2.AnalysisStatusResponse(
+                    enabled=settings.analysis_enabled
+                )
+            )
+
+    def ToggleAnalysis(
+        self,
+        request,
+        context,
+    ):
+        with SessionLocal() as db:
+            repository = UserSettingsRepositoryImpl(db)
+            service = UserSettingsService(repository)
+            
+            settings = (
+                service.toggle_analysis(
+                    request.user_id,
+                    request.enabled,
+                )
+            )
+
+            return (
+                signal_pb2.AnalysisStatusResponse(
+                    enabled=settings.analysis_enabled
                 )
             )

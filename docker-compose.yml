@@ -14,7 +14,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U trading -d trading_platform"]
-      interval: 15s
+      interval: 5s
       timeout: 5s
       retries: 5
       
@@ -36,7 +36,7 @@ services:
       - "5051:5051"
     healthcheck:
       test: ["CMD", "nc", "-z", "localhost", "5051"]
-      interval: 15s
+      interval: 5s
       timeout: 5s
       retries: 5
 
@@ -46,11 +46,11 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      auth_service:
+        condition: service_healthy
     environment:
       ENV: prod
       DATABASE_URL: postgresql://trading:trading@postgres:5432/trading_platform
-      JWT_SECRET: trading-secret-key
-      ENCRYPTION_KEY: 37iwsIZYfGJbWGWmldL4lXBAze-ESZpc7_ODD5AXzlc=
       GRPC_PORT: 5052
       GRPC_SSL_CERT: signal.pem
       GRPC_SSL_KEY: signal.key
@@ -58,7 +58,7 @@ services:
       - "5052:5052"
     healthcheck:
       test: ["CMD", "nc", "-z", "localhost", "5052"]
-      interval: 15s
+      interval: 5s
       timeout: 5s
       retries: 5
   
@@ -73,8 +73,10 @@ services:
       PORT: 8080
       AUTH_SERVICE_HOST: auth_service
       AUTH_SERVICE_PORT: 5051
-      AUTH_SERVICE_SECURE: "true"
-      AUTH_SERVICE_CERT: ca.pem
+      GATEWAY_SERVICE_SECURE: "true"
+      GATEWAY_SERVICE_CERT: ca.pem
+      SIGNAL_SERVICE_HOST: signal_service
+      SIGNAL_SERVICE_PORT: 5052
       JWT_SECRET: trading-secret-key
     ports:
       - "8080:8080"

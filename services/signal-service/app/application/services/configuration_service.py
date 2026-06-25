@@ -20,13 +20,7 @@ class ConfigurationService:
             raise ConfigurationNotFoundError()
 
         self.repository.delete(configuration_id)
-
-    def toggle_configuration(self, configuration_id: str, enabled: bool):
-        configuration = self.repository.get_by_id(configuration_id)
-        configuration.enabled = enabled
-
-        return self.repository.update(configuration)
-    
+            
     def toggle_configuration(
         self,
         configuration_id: str,

@@ -3,6 +3,7 @@ from app.api.dependencies.auth import get_current_user
 from app.infrastructure.grpc.clients.signal_client import SignalClient
 from app.application.services.signal_service import SignalService
 from app.api.schemas.configuration import CreateConfigurationRequest, ToggleConfigurationRequest
+from app.api.mappers.configuration_mapper import ConfigurationMapper
 
 router = APIRouter()
 
@@ -15,8 +16,14 @@ def get_configurations(
     user=Depends(get_current_user),
     service: SignalService = Depends(get_service)
 ):
-    
-    return service.get_configurations(user.user_id)
+    result = service.get_configurations(user.user_id)
+
+    return {
+        "configurations": [
+            ConfigurationMapper.to_dict(c)
+            for c in result.configurations
+        ]
+    }
 
 @router.post("")
 def create_configuration(
@@ -24,24 +31,25 @@ def create_configuration(
     user=Depends(get_current_user),
     service: SignalService = Depends(get_service)
 ):
-    
-    return service.create_configuration(user.user_id, data)
+    result = service.create_configuration(user.user_id, data)
+
+    return ConfigurationMapper.to_dict(result.configuration)
 
 @router.delete("/{configuration_id}")
 def delete_configuration(
     configuration_id: str,
     service: SignalService = Depends(get_service)
 ):
-    
-    return service.delete_configuration(configuration_id)
+    service.delete_configuration(configuration_id)
 
-@router.patch(
-    "/{configuration_id}/status"
-)
+    return {"message": "Configuration deleted successfully"}
+
+@router.patch("/{configuration_id}/status")
 def toggle_configuration(
     configuration_id: str,
     data: ToggleConfigurationRequest,
     service: SignalService = Depends(get_service)
 ):
-    
-    return service.toggle_configuration(configuration_id, data.enabled)
+    result = service.toggle_configuration(configuration_id, data.enabled)
+
+    return ConfigurationMapper.to_dict(result.configuration)

@@ -2,6 +2,7 @@ from fastapi import FastAPI
 import uvicorn
 from app.api.routes.auth import router as auth
 from app.api.routes.configurations import router as configurations
+from app.api.routes.analysis import router as analysis
 from app.core.errors.handlers import register_exception_handlers
 from app.config.settings import validate_settings, PORT, ENV
 from app.core.logging.middleware import logging_middleware
@@ -29,6 +30,8 @@ app.add_middleware(
 app.include_router(auth, prefix="/auth", tags=["Authentication"])
 
 app.include_router(configurations, prefix="/configurations", tags=["Configurations"])
+
+app.include_router(analysis, prefix="/analysis", tags=["Analysis"])
 
 register_exception_handlers(app)
 

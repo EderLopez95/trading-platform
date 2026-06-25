@@ -8,6 +8,8 @@ service SignalService {
   rpc DeleteConfiguration(DeleteConfigurationRequest) returns (google.protobuf.Empty);
   rpc ToggleConfiguration(ToggleConfigurationRequest) returns (ConfigurationResponse);
   rpc UpdateConfiguration(UpdateConfigurationRequest) returns (ConfigurationResponse);
+  rpc GetAnalysisStatus(AnalysisStatusRequest) returns (AnalysisStatusResponse);
+  rpc ToggleAnalysis(ToggleAnalysisRequest) returns (AnalysisStatusResponse);
 }
 
 message ConfigurationDto {
@@ -58,4 +60,17 @@ message ConfigurationListResponse {
 
 message ConfigurationResponse {
   ConfigurationDto configuration = 1;
+}
+
+message AnalysisStatusRequest {
+  string user_id = 1;
+}
+
+message AnalysisStatusResponse {
+  bool enabled = 1;
+}
+
+message ToggleAnalysisRequest {
+  string user_id = 1;
+  bool enabled = 2;
 }

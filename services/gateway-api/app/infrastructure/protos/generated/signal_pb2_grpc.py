@@ -60,6 +60,16 @@ class SignalServiceStub:
                 request_serializer=signal__pb2.UpdateConfigurationRequest.SerializeToString,
                 response_deserializer=signal__pb2.ConfigurationResponse.FromString,
                 _registered_method=True)
+        self.GetAnalysisStatus = channel.unary_unary(
+                '/SignalService/GetAnalysisStatus',
+                request_serializer=signal__pb2.AnalysisStatusRequest.SerializeToString,
+                response_deserializer=signal__pb2.AnalysisStatusResponse.FromString,
+                _registered_method=True)
+        self.ToggleAnalysis = channel.unary_unary(
+                '/SignalService/ToggleAnalysis',
+                request_serializer=signal__pb2.ToggleAnalysisRequest.SerializeToString,
+                response_deserializer=signal__pb2.AnalysisStatusResponse.FromString,
+                _registered_method=True)
 
 
 class SignalServiceServicer:
@@ -95,6 +105,18 @@ class SignalServiceServicer:
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetAnalysisStatus(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ToggleAnalysis(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_SignalServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -122,6 +144,16 @@ def add_SignalServiceServicer_to_server(servicer, server):
                     servicer.UpdateConfiguration,
                     request_deserializer=signal__pb2.UpdateConfigurationRequest.FromString,
                     response_serializer=signal__pb2.ConfigurationResponse.SerializeToString,
+            ),
+            'GetAnalysisStatus': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetAnalysisStatus,
+                    request_deserializer=signal__pb2.AnalysisStatusRequest.FromString,
+                    response_serializer=signal__pb2.AnalysisStatusResponse.SerializeToString,
+            ),
+            'ToggleAnalysis': grpc.unary_unary_rpc_method_handler(
+                    servicer.ToggleAnalysis,
+                    request_deserializer=signal__pb2.ToggleAnalysisRequest.FromString,
+                    response_serializer=signal__pb2.AnalysisStatusResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -259,6 +291,60 @@ class SignalService:
             '/SignalService/UpdateConfiguration',
             signal__pb2.UpdateConfigurationRequest.SerializeToString,
             signal__pb2.ConfigurationResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetAnalysisStatus(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/SignalService/GetAnalysisStatus',
+            signal__pb2.AnalysisStatusRequest.SerializeToString,
+            signal__pb2.AnalysisStatusResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ToggleAnalysis(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/SignalService/ToggleAnalysis',
+            signal__pb2.ToggleAnalysisRequest.SerializeToString,
+            signal__pb2.AnalysisStatusResponse.FromString,
             options,
             channel_credentials,
             insecure,

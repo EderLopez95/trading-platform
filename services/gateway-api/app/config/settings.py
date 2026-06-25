@@ -11,8 +11,8 @@ ENV = os.getenv("ENV")
 PORT = int(os.getenv("PORT", 8080))
 AUTH_SERVICE_HOST = os.getenv("AUTH_SERVICE_HOST")
 AUTH_SERVICE_PORT = int(os.getenv("AUTH_SERVICE_PORT", 5051))
-AUTH_SERVICE_SECURE = (os.getenv("AUTH_SERVICE_SECURE", "false").strip().lower() == "true")
-AUTH_SERVICE_CERT = os.getenv("AUTH_SERVICE_CERT")
+GATEWAY_SERVICE_SECURE = (os.getenv("GATEWAY_SERVICE_SECURE", "false").strip().lower() == "true")
+GATEWAY_SERVICE_CERT = os.getenv("GATEWAY_SERVICE_CERT")
 SIGNAL_SERVICE_HOST = os.getenv("SIGNAL_SERVICE_HOST")
 SIGNAL_SERVICE_PORT = int(os.getenv("SIGNAL_SERVICE_PORT", 5052))
 JWT_SECRET = os.getenv("JWT_SECRET")
@@ -30,5 +30,5 @@ def validate_settings():
     if missing:
         raise EnvironmentVariableMissingException(", ".join(missing))
 
-    if AUTH_SERVICE_SECURE and not AUTH_SERVICE_CERT:
-        raise EnvironmentVariableMissingException("AUTH_SERVICE_CERT required when AUTH_SERVICE_SECURE=true")
+    if GATEWAY_SERVICE_SECURE and not GATEWAY_SERVICE_CERT:
+        raise EnvironmentVariableMissingException("GATEWAY_SERVICE_CERT required when GATEWAY_SERVICE_SECURE=true")

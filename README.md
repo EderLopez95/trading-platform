@@ -38,6 +38,7 @@
         - alembic init migrations
         - alembic revision --autogenerate -m "create configurations and signals tables"
         - alembic upgrade head
+        - alembic revision --autogenerate -m "create user_settings table"
     - after create protos, generate grpcs in protos directory
         - python -m grpc_tools.protoc -I . --python_out=generated --grpc_python_out=generated signal.proto
 
@@ -57,7 +58,7 @@
         - openssl req -new -key signal.key -out signal.csr -subj "//CN=signal_service"
         - openssl x509 -req -in signal.csr -CA ca.pem -CAkey ca.key -CAcreateserial -out signal.pem -days 365 -sha256 -extfile signal.ext
         - delete .csr, .srl and move files to MS root
-        - set AUTH_SERVICE_SECURE to true in .env.local
+        - set GATEWAY_SERVICE_SECURE to true in .env.local
     - copy auth.proto from auth_service to gateway-api and generate stubs
         - python -m grpc_tools.protoc -I . --python_out=generated --grpc_python_out=generated auth.proto
     - copy signal.proto from signal_service to gateway-api and generate stubs
@@ -120,6 +121,13 @@
             entry_timeframe VARCHAR(10) NOT NULL,
             enabled BOOLEAN DEFAULT TRUE,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+          );
+        - CREATE TABLE signals.user_settings (
+            id UUID PRIMARY KEY,
+            user_id UUID UNIQUE NOT NULL,
+            analysis_enabled BOOLEAN NOT NULL DEFAULT TRUE,
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
           );
         - CREATE TABLE signals.signals (
             id UUID PRIMARY KEY,
