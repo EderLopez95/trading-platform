@@ -1,6 +1,7 @@
 import uuid
 from app.domain.entities.configuration import Configuration
 from app.domain.exceptions.exceptions import ConfigurationNotFoundError
+from app.infrastructure.scheduler.registry_container import configuration_registry
 
 class ConfigurationService:
     def __init__(self, repository):
@@ -18,9 +19,10 @@ class ConfigurationService:
 
         if not configuration:
             raise ConfigurationNotFoundError()
-
+        
+        configuration_registry.remove(configuration_id)
         self.repository.delete(configuration_id)
-            
+
     def toggle_configuration(
         self,
         configuration_id: str,
@@ -32,6 +34,11 @@ class ConfigurationService:
             raise ConfigurationNotFoundError()
 
         configuration.enabled = enabled
+                
+        if enabled:
+            configuration_registry.register(configuration)
+        else:
+            configuration_registry.remove(configuration.id)
 
         return self.repository.update(configuration)
 
@@ -57,4 +64,7 @@ class ConfigurationService:
             created_at=None,
         )
 
-        return self.repository.create(configuration)
+        configuration = self.repository.create(configuration)    
+        configuration_registry.register(configuration)
+        
+        return configuration

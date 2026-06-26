@@ -4,15 +4,15 @@ class ConfigurationRegistry:
 
     def load(self, configurations):
         self._configurations = {
-            configuration.id: configuration
+            str(configuration.id): configuration
             for configuration in configurations
         }
 
     def register(self, configuration):
-        self._configurations[configuration.id] = configuration
+        self._configurations[str(configuration.id)] = configuration
 
     def remove(self, configuration_id: str):
-        self._configurations.pop(configuration_id, None)
+        self._configurations.pop(str(configuration_id), None)
 
     def get_all(self):
 

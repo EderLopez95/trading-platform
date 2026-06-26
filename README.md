@@ -72,6 +72,7 @@
 
     - docker-compose down -v
     - docker-compose up --build
+    - docker compose logs -f signal_service
     - docker exec -it trading_postgres psql -U trading -d trading_platform
     - create test DB inside docker container
         - CREATE DATABASE trading_platform_test;

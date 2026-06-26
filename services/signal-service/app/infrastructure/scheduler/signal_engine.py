@@ -1,18 +1,30 @@
-import asyncio
+import time
 from datetime import datetime, timezone
-from app.infrastructure.scheduler.registry_container import configuration_registry, user_registry
+from app.infrastructure.scheduler.utils import should_execute, get_candle_key
+from app.infrastructure.scheduler.registry_container import user_registry, configuration_registry
 
 class SignalEngine:
-    async def run(self):
+    def __init__(self):
+        self._last_execution = {}
+
+    def run(self):
         while True:
             now = datetime.now(timezone.utc)
 
             for configuration in (configuration_registry.get_all()):
-                if not (user_registry.user_enabled(configuration.user_id)):
+                if not (user_registry.is_analysis_enabled(configuration.user_id)):
                     continue
 
-                print(
-                    f"[{now}] checking {configuration.id}"
-                )
+                if not should_execute(configuration, now):
+                    continue
 
-            await asyncio.sleep(1)
+                candle_key = get_candle_key(configuration, now)
+                last_key = self._last_execution.get(configuration.id)
+
+                if last_key == candle_key:
+                    continue
+
+                self._last_execution[configuration.id] = candle_key
+                print(f"PROCESSING {configuration.id}", flush=True)
+
+            time.sleep(60)
