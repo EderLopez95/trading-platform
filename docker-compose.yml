@@ -77,9 +77,13 @@ services:
       GATEWAY_SERVICE_CERT: ca.pem
       SIGNAL_SERVICE_HOST: signal_service
       SIGNAL_SERVICE_PORT: 5052
+      MARKET_DATA_SERVICE_HOST: host.docker.internal
+      MARKET_DATA_SERVICE_PORT: 5053
       JWT_SECRET: trading-secret-key
     ports:
       - "8080:8080"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/docs')"]
       interval: 15s

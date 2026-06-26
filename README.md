@@ -32,6 +32,11 @@
     - run auth-service
         - python -m main
 
+## market-data-service (microservice)
+
+    - after create protos, generate grpcs in protos directory
+        - python -m grpc_tools.protoc -I . --python_out=generated --grpc_python_out=generated market_data.proto
+
 ## signal-service (microservice)
 
     - alembic process migration
@@ -51,12 +56,18 @@
         - openssl genrsa -out gateway.key 2048
         - openssl req -new -key gateway.key -out gateway.csr -subj "//CN=gateway_api"
         - openssl x509 -req -in gateway.csr -CA ca.pem -CAkey ca.key -CAcreateserial -out gateway.pem -days 365 -sha256 -extfile gateway.ext
-        - openssl genrsa -out auth.key 2048
-        - openssl req -new -key auth.key -out auth.csr -subj "//CN=auth_service"
-        - openssl x509 -req -in auth.csr -CA ca.pem -CAkey ca.key -CAcreateserial -out auth.pem -days 365 -sha256 -extfile auth.ext
-        - openssl genrsa -out signal.key 2048
-        - openssl req -new -key signal.key -out signal.csr -subj "//CN=signal_service"
-        - openssl x509 -req -in signal.csr -CA ca.pem -CAkey ca.key -CAcreateserial -out signal.pem -days 365 -sha256 -extfile signal.ext
+        - auth
+            - openssl genrsa -out auth.key 2048
+            - openssl req -new -key auth.key -out auth.csr -subj "//CN=auth_service"
+            - openssl x509 -req -in auth.csr -CA ca.pem -CAkey ca.key -CAcreateserial -out auth.pem -days 365 -sha256 -extfile auth.ext
+        - signal
+            - openssl genrsa -out signal.key 2048
+            - openssl req -new -key signal.key -out signal.csr -subj "//CN=signal_service"
+            - openssl x509 -req -in signal.csr -CA ca.pem -CAkey ca.key -CAcreateserial -out signal.pem -days 365 -sha256 -extfile signal.ext
+        - market-data
+            - openssl genrsa -out market_data.key 2048
+            - openssl req -new -key market_data.key -out market_data.csr -subj "//CN=market_data_service"
+            - openssl x509 -req -in market_data.csr -CA ca.pem -CAkey ca.key -CAcreateserial -out market_data.pem -days 365 -sha256 -extfile market_data.ext
         - delete .csr, .srl and move files to MS root
         - set GATEWAY_SERVICE_SECURE to true in .env.local
     - copy auth.proto from auth_service to gateway-api and generate stubs

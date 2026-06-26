@@ -40,6 +40,8 @@ signal.key
 signal.pem
 gateway.key
 gateway.pem
+market_data.key
+market_data.pem
 ca.key
 ca.pem
 
