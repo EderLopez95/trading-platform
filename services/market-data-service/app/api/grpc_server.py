@@ -3,16 +3,16 @@ from concurrent import futures
 from app.config.settings import ENV, GRPC_PORT, GRPC_SSL_CERT, GRPC_SSL_KEY
 from app.domain.exceptions.exceptions import TLSMissingCertKeyException
 from app.infrastructure.protos.generated import market_data_pb2_grpc
-# from app.api.signal_service import SignalGrpcService
+from app.api.market_data_service import MarketDataGrpcService
 
 def create_server():
     server = grpc.server(
         futures.ThreadPoolExecutor(max_workers=10)
     )
-    # signal_pb2_grpc.add_SignalServiceServicer_to_server(
-    #     SignalGrpcService(),
-    #     server
-    # )
+    market_data_pb2_grpc.add_MarketDataServiceServicer_to_server(
+        MarketDataGrpcService(),
+        server
+    )
     address = f"[::]:{GRPC_PORT}"
     
     if ENV == "prod":

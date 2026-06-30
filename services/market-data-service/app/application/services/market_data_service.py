@@ -1,9 +1,5 @@
 class MarketDataService:
-
-    def __init__(
-        self,
-        provider,
-    ):
+    def __init__(self, provider):
         self.provider = provider
 
     def get_candles(
@@ -12,8 +8,5 @@ class MarketDataService:
         timeframe: str,
         count: int,
     ):
-        return self.provider.get_candles(
-            symbol,
-            timeframe,
-            count,
-        )
+        
+        return self.provider.get_candles(symbol, timeframe, count)

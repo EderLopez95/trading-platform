@@ -36,6 +36,8 @@
 
     - after create protos, generate grpcs in protos directory
         - python -m grpc_tools.protoc -I . --python_out=generated --grpc_python_out=generated market_data.proto
+    - run service
+        - python -u -m main
 
 ## signal-service (microservice)
 
@@ -46,6 +48,16 @@
         - alembic revision --autogenerate -m "create user_settings table"
     - after create protos, generate grpcs in protos directory
         - python -m grpc_tools.protoc -I . --python_out=generated --grpc_python_out=generated signal.proto
+        - python -m grpc_tools.protoc -I . --python_out=generated --grpc_python_out=generated market_data.proto
+    - certificates
+        - openssl genrsa -out ca.key 4096
+        - openssl req -x509 -new -nodes -key ca.key -sha256 -days 365 -out ca.pem -subj "//CN=Local-CA"
+        - market-data
+            - openssl genrsa -out market-data-signal.key 2048
+            - openssl req -new -key market-data-signal.key -out market-data-signal.csr -subj "//CN=market_data_service"
+            - openssl x509 -req -in market-data-signal.csr -CA ca.pem -CAkey ca.key -CAcreateserial -out market-data-signal.pem -days 365 -sha256 -extfile market-data-signal.ext
+        - delete .csr, .srl and move files to MS root
+        - set SIGNAL_SERVICE_SECURE to true in .env.local
 
 ## gateway-api (microservice)
 
@@ -53,21 +65,14 @@
     - certificates
         - openssl genrsa -out ca.key 4096
         - openssl req -x509 -new -nodes -key ca.key -sha256 -days 365 -out ca.pem -subj "//CN=Local-CA"
-        - openssl genrsa -out gateway.key 2048
-        - openssl req -new -key gateway.key -out gateway.csr -subj "//CN=gateway_api"
-        - openssl x509 -req -in gateway.csr -CA ca.pem -CAkey ca.key -CAcreateserial -out gateway.pem -days 365 -sha256 -extfile gateway.ext
         - auth
-            - openssl genrsa -out auth.key 2048
-            - openssl req -new -key auth.key -out auth.csr -subj "//CN=auth_service"
-            - openssl x509 -req -in auth.csr -CA ca.pem -CAkey ca.key -CAcreateserial -out auth.pem -days 365 -sha256 -extfile auth.ext
+            - openssl genrsa -out auth-gateway.key 2048
+            - openssl req -new -key auth-gateway.key -out auth-gateway.csr -subj "//CN=auth_service"
+            - openssl x509 -req -in auth-gateway.csr -CA ca.pem -CAkey ca.key -CAcreateserial -out auth-gateway.pem -days 365 -sha256 -extfile auth-gateway.ext
         - signal
-            - openssl genrsa -out signal.key 2048
-            - openssl req -new -key signal.key -out signal.csr -subj "//CN=signal_service"
-            - openssl x509 -req -in signal.csr -CA ca.pem -CAkey ca.key -CAcreateserial -out signal.pem -days 365 -sha256 -extfile signal.ext
-        - market-data
-            - openssl genrsa -out market_data.key 2048
-            - openssl req -new -key market_data.key -out market_data.csr -subj "//CN=market_data_service"
-            - openssl x509 -req -in market_data.csr -CA ca.pem -CAkey ca.key -CAcreateserial -out market_data.pem -days 365 -sha256 -extfile market_data.ext
+            - openssl genrsa -out signal-gateway.key 2048
+            - openssl req -new -key signal-gateway.key -out signal-gateway.csr -subj "//CN=signal_service"
+            - openssl x509 -req -in signal-gateway.csr -CA ca.pem -CAkey ca.key -CAcreateserial -out signal-gateway.pem -days 365 -sha256 -extfile signal-gateway.ext
         - delete .csr, .srl and move files to MS root
         - set GATEWAY_SERVICE_SECURE to true in .env.local
     - copy auth.proto from auth_service to gateway-api and generate stubs

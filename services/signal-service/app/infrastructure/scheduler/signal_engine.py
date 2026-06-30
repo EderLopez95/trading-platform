@@ -2,9 +2,11 @@ import time
 from datetime import datetime, timezone
 from app.infrastructure.scheduler.utils import should_execute, get_candle_key
 from app.infrastructure.scheduler.registry_container import user_registry, configuration_registry
+from app.infrastructure.adapters.market_data_adapter import MarketDataAdapter
 
 class SignalEngine:
     def __init__(self):
+        self.market_data = (MarketDataAdapter())
         self._last_execution = {}
 
     def run(self):
@@ -25,6 +27,13 @@ class SignalEngine:
                     continue
 
                 self._last_execution[configuration.id] = candle_key
-                print(f"PROCESSING {configuration.id}", flush=True)
+                candles = (
+                    self.market_data.get_candles(
+                        symbol=configuration.symbols[0],
+                        timeframe=configuration.entry_timeframe,
+                        count=100,
+                    )
+                )
+                print(f"{configuration.symbols[0]} CANDLES={len(candles.candles)}", flush=True)
 
             time.sleep(60)

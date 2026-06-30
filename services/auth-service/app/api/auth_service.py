@@ -3,7 +3,7 @@ from concurrent import futures
 from app.infrastructure.protos.generated import auth_pb2_grpc
 from app.config.settings import ENV, GRPC_PORT, GRPC_SSL_CERT, GRPC_SSL_KEY
 from app.domain.exceptions import TLSMissingCertKeyException
-from app.api.auth_service import AuthServiceServicer
+from app.api.grpc_server import AuthServiceServicer
 
 def create_server():
     server = grpc.server(

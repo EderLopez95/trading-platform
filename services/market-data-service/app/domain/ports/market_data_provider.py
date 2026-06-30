@@ -1,9 +1,7 @@
 from abc import ABC
 from abc import abstractmethod
 
-
 class MarketDataProvider(ABC):
-
     @abstractmethod
     def get_candles(
         self,
@@ -12,4 +10,3 @@ class MarketDataProvider(ABC):
         count: int,
     ):
         pass
-    

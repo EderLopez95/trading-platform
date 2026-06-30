@@ -7,7 +7,7 @@ from unittest.mock import patch
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 from app.infrastructure.database.models.base import Base
-from app.api.grpc_server import create_server
+from app.api.auth_service import create_server
 
 engine = create_engine(os.environ["DATABASE_URL"])
 SessionTesting = sessionmaker(bind=engine)

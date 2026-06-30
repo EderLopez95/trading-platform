@@ -1,25 +1,17 @@
 class DomainError(Exception):
     pass
 
-class InvalidConfigError(DomainError):
-    def __init__(self, message: str = "Invalid configuration"):
-        super().__init__(message)
+class TimeframeNotSupportedException(DomainError):
+    def __init__(self, timeframe: str = ""):
+        super().__init__(f"Unsupported timeframe: {timeframe}")
 
-class StrategyNotFoundError(DomainError):
-    def __init__(self, message: str = "Strategy not found"):
-        super().__init__(message)
+class SymbolNotFoundException(DomainError):
+    def __init__(self, symbol: str = ""):
+        super().__init__(f"Symbol not found: {symbol}")
 
-class ConfigurationNotFoundError(DomainError):
-    def __init__(self, message: str = "Configuration not found"):
-        super().__init__(message)
-
-class BotAlreadyRunningError(DomainError):
-    def __init__(self, message: str = "Bot already running"):
-        super().__init__(message)
-
-class BotNotRunningError(DomainError):
-    def __init__(self, message: str = "Bot not running"):
-        super().__init__(message)
+class RuntimeException(DomainError):
+    def __init__(self, error: str = ""):
+        super().__init__(error)
 
 class EnvironmentVariableMissingException(DomainError):
     def __init__(self, var_name: str = ""):
