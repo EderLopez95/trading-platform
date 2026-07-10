@@ -11,6 +11,7 @@ class MarketDataAdapter(MarketDataPort):
         timeframe: str,
         count: int,
     ):
+        
         return self.client.get_candles(
             symbol,
             timeframe,

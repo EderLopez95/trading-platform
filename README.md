@@ -49,32 +49,23 @@
     - after create protos, generate grpcs in protos directory
         - python -m grpc_tools.protoc -I . --python_out=generated --grpc_python_out=generated signal.proto
         - python -m grpc_tools.protoc -I . --python_out=generated --grpc_python_out=generated market_data.proto
-    - certificates
-        - openssl genrsa -out ca.key 4096
-        - openssl req -x509 -new -nodes -key ca.key -sha256 -days 365 -out ca.pem -subj "//CN=Local-CA"
-        - market-data
-            - openssl genrsa -out market-data-signal.key 2048
-            - openssl req -new -key market-data-signal.key -out market-data-signal.csr -subj "//CN=market_data_service"
-            - openssl x509 -req -in market-data-signal.csr -CA ca.pem -CAkey ca.key -CAcreateserial -out market-data-signal.pem -days 365 -sha256 -extfile market-data-signal.ext
-        - delete .csr, .srl and move files to MS root
-        - set SIGNAL_SERVICE_SECURE to true in .env.local
-
+        - python -m grpc_tools.protoc -I . --python_out=generated --grpc_python_out=generated auth.proto
+        
 ## gateway-api (microservice)
 
     - configure .env.local
-    - certificates
-        - openssl genrsa -out ca.key 4096
-        - openssl req -x509 -new -nodes -key ca.key -sha256 -days 365 -out ca.pem -subj "//CN=Local-CA"
-        - auth
-            - openssl genrsa -out auth-gateway.key 2048
-            - openssl req -new -key auth-gateway.key -out auth-gateway.csr -subj "//CN=auth_service"
-            - openssl x509 -req -in auth-gateway.csr -CA ca.pem -CAkey ca.key -CAcreateserial -out auth-gateway.pem -days 365 -sha256 -extfile auth-gateway.ext
-        - signal
-            - openssl genrsa -out signal-gateway.key 2048
-            - openssl req -new -key signal-gateway.key -out signal-gateway.csr -subj "//CN=signal_service"
-            - openssl x509 -req -in signal-gateway.csr -CA ca.pem -CAkey ca.key -CAcreateserial -out signal-gateway.pem -days 365 -sha256 -extfile signal-gateway.ext
-        - delete .csr, .srl and move files to MS root
-        - set GATEWAY_SERVICE_SECURE to true in .env.local
+    - certificates (single CA for all services)
+        - from project root: cd certs
+        - Linux/Git Bash: ./generate-certs.sh
+        - PowerShell: ./generate-certs.ps1
+        - generated files:
+            - root-ca.pem (shared trust root)
+            - auth-service.pem/key
+            - signal-service.pem/key
+            - market-data-service.pem/key
+        - Notes:
+            - signal_service and gateway_api (Docker) trust root-ca.pem
+            - market-data-service runs on Windows host and is reached from Docker via host.docker.internal; certificate SAN already includes localhost and host.docker.internal
     - copy auth.proto from auth_service to gateway-api and generate stubs
         - python -m grpc_tools.protoc -I . --python_out=generated --grpc_python_out=generated auth.proto
     - copy signal.proto from signal_service to gateway-api and generate stubs
@@ -86,6 +77,10 @@
 
 ## run with docker
 
+    - generate certificates once (or when rotating)
+        - cd certs
+        - ./generate-certs.sh (or ./generate-certs.ps1)
+        - cd ..
     - docker-compose down -v
     - docker-compose up --build
     - docker compose logs -f signal_service

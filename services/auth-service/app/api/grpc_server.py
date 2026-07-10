@@ -158,6 +158,34 @@ class AuthServiceServicer(auth_pb2_grpc.AuthServiceServicer):
 
                 return auth_pb2.UserResponse()
             
+    def GetUser(self, request, context):
+        request_id = _get_request_id(context)
+        logger.info(
+            "get_user_called",
+            extra={
+                "request_id": request_id,
+                "service": "auth",
+            }
+        )
+        
+        try:
+            with SessionLocal() as db:
+                repository = UserRepositoryImpl(db)
+                user = repository.get_by_id(request.user_id)
+
+                return auth_pb2.UserTelegramResponse(
+                    user_id=str(user.id),
+                    email=user.email,
+                    telegram_token=user.telegram_token or "",
+                    telegram_chat_id=user.telegram_chat_id or "",
+                )
+            
+        except Exception as e:
+            context.set_code(grpc.StatusCode.INTERNAL)
+            context.set_details("Internal server error: " + str(e))
+
+            return auth_pb2.UserTelegramResponse()
+            
 def _get_request_id(context):
     metadata = dict(context.invocation_metadata())
     

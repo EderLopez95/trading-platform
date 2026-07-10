@@ -1,3 +1,4 @@
+import logging
 from google.protobuf.empty_pb2 import Empty
 from app.infrastructure.database.connection import SessionLocal
 from app.infrastructure.protos.generated import signal_pb2, signal_pb2_grpc
@@ -7,12 +8,19 @@ from app.application.services.configuration_service import ConfigurationService
 from app.application.services.user_settings_service import UserSettingsService
 from app.infrastructure.database.repositories.user_settings_repository import UserSettingsRepositoryImpl
 
+logger = logging.getLogger("signal")
+
 class SignalGrpcService(signal_pb2_grpc.SignalServiceServicer):
-    def CreateConfiguration(
-        self,
-        request,
-        context,
-    ):
+    def CreateConfiguration(self, request, context):
+        request_id = _get_request_id(context)
+        logger.info(
+            "create_configuration_called",
+            extra={
+                "request_id": request_id,
+                "service": "signal",
+            }
+        )
+
         with SessionLocal() as db:
             repository = ConfigurationRepositoryImpl(db)
             use_case = ConfigurationService(repository)
@@ -34,11 +42,16 @@ class SignalGrpcService(signal_pb2_grpc.SignalServiceServicer):
                 )
             )
 
-    def GetConfigurations(
-        self,
-        request,
-        context,
-    ):
+    def GetConfigurations(self, request, context):
+        request_id = _get_request_id(context)
+        logger.info(
+            "get_configurations_called",
+            extra={
+                "request_id": request_id,
+                "service": "signal",
+            }
+        )
+
         with SessionLocal() as db:
             repository = ConfigurationRepositoryImpl(db)
             use_case = ConfigurationService(repository)
@@ -58,11 +71,16 @@ class SignalGrpcService(signal_pb2_grpc.SignalServiceServicer):
                 )
             )
 
-    def DeleteConfiguration(
-        self,
-        request,
-        context,
-    ):
+    def DeleteConfiguration(self, request, context):
+        request_id = _get_request_id(context)
+        logger.info(
+            "delete_configuration_called",
+            extra={
+                "request_id": request_id,
+                "service": "signal",
+            }
+        )
+
         with SessionLocal() as db:
             repository = ConfigurationRepositoryImpl(db)
             use_case = ConfigurationService(repository)
@@ -71,11 +89,16 @@ class SignalGrpcService(signal_pb2_grpc.SignalServiceServicer):
 
             return Empty()
 
-    def ToggleConfiguration(
-        self,
-        request,
-        context,
-    ):
+    def ToggleConfiguration(self, request, context):
+        request_id = _get_request_id(context)
+        logger.info(
+            "toggle_configuration_called",
+            extra={
+                "request_id": request_id,
+                "service": "signal",
+            }
+        )
+
         with SessionLocal() as db:
             repository = ConfigurationRepositoryImpl(db)
             use_case = ConfigurationService(repository)
@@ -91,11 +114,16 @@ class SignalGrpcService(signal_pb2_grpc.SignalServiceServicer):
                 )
             )
 
-    def GetAnalysisStatus(
-        self,
-        request,
-        context,
-    ):
+    def GetAnalysisStatus(self, request, context):
+        request_id = _get_request_id(context)
+        logger.info(
+            "get_analysis_status_called",
+            extra={
+                "request_id": request_id,
+                "service": "signal",
+            }
+        )
+
         with SessionLocal() as db:
             repository = UserSettingsRepositoryImpl(db)
             service = UserSettingsService(repository)
@@ -107,11 +135,16 @@ class SignalGrpcService(signal_pb2_grpc.SignalServiceServicer):
                 )
             )
 
-    def ToggleAnalysis(
-        self,
-        request,
-        context,
-    ):
+    def ToggleAnalysis(self, request, context):
+        request_id = _get_request_id(context)
+        logger.info(
+            "toggle_analysis_called",
+            extra={
+                "request_id": request_id,
+                "service": "signal",
+            }
+        )
+
         with SessionLocal() as db:
             repository = UserSettingsRepositoryImpl(db)
             service = UserSettingsService(repository)
@@ -128,3 +161,8 @@ class SignalGrpcService(signal_pb2_grpc.SignalServiceServicer):
                     enabled=settings.analysis_enabled
                 )
             )
+
+def _get_request_id(context):
+    metadata = dict(context.invocation_metadata())
+    
+    return metadata.get("request-id")

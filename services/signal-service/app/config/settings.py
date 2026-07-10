@@ -15,13 +15,16 @@ GRPC_SSL_KEY = os.getenv("GRPC_SSL_KEY")
 MARKET_DATA_SERVICE_HOST = os.getenv("MARKET_DATA_SERVICE_HOST")
 MARKET_DATA_SERVICE_PORT = int(os.getenv("MARKET_DATA_SERVICE_PORT", 5053))
 SIGNAL_SERVICE_SECURE = (os.getenv("SIGNAL_SERVICE_SECURE", "false").strip().lower() == "true")
-SIGNAL_SERVICE_CERT = os.getenv("SIGNAL_SERVICE_CERT")
+TRUSTED_CA_CERT = os.getenv("TRUSTED_CA_CERT")
+AUTH_SERVICE_HOST = os.getenv("AUTH_SERVICE_HOST")
+AUTH_SERVICE_PORT = int(os.getenv("AUTH_SERVICE_PORT", 5051))
 
 def validate_settings():
     required = [
         "ENV",
         "DATABASE_URL",
         "MARKET_DATA_SERVICE_HOST",
+        "AUTH_SERVICE_HOST",
     ]
 
     missing = [var for var in required if not os.getenv(var)]
@@ -29,5 +32,5 @@ def validate_settings():
     if missing:
         raise EnvironmentVariableMissingException(", ".join(missing))
 
-    if SIGNAL_SERVICE_SECURE and not SIGNAL_SERVICE_CERT:
-        raise EnvironmentVariableMissingException("SIGNAL_SERVICE_SECURE required when SIGNAL_SERVICE_CERT=true")
+    if SIGNAL_SERVICE_SECURE and not TRUSTED_CA_CERT:
+        raise EnvironmentVariableMissingException("TRUSTED_CA_CERT required when SIGNAL_SERVICE_SECURE=true")

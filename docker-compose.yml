@@ -30,10 +30,12 @@ services:
       JWT_SECRET: trading-secret-key
       ENCRYPTION_KEY: 37iwsIZYfGJbWGWmldL4lXBAze-ESZpc7_ODD5AXzlc=
       GRPC_PORT: 5051
-      GRPC_SSL_CERT: auth-gateway.pem
-      GRPC_SSL_KEY: auth-gateway.key
+      GRPC_SSL_CERT: /certs/auth-service.pem
+      GRPC_SSL_KEY: /certs/auth-service.key
     ports:
       - "5051:5051"
+    volumes:
+      - ./certs:/certs:ro
     healthcheck:
       test: ["CMD", "nc", "-z", "localhost", "5051"]
       interval: 5s
@@ -52,14 +54,18 @@ services:
       ENV: prod
       DATABASE_URL: postgresql://trading:trading@postgres:5432/trading_platform
       GRPC_PORT: 5052
-      GRPC_SSL_CERT: signal-gateway.pem
-      GRPC_SSL_KEY: signal-gateway.key
+      GRPC_SSL_CERT: /certs/signal-service.pem
+      GRPC_SSL_KEY: /certs/signal-service.key
       MARKET_DATA_SERVICE_HOST: host.docker.internal
       MARKET_DATA_SERVICE_PORT: 5053
       SIGNAL_SERVICE_SECURE: "true"
-      SIGNAL_SERVICE_CERT: ca.pem
+      TRUSTED_CA_CERT: /certs/root-ca.pem
+      AUTH_SERVICE_HOST: auth_service
+      AUTH_SERVICE_PORT: 5051
     ports:
       - "5052:5052"
+    volumes:
+      - ./certs:/certs:ro
     extra_hosts:
       - "host.docker.internal:host-gateway"
     healthcheck:
@@ -75,17 +81,19 @@ services:
       auth_service:
         condition: service_healthy
     environment:
-      ENV: docker
+      ENV: prod
       PORT: 8080
       AUTH_SERVICE_HOST: auth_service
       AUTH_SERVICE_PORT: 5051
       GATEWAY_SERVICE_SECURE: "true"
-      GATEWAY_SERVICE_CERT: ca.pem
+      TRUSTED_CA_CERT: /certs/root-ca.pem
       SIGNAL_SERVICE_HOST: signal_service
       SIGNAL_SERVICE_PORT: 5052
       JWT_SECRET: trading-secret-key
     ports:
       - "8080:8080"
+    volumes:
+      - ./certs:/certs:ro
     extra_hosts:
       - "host.docker.internal:host-gateway"
     healthcheck:

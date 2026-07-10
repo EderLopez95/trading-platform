@@ -1,5 +1,5 @@
 import grpc
-from app.config.settings import AUTH_SERVICE_HOST, AUTH_SERVICE_PORT, GATEWAY_SERVICE_SECURE, GATEWAY_SERVICE_CERT
+from app.config.settings import ENV, AUTH_SERVICE_HOST, AUTH_SERVICE_PORT, GATEWAY_SERVICE_SECURE, TRUSTED_CA_CERT
 from app.infrastructure.protos.generated import auth_pb2, auth_pb2_grpc
 from app.infrastructure.grpc.error_mapper import map_grpc_error
 
@@ -7,8 +7,8 @@ class AuthClient:
     def __init__(self):
         address = f"{AUTH_SERVICE_HOST}:{AUTH_SERVICE_PORT}"
 
-        if GATEWAY_SERVICE_SECURE:
-            with open(GATEWAY_SERVICE_CERT, "rb") as f:
+        if ENV == "prod" and GATEWAY_SERVICE_SECURE:
+            with open(TRUSTED_CA_CERT, "rb") as f:
                 credentials = grpc.ssl_channel_credentials(f.read())
             self.channel = grpc.secure_channel(address, credentials)
         else:

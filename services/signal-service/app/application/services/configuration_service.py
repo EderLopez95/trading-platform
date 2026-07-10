@@ -11,10 +11,7 @@ class ConfigurationService:
 
         return self.repository.get_by_user(user_id)
     
-    def delete_configuration(
-        self,
-        configuration_id: str,
-    ):
+    def delete_configuration(self, configuration_id: str):
         configuration = self.repository.get_by_id(configuration_id)
 
         if not configuration:

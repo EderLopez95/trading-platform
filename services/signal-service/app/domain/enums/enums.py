@@ -13,11 +13,7 @@ class StrategyNameType(str, Enum):
 class SignalType(str, Enum):
     BUY = "BUY"
     SELL = "SELL"
-    HOLD = "HOLD"
-
-class BotStatus(str, Enum):
-    RUNNING = "RUNNING"
-    STOPPED = "STOPPED"
+    NONE = "NONE"
 
 class Timeframe(str, Enum):
     M1 = "M1"

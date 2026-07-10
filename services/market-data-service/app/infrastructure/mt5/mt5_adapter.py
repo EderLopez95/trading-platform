@@ -8,6 +8,7 @@ from app.domain.exceptions.exceptions import TimeframeNotSupportedException, Sym
 
 class MT5Adapter(MarketDataProvider):
     def __init__(self):
+        
         if not mt5.initialize():
             raise RuntimeError(f"MT5 initialize failed: {mt5.last_error()}")
 

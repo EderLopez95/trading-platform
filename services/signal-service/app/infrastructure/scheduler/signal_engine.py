@@ -1,39 +1,105 @@
-import time
+import time, logging, grpc
 from datetime import datetime, timezone
 from app.infrastructure.scheduler.utils import should_execute, get_candle_key
 from app.infrastructure.scheduler.registry_container import user_registry, configuration_registry
 from app.infrastructure.adapters.market_data_adapter import MarketDataAdapter
+from app.domain.enums.enums import SignalType
+from app.domain.strategies.strategy_registry import STRATEGIES
+from app.domain.formatters.signal_formatter import SignalFormatter
+from app.infrastructure.notifications.telegram_adapter import TelegramAdapter
+from app.application.services.notification_service import NotificationService
+from app.application.services.user_profile_service import UserProfileService
+from app.infrastructure.grpc.clients.auth_client import AuthClient
+
+logger = logging.getLogger("signal")
 
 class SignalEngine:
     def __init__(self):
         self.market_data = (MarketDataAdapter())
+        self.user_service = (UserProfileService(AuthClient()))
+        self.notification_service = (NotificationService(TelegramAdapter()))
         self._last_execution = {}
 
     def run(self):
         while True:
-            now = datetime.now(timezone.utc)
+            try:    
+                now = datetime.now(timezone.utc)
 
-            for configuration in (configuration_registry.get_all()):
-                if not (user_registry.is_analysis_enabled(configuration.user_id)):
-                    continue
+                for configuration in (configuration_registry.get_all()):
 
-                if not should_execute(configuration, now):
-                    continue
+                    if not (user_registry.is_analysis_enabled(configuration.user_id)):
+                        continue
 
-                candle_key = get_candle_key(configuration, now)
-                last_key = self._last_execution.get(configuration.id)
+                    if not should_execute(configuration, now):
+                        continue
 
-                if last_key == candle_key:
-                    continue
+                    execution_key = (get_candle_key(configuration, now))
 
-                self._last_execution[configuration.id] = candle_key
-                candles = (
-                    self.market_data.get_candles(
-                        symbol=configuration.symbols[0],
-                        timeframe=configuration.entry_timeframe,
-                        count=100,
-                    )
+                    if (self._last_execution.get(configuration.id) == execution_key):
+                        continue
+
+                    self._last_execution[configuration.id] = execution_key
+                    user = (self.user_service.get_user(configuration.user_id))
+
+                    for symbol in (configuration.symbols):
+                        try:
+                            candles_response = (
+                                self.market_data.get_candles(
+                                    symbol=symbol,
+                                    timeframe=configuration.entry_timeframe,
+                                    count=100,
+                                )
+                            )
+
+                            candles = candles_response.candles
+
+                            for strategy_name in (configuration.strategies):
+                                strategy = STRATEGIES.get(strategy_name)
+
+                                if not strategy:
+                                    continue
+
+                                result = strategy.evaluate(candles)
+
+                                if result.signal == SignalType.NONE:
+                                    continue
+
+                                if not user.telegram_token or not user.telegram_chat_id:
+                                    continue
+
+                                message = (
+                                    SignalFormatter.telegram(
+                                        symbol=symbol,
+                                        strategy=strategy_name,
+                                        signal=result.signal.value,
+                                        timeframe=configuration.entry_timeframe,
+                                        price=candles[-1].close,
+                                    )
+                                )
+
+                                self.notification_service.send(
+                                    token=user.telegram_token,
+                                    chat_id=user.telegram_chat_id,
+                                    message=message,
+                                )
+
+                        except grpc.RpcError as e:
+                            logger.error(
+                                "Unable to load candles",
+                                extra={
+                                    "configuration_id": configuration.id,
+                                    "symbol": configuration.symbols[0],
+                                    "status": e.code().name,
+                                }
+                            )
+                            continue
+
+            except Exception as ex:
+                logger.error(
+                    "Error in signal engine",
+                    extra={
+                        "error": str(ex),
+                    }
                 )
-                print(f"{configuration.symbols[0]} CANDLES={len(candles.candles)}", flush=True)
 
             time.sleep(60)

@@ -1,14 +1,14 @@
 import grpc
 from app.infrastructure.protos.generated import signal_pb2, signal_pb2_grpc
-from app.config.settings import SIGNAL_SERVICE_HOST, SIGNAL_SERVICE_PORT, GATEWAY_SERVICE_SECURE, GATEWAY_SERVICE_CERT
+from app.config.settings import ENV, SIGNAL_SERVICE_HOST, SIGNAL_SERVICE_PORT, GATEWAY_SERVICE_SECURE, TRUSTED_CA_CERT
 from app.infrastructure.grpc.error_mapper import map_grpc_error
 
 class SignalClient:
     def __init__(self):
         address = (f"{SIGNAL_SERVICE_HOST}:{SIGNAL_SERVICE_PORT}")
 
-        if GATEWAY_SERVICE_SECURE:
-            with open(GATEWAY_SERVICE_CERT, "rb") as f:
+        if ENV == "prod" and GATEWAY_SERVICE_SECURE:
+            with open(TRUSTED_CA_CERT, "rb") as f:
                 credentials = grpc.ssl_channel_credentials(f.read())
             self.channel = grpc.secure_channel(address, credentials)
         else:
