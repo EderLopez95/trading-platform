@@ -1,5 +1,5 @@
-from app.domain.strategies.ema_cross_strategy import EmaCrossStrategy
+from app.domain.strategies.multi_smas_momentum_strategy import MultiSMAsMomentumStrategy
 
 STRATEGIES = {
-    "EMA_CROSS": EmaCrossStrategy(),
+    "multi_smas_momentum": MultiSMAsMomentumStrategy(),
 }

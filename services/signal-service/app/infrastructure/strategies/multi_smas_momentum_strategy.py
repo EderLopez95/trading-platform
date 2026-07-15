@@ -1,5 +1,5 @@
 from app.application.ports.strategy_port import StrategyPort
 
-class EmaCrossStrategy(StrategyPort):
+class MultiSMAsMomentumStrategy(StrategyPort):
     def evaluate(self, candles):
         return None

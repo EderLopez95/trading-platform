@@ -54,10 +54,10 @@ class AuthServiceStub:
                 request_serializer=auth__pb2.UpdateTelegramRequest.SerializeToString,
                 response_deserializer=auth__pb2.UserResponse.FromString,
                 _registered_method=True)
-        self.GetUser = channel.unary_unary(
-                '/AuthService/GetUser',
-                request_serializer=auth__pb2.GetUserRequest.SerializeToString,
-                response_deserializer=auth__pb2.UserTelegramResponse.FromString,
+        self.GetUsers = channel.unary_unary(
+                '/AuthService/GetUsers',
+                request_serializer=auth__pb2.GetUsersRequest.SerializeToString,
+                response_deserializer=auth__pb2.GetUsersResponse.FromString,
                 _registered_method=True)
 
 
@@ -88,7 +88,7 @@ class AuthServiceServicer:
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def GetUser(self, request, context):
+    def GetUsers(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -117,10 +117,10 @@ def add_AuthServiceServicer_to_server(servicer, server):
                     request_deserializer=auth__pb2.UpdateTelegramRequest.FromString,
                     response_serializer=auth__pb2.UserResponse.SerializeToString,
             ),
-            'GetUser': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetUser,
-                    request_deserializer=auth__pb2.GetUserRequest.FromString,
-                    response_serializer=auth__pb2.UserTelegramResponse.SerializeToString,
+            'GetUsers': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetUsers,
+                    request_deserializer=auth__pb2.GetUsersRequest.FromString,
+                    response_serializer=auth__pb2.GetUsersResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -242,7 +242,7 @@ class AuthService:
             _registered_method=True)
 
     @staticmethod
-    def GetUser(request,
+    def GetUsers(request,
             target,
             options=(),
             channel_credentials=None,
@@ -255,9 +255,9 @@ class AuthService:
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/AuthService/GetUser',
-            auth__pb2.GetUserRequest.SerializeToString,
-            auth__pb2.UserTelegramResponse.FromString,
+            '/AuthService/GetUsers',
+            auth__pb2.GetUsersRequest.SerializeToString,
+            auth__pb2.GetUsersResponse.FromString,
             options,
             channel_credentials,
             insecure,

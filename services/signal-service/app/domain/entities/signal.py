@@ -16,4 +16,3 @@ class Signal:
     signal_time: datetime
     candle_time: datetime
     dedup_key: str
-    created_at: datetime | None = None

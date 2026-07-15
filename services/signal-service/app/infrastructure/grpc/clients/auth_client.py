@@ -22,3 +22,6 @@ class AuthClient:
                 user_id=user_id,
             )
         )
+
+    def get_users(self):
+        return self.stub.GetUsers(auth_pb2.GetUsersRequest())

@@ -7,7 +7,7 @@ class SignalRepository(ABC):
         pass
 
     @abstractmethod
-    def exists(self, dedup_key: str, candle_time, user_id: str):
+    def exists(self, user_id: str, dedup_key: str, candle_time):
         pass
 
     @abstractmethod

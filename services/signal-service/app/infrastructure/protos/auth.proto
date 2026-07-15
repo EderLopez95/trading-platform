@@ -5,7 +5,7 @@ service AuthService {
   rpc Login (LoginRequest) returns (AuthResponse);
   rpc Validate (ValidateRequest) returns (UserResponse);
   rpc UpdateTelegram(UpdateTelegramRequest) returns (UserResponse);
-  rpc GetUser(GetUserRequest) returns (UserTelegramResponse);
+  rpc GetUsers(GetUsersRequest) returns (GetUsersResponse);
 }
 
 message RegisterRequest {
@@ -28,8 +28,7 @@ message UpdateTelegramRequest {
   string telegram_chat_id = 3;
 }
 
-message GetUserRequest {
-  string user_id = 1;
+message GetUsersRequest {
 }
 
 message AuthResponse {
@@ -48,4 +47,8 @@ message UserTelegramResponse {
   string email = 2;
   string telegram_token = 3;
   string telegram_chat_id = 4;
+}
+
+message GetUsersResponse {
+  repeated UserTelegramResponse users = 1;
 }

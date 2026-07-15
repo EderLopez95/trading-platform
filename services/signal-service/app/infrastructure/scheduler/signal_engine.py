@@ -1,4 +1,5 @@
 import time, logging, grpc
+from app.infrastructure.database.connection import SessionLocal
 from datetime import datetime, timezone
 from app.infrastructure.scheduler.utils import should_execute, get_candle_key
 from app.infrastructure.scheduler.registry_container import user_registry, configuration_registry
@@ -8,16 +9,17 @@ from app.domain.strategies.strategy_registry import STRATEGIES
 from app.domain.formatters.signal_formatter import SignalFormatter
 from app.infrastructure.notifications.telegram_adapter import TelegramAdapter
 from app.application.services.notification_service import NotificationService
-from app.application.services.user_profile_service import UserProfileService
-from app.infrastructure.grpc.clients.auth_client import AuthClient
+from app.infrastructure.scheduler.registry_container import user_profile_registry
+from app.application.services.signal_generation_service import SignalGenerationService
+from app.infrastructure.database.repositories.signal_repository import SignalRepositoryImpl
 
 logger = logging.getLogger("signal")
 
 class SignalEngine:
     def __init__(self):
-        self.market_data = (MarketDataAdapter())
-        self.user_service = (UserProfileService(AuthClient()))
-        self.notification_service = (NotificationService(TelegramAdapter()))
+        self.signal_generation_service = SignalGenerationService(SignalRepositoryImpl(SessionLocal()))
+        self.market_data = MarketDataAdapter()
+        self.notification_service = NotificationService(TelegramAdapter())
         self._last_execution = {}
 
     def run(self):
@@ -39,8 +41,8 @@ class SignalEngine:
                         continue
 
                     self._last_execution[configuration.id] = execution_key
-                    user = (self.user_service.get_user(configuration.user_id))
-
+                    user = user_profile_registry.get(configuration.user_id)
+                    
                     for symbol in (configuration.symbols):
                         try:
                             candles_response = (
@@ -64,7 +66,21 @@ class SignalEngine:
                                 if result.signal == SignalType.NONE:
                                     continue
 
-                                if not user.telegram_token or not user.telegram_chat_id:
+                                signal = (
+                                    self.signal_generation_service.generate(
+                                        configuration=configuration,
+                                        symbol=symbol,
+                                        strategy=strategy_name,
+                                        result=result,
+                                        candle_time=now,
+                                        price=candles[-1].close,
+                                    )
+                                )
+
+                                if not signal:
+                                    continue
+
+                                if not user or not user.telegram_token or not user.telegram_chat_id:
                                     continue
 
                                 message = (

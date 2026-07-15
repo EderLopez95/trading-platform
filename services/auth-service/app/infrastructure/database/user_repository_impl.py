@@ -55,6 +55,14 @@ class UserRepositoryImpl(UserRepository):
 
         return user
     
+    def get_all(self):
+
+        return (
+            self.db.query(UserModel)
+            .filter(UserModel.is_active == True)
+            .all()
+        )
+    
     def _to_domain(self, model: UserModel) -> User:
         
         return User(
