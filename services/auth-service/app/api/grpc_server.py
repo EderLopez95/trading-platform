@@ -200,7 +200,7 @@ class AuthServiceServicer(auth_pb2_grpc.AuthServiceServicer):
         try:
             with SessionLocal() as db:
                 repo = UserRepositoryImpl(db)
-                users = repo.get_all()
+                users = repo.get_users()
 
                 return auth_pb2.GetUsersResponse(
                     users=[

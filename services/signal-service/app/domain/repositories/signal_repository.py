@@ -13,3 +13,14 @@ class SignalRepository(ABC):
     @abstractmethod
     def get_by_user(self, user_id: str) -> list[Signal]:
         pass
+
+    @abstractmethod
+    def search(
+        self,
+        user_id: str,
+        symbol: str | None,
+        strategy: str | None,
+        page: int,
+        page_size: int,
+    ):
+        pass

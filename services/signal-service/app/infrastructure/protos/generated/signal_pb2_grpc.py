@@ -70,6 +70,16 @@ class SignalServiceStub:
                 request_serializer=signal__pb2.ToggleAnalysisRequest.SerializeToString,
                 response_deserializer=signal__pb2.AnalysisStatusResponse.FromString,
                 _registered_method=True)
+        self.GetSignals = channel.unary_unary(
+                '/SignalService/GetSignals',
+                request_serializer=signal__pb2.GetSignalsRequest.SerializeToString,
+                response_deserializer=signal__pb2.GetSignalsResponse.FromString,
+                _registered_method=True)
+        self.RefreshRegistries = channel.unary_unary(
+                '/SignalService/RefreshRegistries',
+                request_serializer=signal__pb2.RefreshRegistriesRequest.SerializeToString,
+                response_deserializer=signal__pb2.RefreshRegistriesResponse.FromString,
+                _registered_method=True)
 
 
 class SignalServiceServicer:
@@ -117,6 +127,18 @@ class SignalServiceServicer:
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetSignals(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def RefreshRegistries(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_SignalServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -154,6 +176,16 @@ def add_SignalServiceServicer_to_server(servicer, server):
                     servicer.ToggleAnalysis,
                     request_deserializer=signal__pb2.ToggleAnalysisRequest.FromString,
                     response_serializer=signal__pb2.AnalysisStatusResponse.SerializeToString,
+            ),
+            'GetSignals': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetSignals,
+                    request_deserializer=signal__pb2.GetSignalsRequest.FromString,
+                    response_serializer=signal__pb2.GetSignalsResponse.SerializeToString,
+            ),
+            'RefreshRegistries': grpc.unary_unary_rpc_method_handler(
+                    servicer.RefreshRegistries,
+                    request_deserializer=signal__pb2.RefreshRegistriesRequest.FromString,
+                    response_serializer=signal__pb2.RefreshRegistriesResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -345,6 +377,60 @@ class SignalService:
             '/SignalService/ToggleAnalysis',
             signal__pb2.ToggleAnalysisRequest.SerializeToString,
             signal__pb2.AnalysisStatusResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetSignals(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/SignalService/GetSignals',
+            signal__pb2.GetSignalsRequest.SerializeToString,
+            signal__pb2.GetSignalsResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def RefreshRegistries(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/SignalService/RefreshRegistries',
+            signal__pb2.RefreshRegistriesRequest.SerializeToString,
+            signal__pb2.RefreshRegistriesResponse.FromString,
             options,
             channel_credentials,
             insecure,

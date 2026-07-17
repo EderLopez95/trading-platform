@@ -1,7 +1,8 @@
 from app.infrastructure.scheduler.registry_container import user_registry
+from app.infrastructure.database.repositories.user_settings_repository import UserSettingsRepositoryImpl
 
 class UserSettingsService:
-    def __init__(self, repository):
+    def __init__(self, repository: UserSettingsRepositoryImpl):
         self.repository = repository
 
     def get_status(self, user_id: str):

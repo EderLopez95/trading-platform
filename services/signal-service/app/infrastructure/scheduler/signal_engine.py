@@ -12,6 +12,7 @@ from app.application.services.notification_service import NotificationService
 from app.infrastructure.scheduler.registry_container import user_profile_registry
 from app.application.services.signal_generation_service import SignalGenerationService
 from app.infrastructure.database.repositories.signal_repository import SignalRepositoryImpl
+from app.infrastructure.scheduler.metrics import SchedulerMetrics
 
 logger = logging.getLogger("signal")
 
@@ -23,12 +24,15 @@ class SignalEngine:
         self._last_execution = {}
 
     def run(self):
+        metrics = SchedulerMetrics()
+
         while True:
             try:    
                 now = datetime.now(timezone.utc)
-
-                for configuration in (configuration_registry.get_all()):
-
+                
+                for configuration in (configuration_registry.get_users()):
+                    started_at = time.time()
+                    
                     if not (user_registry.is_analysis_enabled(configuration.user_id)):
                         continue
 
@@ -54,7 +58,7 @@ class SignalEngine:
                             )
 
                             candles = candles_response.candles
-
+                            
                             for strategy_name in (configuration.strategies):
                                 strategy = STRATEGIES.get(strategy_name)
 
@@ -62,7 +66,7 @@ class SignalEngine:
                                     continue
 
                                 result = strategy.evaluate(candles)
-
+                                
                                 if result.signal == SignalType.NONE:
                                     continue
 
@@ -79,6 +83,8 @@ class SignalEngine:
 
                                 if not signal:
                                     continue
+
+                                metrics.signals += 1
 
                                 if not user or not user.telegram_token or not user.telegram_chat_id:
                                     continue
@@ -101,14 +107,26 @@ class SignalEngine:
 
                         except grpc.RpcError as e:
                             logger.error(
-                                "Unable to load candles",
+                                "Error in signal engine for configuration",
                                 extra={
                                     "configuration_id": configuration.id,
                                     "symbol": configuration.symbols[0],
                                     "status": e.code().name,
+                                    "details": e.details(),
                                 }
                             )
+                            metrics.errors += 1
                             continue
+
+                    duration = time.time() - started_at
+                    logger.info(
+                        "scheduler_cycle",
+                        extra={
+                            "signals": metrics.signals,
+                            "errors": metrics.errors,
+                            "duration_s": round(duration, 2),
+                        }
+                    )
 
             except Exception as ex:
                 logger.error(
@@ -117,5 +135,6 @@ class SignalEngine:
                         "error": str(ex),
                     }
                 )
+                metrics.errors += 1
 
             time.sleep(60)

@@ -63,6 +63,17 @@ class ConfigurationRepositoryImpl(ConfigurationRepository):
             ConfigurationMapper.to_domain(model)
             for model in models
         ]
+    
+    def get_all(self) -> list[Configuration]:
+        models = (
+            self.db.query(ConfigurationModel)
+            .all()
+        )
+
+        return [
+            ConfigurationMapper.to_domain(model)
+            for model in models
+        ]
 
     def update(self, configuration: Configuration) -> Configuration:
         model = (

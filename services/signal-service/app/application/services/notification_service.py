@@ -1,5 +1,7 @@
+from app.infrastructure.notifications.telegram_adapter import TelegramAdapter
+
 class NotificationService:
-    def __init__(self, provider):
+    def __init__(self, provider: TelegramAdapter):
         self.provider = provider
 
     def send(

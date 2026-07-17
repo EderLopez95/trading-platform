@@ -24,4 +24,5 @@ class AuthClient:
         )
 
     def get_users(self):
+        
         return self.stub.GetUsers(auth_pb2.GetUsersRequest())

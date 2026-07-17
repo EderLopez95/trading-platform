@@ -1,10 +1,13 @@
+from app.infrastructure.scheduler.user_registry import UserRegistry
+from app.infrastructure.database.repositories.user_settings_repository import UserSettingsRepositoryImpl
+
 class UserRegistryService:
-    def __init__(self, repository, registry):
+    def __init__(self, repository: UserSettingsRepositoryImpl, registry: UserRegistry):
         self.repository = repository
         self.registry = registry
 
     def load(self):
-        settings = self.repository.get_all()
-        self.registry.load(settings)
+        response = self.repository.get_users()
+        self.registry.load(response)
 
-        return len(settings)
+        return len(response)

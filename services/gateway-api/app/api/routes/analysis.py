@@ -31,5 +31,8 @@ def toggle_analysis(
             data.enabled,
         )
     )
+    
+    if result:
+        service.refresh_registries()
 
     return AnalysisStatusResponse(enabled=result.enabled)

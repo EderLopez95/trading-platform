@@ -14,7 +14,7 @@
         - docker stop postgres-trading
     - verify docker container and connect DB
         - docker ps
-        - docker exec -it postgres-trading psql -U trading -d trading_platform
+        - docker exec -it trading_postgres psql -U trading -d trading_platform
         - CREATE DATABASE trading_platform; (if necessary)
         - docker rm -f postgres-trading (deletes container)
     - alembic process migration

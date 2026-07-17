@@ -3,9 +3,10 @@ from datetime import datetime, timezone
 from app.domain.entities.signal import Signal
 from app.domain.enums.enums import SignalType
 from app.domain.utils.signal_dedup import build_dedup_key
+from app.infrastructure.database.repositories.signal_repository import SignalRepositoryImpl
 
 class SignalGenerationService:
-    def __init__(self, repository):
+    def __init__(self, repository: SignalRepositoryImpl):
         self.repository = repository
 
     def generate(
@@ -26,7 +27,7 @@ class SignalGenerationService:
                 symbol=symbol,
                 strategy=strategy,
                 signal=result.signal.value,
-                timeframe=configuration.entry_timeframe,
+                timeframe=configuration.trend_timeframe,
             )
         )
 

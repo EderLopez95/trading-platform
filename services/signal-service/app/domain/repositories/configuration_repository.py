@@ -19,6 +19,10 @@ class ConfigurationRepository(ABC):
         pass
 
     @abstractmethod
+    def get_all(self) -> list[Configuration]:
+        pass
+
+    @abstractmethod
     def update(self, configuration: Configuration) -> Configuration:
         pass
 

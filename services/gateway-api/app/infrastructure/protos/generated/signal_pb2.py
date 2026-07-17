@@ -25,7 +25,7 @@ _sym_db = _symbol_database.Default()
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0csignal.proto\x1a\x1bgoogle/protobuf/empty.proto\"\xb2\x01\n\x10\x43onfigurationDto\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12\x0f\n\x07symbols\x18\x03 \x03(\t\x12\x12\n\nstrategies\x18\x04 \x03(\t\x12\x17\n\x0ftrend_timeframe\x18\x05 \x01(\t\x12\x19\n\x11\x63ontext_timeframe\x18\x06 \x01(\t\x12\x17\n\x0f\x65ntry_timeframe\x18\x07 \x01(\t\x12\x0f\n\x07\x65nabled\x18\x08 \x01(\x08\"\x9f\x01\n\x1a\x43reateConfigurationRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\x12\x0f\n\x07symbols\x18\x02 \x03(\t\x12\x12\n\nstrategies\x18\x03 \x03(\t\x12\x17\n\x0ftrend_timeframe\x18\x04 \x01(\t\x12\x19\n\x11\x63ontext_timeframe\x18\x05 \x01(\t\x12\x17\n\x0f\x65ntry_timeframe\x18\x06 \x01(\t\"+\n\x18GetConfigurationsRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\"6\n\x1a\x44\x65leteConfigurationRequest\x12\x18\n\x10\x63onfiguration_id\x18\x01 \x01(\t\"G\n\x1aToggleConfigurationRequest\x12\x18\n\x10\x63onfiguration_id\x18\x01 \x01(\t\x12\x0f\n\x07\x65nabled\x18\x02 \x01(\x08\"\xa8\x01\n\x1aUpdateConfigurationRequest\x12\x18\n\x10\x63onfiguration_id\x18\x01 \x01(\t\x12\x0f\n\x07symbols\x18\x02 \x03(\t\x12\x12\n\nstrategies\x18\x03 \x03(\t\x12\x17\n\x0ftrend_timeframe\x18\x04 \x01(\t\x12\x19\n\x11\x63ontext_timeframe\x18\x05 \x01(\t\x12\x17\n\x0f\x65ntry_timeframe\x18\x06 \x01(\t\"F\n\x19\x43onfigurationListResponse\x12)\n\x0e\x63onfigurations\x18\x01 \x03(\x0b\x32\x11.ConfigurationDto\"A\n\x15\x43onfigurationResponse\x12(\n\rconfiguration\x18\x01 \x01(\x0b\x32\x11.ConfigurationDto\"(\n\x15\x41nalysisStatusRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\")\n\x16\x41nalysisStatusResponse\x12\x0f\n\x07\x65nabled\x18\x01 \x01(\x08\"9\n\x15ToggleAnalysisRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\x12\x0f\n\x07\x65nabled\x18\x02 \x01(\x08\x32\x94\x04\n\rSignalService\x12J\n\x13\x43reateConfiguration\x12\x1b.CreateConfigurationRequest\x1a\x16.ConfigurationResponse\x12J\n\x11GetConfigurations\x12\x19.GetConfigurationsRequest\x1a\x1a.ConfigurationListResponse\x12J\n\x13\x44\x65leteConfiguration\x12\x1b.DeleteConfigurationRequest\x1a\x16.google.protobuf.Empty\x12J\n\x13ToggleConfiguration\x12\x1b.ToggleConfigurationRequest\x1a\x16.ConfigurationResponse\x12J\n\x13UpdateConfiguration\x12\x1b.UpdateConfigurationRequest\x1a\x16.ConfigurationResponse\x12\x44\n\x11GetAnalysisStatus\x12\x16.AnalysisStatusRequest\x1a\x17.AnalysisStatusResponse\x12\x41\n\x0eToggleAnalysis\x12\x16.ToggleAnalysisRequest\x1a\x17.AnalysisStatusResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0csignal.proto\x1a\x1bgoogle/protobuf/empty.proto\"\xb2\x01\n\x10\x43onfigurationDto\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12\x0f\n\x07symbols\x18\x03 \x03(\t\x12\x12\n\nstrategies\x18\x04 \x03(\t\x12\x17\n\x0ftrend_timeframe\x18\x05 \x01(\t\x12\x19\n\x11\x63ontext_timeframe\x18\x06 \x01(\t\x12\x17\n\x0f\x65ntry_timeframe\x18\x07 \x01(\t\x12\x0f\n\x07\x65nabled\x18\x08 \x01(\x08\"\xba\x01\n\tSignalDto\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0e\n\x06symbol\x18\x02 \x01(\t\x12\x10\n\x08strategy\x18\x03 \x01(\t\x12\x0e\n\x06signal\x18\x04 \x01(\t\x12\x17\n\x0ftrend_timeframe\x18\x05 \x01(\t\x12\x19\n\x11\x63ontext_timeframe\x18\x06 \x01(\t\x12\x17\n\x0f\x65ntry_timeframe\x18\x07 \x01(\t\x12\r\n\x05price\x18\x08 \x01(\x01\x12\x13\n\x0bsignal_time\x18\t \x01(\t\"\x9f\x01\n\x1a\x43reateConfigurationRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\x12\x0f\n\x07symbols\x18\x02 \x03(\t\x12\x12\n\nstrategies\x18\x03 \x03(\t\x12\x17\n\x0ftrend_timeframe\x18\x04 \x01(\t\x12\x19\n\x11\x63ontext_timeframe\x18\x05 \x01(\t\x12\x17\n\x0f\x65ntry_timeframe\x18\x06 \x01(\t\"+\n\x18GetConfigurationsRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\"6\n\x1a\x44\x65leteConfigurationRequest\x12\x18\n\x10\x63onfiguration_id\x18\x01 \x01(\t\"G\n\x1aToggleConfigurationRequest\x12\x18\n\x10\x63onfiguration_id\x18\x01 \x01(\t\x12\x0f\n\x07\x65nabled\x18\x02 \x01(\x08\"\xa8\x01\n\x1aUpdateConfigurationRequest\x12\x18\n\x10\x63onfiguration_id\x18\x01 \x01(\t\x12\x0f\n\x07symbols\x18\x02 \x03(\t\x12\x12\n\nstrategies\x18\x03 \x03(\t\x12\x17\n\x0ftrend_timeframe\x18\x04 \x01(\t\x12\x19\n\x11\x63ontext_timeframe\x18\x05 \x01(\t\x12\x17\n\x0f\x65ntry_timeframe\x18\x06 \x01(\t\"9\n\x15ToggleAnalysisRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\x12\x0f\n\x07\x65nabled\x18\x02 \x01(\x08\"(\n\x15\x41nalysisStatusRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\"g\n\x11GetSignalsRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\x12\x0e\n\x06symbol\x18\x02 \x01(\t\x12\x10\n\x08strategy\x18\x03 \x01(\t\x12\x0c\n\x04page\x18\x04 \x01(\x05\x12\x11\n\tpage_size\x18\x05 \x01(\x05\"\x1a\n\x18RefreshRegistriesRequest\"F\n\x19\x43onfigurationListResponse\x12)\n\x0e\x63onfigurations\x18\x01 \x03(\x0b\x32\x11.ConfigurationDto\"A\n\x15\x43onfigurationResponse\x12(\n\rconfiguration\x18\x01 \x01(\x0b\x32\x11.ConfigurationDto\")\n\x16\x41nalysisStatusResponse\x12\x0f\n\x07\x65nabled\x18\x01 \x01(\x08\"a\n\x12GetSignalsResponse\x12\x1b\n\x07signals\x18\x01 \x03(\x0b\x32\n.SignalDto\x12\x0c\n\x04page\x18\x02 \x01(\x05\x12\x11\n\tpage_size\x18\x03 \x01(\x05\x12\r\n\x05total\x18\x04 \x01(\x03\",\n\x19RefreshRegistriesResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x32\x97\x05\n\rSignalService\x12J\n\x13\x43reateConfiguration\x12\x1b.CreateConfigurationRequest\x1a\x16.ConfigurationResponse\x12J\n\x11GetConfigurations\x12\x19.GetConfigurationsRequest\x1a\x1a.ConfigurationListResponse\x12J\n\x13\x44\x65leteConfiguration\x12\x1b.DeleteConfigurationRequest\x1a\x16.google.protobuf.Empty\x12J\n\x13ToggleConfiguration\x12\x1b.ToggleConfigurationRequest\x1a\x16.ConfigurationResponse\x12J\n\x13UpdateConfiguration\x12\x1b.UpdateConfigurationRequest\x1a\x16.ConfigurationResponse\x12\x44\n\x11GetAnalysisStatus\x12\x16.AnalysisStatusRequest\x1a\x17.AnalysisStatusResponse\x12\x41\n\x0eToggleAnalysis\x12\x16.ToggleAnalysisRequest\x1a\x17.AnalysisStatusResponse\x12\x35\n\nGetSignals\x12\x12.GetSignalsRequest\x1a\x13.GetSignalsResponse\x12J\n\x11RefreshRegistries\x12\x19.RefreshRegistriesRequest\x1a\x1a.RefreshRegistriesResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -34,26 +34,36 @@ if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
   _globals['_CONFIGURATIONDTO']._serialized_start=46
   _globals['_CONFIGURATIONDTO']._serialized_end=224
-  _globals['_CREATECONFIGURATIONREQUEST']._serialized_start=227
-  _globals['_CREATECONFIGURATIONREQUEST']._serialized_end=386
-  _globals['_GETCONFIGURATIONSREQUEST']._serialized_start=388
-  _globals['_GETCONFIGURATIONSREQUEST']._serialized_end=431
-  _globals['_DELETECONFIGURATIONREQUEST']._serialized_start=433
-  _globals['_DELETECONFIGURATIONREQUEST']._serialized_end=487
-  _globals['_TOGGLECONFIGURATIONREQUEST']._serialized_start=489
-  _globals['_TOGGLECONFIGURATIONREQUEST']._serialized_end=560
-  _globals['_UPDATECONFIGURATIONREQUEST']._serialized_start=563
-  _globals['_UPDATECONFIGURATIONREQUEST']._serialized_end=731
-  _globals['_CONFIGURATIONLISTRESPONSE']._serialized_start=733
-  _globals['_CONFIGURATIONLISTRESPONSE']._serialized_end=803
-  _globals['_CONFIGURATIONRESPONSE']._serialized_start=805
-  _globals['_CONFIGURATIONRESPONSE']._serialized_end=870
-  _globals['_ANALYSISSTATUSREQUEST']._serialized_start=872
-  _globals['_ANALYSISSTATUSREQUEST']._serialized_end=912
-  _globals['_ANALYSISSTATUSRESPONSE']._serialized_start=914
-  _globals['_ANALYSISSTATUSRESPONSE']._serialized_end=955
-  _globals['_TOGGLEANALYSISREQUEST']._serialized_start=957
-  _globals['_TOGGLEANALYSISREQUEST']._serialized_end=1014
-  _globals['_SIGNALSERVICE']._serialized_start=1017
-  _globals['_SIGNALSERVICE']._serialized_end=1549
+  _globals['_SIGNALDTO']._serialized_start=227
+  _globals['_SIGNALDTO']._serialized_end=413
+  _globals['_CREATECONFIGURATIONREQUEST']._serialized_start=416
+  _globals['_CREATECONFIGURATIONREQUEST']._serialized_end=575
+  _globals['_GETCONFIGURATIONSREQUEST']._serialized_start=577
+  _globals['_GETCONFIGURATIONSREQUEST']._serialized_end=620
+  _globals['_DELETECONFIGURATIONREQUEST']._serialized_start=622
+  _globals['_DELETECONFIGURATIONREQUEST']._serialized_end=676
+  _globals['_TOGGLECONFIGURATIONREQUEST']._serialized_start=678
+  _globals['_TOGGLECONFIGURATIONREQUEST']._serialized_end=749
+  _globals['_UPDATECONFIGURATIONREQUEST']._serialized_start=752
+  _globals['_UPDATECONFIGURATIONREQUEST']._serialized_end=920
+  _globals['_TOGGLEANALYSISREQUEST']._serialized_start=922
+  _globals['_TOGGLEANALYSISREQUEST']._serialized_end=979
+  _globals['_ANALYSISSTATUSREQUEST']._serialized_start=981
+  _globals['_ANALYSISSTATUSREQUEST']._serialized_end=1021
+  _globals['_GETSIGNALSREQUEST']._serialized_start=1023
+  _globals['_GETSIGNALSREQUEST']._serialized_end=1126
+  _globals['_REFRESHREGISTRIESREQUEST']._serialized_start=1128
+  _globals['_REFRESHREGISTRIESREQUEST']._serialized_end=1154
+  _globals['_CONFIGURATIONLISTRESPONSE']._serialized_start=1156
+  _globals['_CONFIGURATIONLISTRESPONSE']._serialized_end=1226
+  _globals['_CONFIGURATIONRESPONSE']._serialized_start=1228
+  _globals['_CONFIGURATIONRESPONSE']._serialized_end=1293
+  _globals['_ANALYSISSTATUSRESPONSE']._serialized_start=1295
+  _globals['_ANALYSISSTATUSRESPONSE']._serialized_end=1336
+  _globals['_GETSIGNALSRESPONSE']._serialized_start=1338
+  _globals['_GETSIGNALSRESPONSE']._serialized_end=1435
+  _globals['_REFRESHREGISTRIESRESPONSE']._serialized_start=1437
+  _globals['_REFRESHREGISTRIESRESPONSE']._serialized_end=1481
+  _globals['_SIGNALSERVICE']._serialized_start=1484
+  _globals['_SIGNALSERVICE']._serialized_end=2147
 # @@protoc_insertion_point(module_scope)

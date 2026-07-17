@@ -32,6 +32,9 @@ def create_configuration(
     service: SignalService = Depends(get_service)
 ):
     result = service.create_configuration(user.user_id, data)
+    
+    if result:
+        service.refresh_registries()
 
     return ConfigurationMapper.to_dict(result.configuration)
 
@@ -41,6 +44,7 @@ def delete_configuration(
     service: SignalService = Depends(get_service)
 ):
     service.delete_configuration(configuration_id)
+    service.refresh_registries()
 
     return {"message": "Configuration deleted successfully"}
 
@@ -51,5 +55,8 @@ def toggle_configuration(
     service: SignalService = Depends(get_service)
 ):
     result = service.toggle_configuration(configuration_id, data.enabled)
+    
+    if result:
+        service.refresh_registries()
 
     return ConfigurationMapper.to_dict(result.configuration)

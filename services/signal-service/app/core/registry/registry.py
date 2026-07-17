@@ -35,8 +35,6 @@ def load_registries():
             ).load()
         )
 
-        print(f"Loaded configurations: {configs_loaded}", flush=True)
-        print(f"Loaded users: {users_loaded}", flush=True)
-        print(f"Loaded profiles: {profiles_loaded}", flush=True)
+        print(f"Configurations: {configs_loaded}, Users: {users_loaded}, Profiles: {profiles_loaded}", flush=True)
         
     start_engine()

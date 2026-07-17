@@ -55,7 +55,7 @@ class UserRepositoryImpl(UserRepository):
 
         return user
     
-    def get_all(self):
+    def get_users(self):
 
         return (
             self.db.query(UserModel)

@@ -14,7 +14,7 @@ class ConfigurationRegistry:
     def remove(self, configuration_id: str):
         self._configurations.pop(str(configuration_id), None)
 
-    def get_all(self):
+    def get_users(self):
 
         return list(self._configurations.values())
 

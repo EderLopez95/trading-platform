@@ -3,6 +3,7 @@ from app.infrastructure.protos.generated import signal_pb2
 class ConfigurationGrpcMapper:
     @staticmethod
     def to_proto(configuration):
+        
         return signal_pb2.ConfigurationDto(
             id=configuration.id,
             user_id=configuration.user_id,

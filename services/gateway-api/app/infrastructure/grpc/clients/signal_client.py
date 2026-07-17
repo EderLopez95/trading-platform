@@ -94,3 +94,36 @@ class SignalClient:
         
         except grpc.RpcError as e:
             map_grpc_error(e)
+
+    def get_signals(
+        self,
+        user_id: str,
+        symbol: str | None,
+        strategy: str | None,
+        page: int,
+        page_size: int,
+    ):
+        try:
+
+            return self.stub.GetSignals(
+                signal_pb2.GetSignalsRequest(
+                    user_id=user_id,
+                    symbol=symbol or "",
+                    strategy=strategy or "",
+                    page=page,
+                    page_size=page_size,
+                )
+            )
+
+        except grpc.RpcError as e:
+            map_grpc_error(e)
+
+    def refresh_registries(self):
+        try:
+
+            return self.stub.RefreshRegistries(
+                signal_pb2.RefreshRegistriesRequest()
+            )
+        
+        except grpc.RpcError as e:
+            map_grpc_error(e)

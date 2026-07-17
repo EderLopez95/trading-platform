@@ -5,7 +5,7 @@ import pandas as pd
 
 class MultiSMAsMomentumStrategy:
     def __init__(self):
-        self.utils = RSICross()
+        self.rsi_cross = RSICross()
 
     def evaluate(self, candles):
         closes = [
@@ -63,10 +63,10 @@ class MultiSMAsMomentumStrategy:
         trend_direction_ok = abs(sma20_slope) > 0
 
         # calculate RSI entry
-        rsi = self.utils.calculate_rsi(close_series, 14)
+        rsi = self.rsi_cross.calculate_rsi(close_series, 14)
         rsi_ma = rsi.rolling(14).mean()
-        bullish_cross = self.utils.crossover(rsi, rsi_ma)
-        bearish_cross = self.utils.crossunder(rsi, rsi_ma)
+        bullish_cross = self.rsi_cross.crossover(rsi, rsi_ma)
+        bearish_cross = self.rsi_cross.crossunder(rsi, rsi_ma)
         
         volume_avg = pd.Series([candle.volume for candle in candles]).rolling(20).mean()
         if pd.isna(volume_avg.iloc[-1]): # in case of invalid data

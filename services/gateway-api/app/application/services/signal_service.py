@@ -36,3 +36,24 @@ class SignalService:
     def toggle_analysis(self, user_id: str, enabled: bool):
         
         return self.client.toggle_analysis(user_id, enabled)
+
+    def get_signals(
+        self,
+        user_id: str,
+        symbol: str | None = None,
+        strategy: str | None = None,
+        page: int = 1,
+        page_size: int = 20,
+    ):
+        
+        return self.client.get_signals(
+            user_id=user_id,
+            symbol=symbol,
+            strategy=strategy,
+            page=page,
+            page_size=page_size,
+        )
+
+    def refresh_registries(self):
+        
+        return self.client.refresh_registries()

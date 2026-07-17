@@ -1,5 +1,7 @@
+from app.infrastructure.mt5.mt5_adapter import MT5Adapter
+
 class MarketDataService:
-    def __init__(self, provider):
+    def __init__(self, provider: MT5Adapter):
         self.provider = provider
 
     def get_candles(

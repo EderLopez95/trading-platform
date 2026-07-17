@@ -31,3 +31,37 @@ class SignalRepositoryImpl:
             .first()
             is not None
         )
+
+    def search(
+        self,
+        user_id: str,
+        symbol: str | None,
+        strategy: str | None,
+        page: int,
+        page_size: int,
+    ):
+        query = (
+            self.db.query(SignalModel)
+            .filter(SignalModel.user_id == uuid.UUID(user_id))
+        )
+
+        if symbol:
+            query = query.filter(SignalModel.symbol == symbol)
+
+        if strategy:
+            query = query.filter(SignalModel.strategy == strategy)
+
+        total = query.count()
+
+        items = (
+            query
+            .order_by(SignalModel.signal_time.desc())
+            .offset((page - 1) * page_size)
+            .limit(page_size)
+            .all()
+        )
+
+        return {
+            "items": items,
+            "total": total,
+        }

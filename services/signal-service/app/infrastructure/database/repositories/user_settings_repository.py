@@ -42,7 +42,7 @@ class UserSettingsRepositoryImpl:
 
         return UserSettingsMapper.to_domain(model)
 
-    def get_all(self):
+    def get_users(self):
         models = (
             self.db.query(UserSettingsModel)
             .all()

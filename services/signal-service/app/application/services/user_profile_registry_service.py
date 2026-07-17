@@ -1,7 +1,9 @@
 from app.domain.entities.user_profile import UserProfile
+from app.infrastructure.grpc.clients.auth_client import AuthClient
+from app.infrastructure.scheduler.user_profile_registry import UserProfileRegistry
 
 class UserProfileRegistryService:
-    def __init__(self, auth_client, registry):
+    def __init__(self, auth_client: AuthClient, registry: UserProfileRegistry):
         self.auth_client = auth_client
         self.registry = registry
 

@@ -3,8 +3,10 @@ from app.infrastructure.grpc.clients.auth_client import AuthClient
 from app.application.services.auth_service import AuthService
 from app.api.dependencies.auth import get_current_user
 from app.api.schemas.auth import RegisterRequest, LoginRequest, UpdateTelegramRequest, AuthResponse, UserResponse, CurrentUserResponse
+from app.infrastructure.grpc.clients.signal_client import SignalClient
 
 router = APIRouter()
+signal_client = SignalClient()
 
 def get_service():
 
@@ -18,6 +20,9 @@ def register(
 ):
     request_id = request.state.request_id
     res = service.register(data.email, data.password, request_id)
+
+    if res:
+        signal_client.refresh_registries()
 
     return AuthResponse(
         user_id=res.user_id,
@@ -53,6 +58,9 @@ def update_telegram(
         data.telegram_chat_id,
         request_id
     )
+
+    if res:
+        signal_client.refresh_registries()
 
     return UserResponse(user_id=res.user_id)
 

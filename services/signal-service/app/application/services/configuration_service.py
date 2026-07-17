@@ -2,9 +2,10 @@ import uuid
 from app.domain.entities.configuration import Configuration
 from app.domain.exceptions.exceptions import ConfigurationNotFoundError
 from app.infrastructure.scheduler.registry_container import configuration_registry
+from app.infrastructure.database.repositories.configuration_repository import ConfigurationRepository
 
 class ConfigurationService:
-    def __init__(self, repository):
+    def __init__(self, repository: ConfigurationRepository):
         self.repository = repository
 
     def get_configurations(self, user_id: str):
