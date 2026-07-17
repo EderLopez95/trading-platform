@@ -27,8 +27,6 @@
         - CREATE DATABASE trading_platform_test;
     - generate encrypted key, copy into .env.local
         - python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
-    - run tests (if running integration tests from gateway api, target database url to DB test)
-        - pytest tests/unit, pytest tests/integration, pytest tests/grpc
     - run auth-service
         - python -m main
 
@@ -70,8 +68,6 @@
         - python -m grpc_tools.protoc -I . --python_out=generated --grpc_python_out=generated auth.proto
     - copy signal.proto from signal_service to gateway-api and generate stubs
         - python -m grpc_tools.protoc -I . --python_out=generated --grpc_python_out=generated signal.proto
-    - run tests
-        - pytest tests/unit, pytest tests/integration
     - run gateway-api
         - python -m main
 
