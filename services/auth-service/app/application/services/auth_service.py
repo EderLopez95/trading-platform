@@ -39,14 +39,6 @@ class AuthService:
             token=token
         )
 
-    def validate_user(self, user_id: str):
-        user = self.user_repo.get_by_id(user_id)
-
-        if not user:
-            raise InvalidCredentialsException()
-
-        return user
-
     def update_telegram(self, user_id: str, token: str, chat_id: str):
         user = self.user_repo.get_by_id(user_id)
 

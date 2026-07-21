@@ -36,49 +36,64 @@ class SignalServiceStub:
             channel: A grpc.Channel.
         """
         self.CreateConfiguration = channel.unary_unary(
-                '/SignalService/CreateConfiguration',
+                '/signal.SignalService/CreateConfiguration',
                 request_serializer=signal__pb2.CreateConfigurationRequest.SerializeToString,
                 response_deserializer=signal__pb2.ConfigurationResponse.FromString,
                 _registered_method=True)
         self.GetConfigurations = channel.unary_unary(
-                '/SignalService/GetConfigurations',
+                '/signal.SignalService/GetConfigurations',
                 request_serializer=signal__pb2.GetConfigurationsRequest.SerializeToString,
                 response_deserializer=signal__pb2.ConfigurationListResponse.FromString,
                 _registered_method=True)
         self.DeleteConfiguration = channel.unary_unary(
-                '/SignalService/DeleteConfiguration',
+                '/signal.SignalService/DeleteConfiguration',
                 request_serializer=signal__pb2.DeleteConfigurationRequest.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
         self.ToggleConfiguration = channel.unary_unary(
-                '/SignalService/ToggleConfiguration',
+                '/signal.SignalService/ToggleConfiguration',
                 request_serializer=signal__pb2.ToggleConfigurationRequest.SerializeToString,
                 response_deserializer=signal__pb2.ConfigurationResponse.FromString,
                 _registered_method=True)
         self.UpdateConfiguration = channel.unary_unary(
-                '/SignalService/UpdateConfiguration',
+                '/signal.SignalService/UpdateConfiguration',
                 request_serializer=signal__pb2.UpdateConfigurationRequest.SerializeToString,
                 response_deserializer=signal__pb2.ConfigurationResponse.FromString,
                 _registered_method=True)
         self.GetAnalysisStatus = channel.unary_unary(
-                '/SignalService/GetAnalysisStatus',
+                '/signal.SignalService/GetAnalysisStatus',
                 request_serializer=signal__pb2.AnalysisStatusRequest.SerializeToString,
                 response_deserializer=signal__pb2.AnalysisStatusResponse.FromString,
                 _registered_method=True)
         self.ToggleAnalysis = channel.unary_unary(
-                '/SignalService/ToggleAnalysis',
+                '/signal.SignalService/ToggleAnalysis',
                 request_serializer=signal__pb2.ToggleAnalysisRequest.SerializeToString,
                 response_deserializer=signal__pb2.AnalysisStatusResponse.FromString,
                 _registered_method=True)
         self.GetSignals = channel.unary_unary(
-                '/SignalService/GetSignals',
+                '/signal.SignalService/GetSignals',
                 request_serializer=signal__pb2.GetSignalsRequest.SerializeToString,
                 response_deserializer=signal__pb2.GetSignalsResponse.FromString,
                 _registered_method=True)
         self.RefreshRegistries = channel.unary_unary(
-                '/SignalService/RefreshRegistries',
+                '/signal.SignalService/RefreshRegistries',
                 request_serializer=signal__pb2.RefreshRegistriesRequest.SerializeToString,
                 response_deserializer=signal__pb2.RefreshRegistriesResponse.FromString,
+                _registered_method=True)
+        self.GetStrategies = channel.unary_unary(
+                '/signal.SignalService/GetStrategies',
+                request_serializer=signal__pb2.GetStrategiesRequest.SerializeToString,
+                response_deserializer=signal__pb2.GetStrategiesResponse.FromString,
+                _registered_method=True)
+        self.GetSymbols = channel.unary_unary(
+                '/signal.SignalService/GetSymbols',
+                request_serializer=signal__pb2.GetSymbolsRequest.SerializeToString,
+                response_deserializer=signal__pb2.GetSymbolsResponse.FromString,
+                _registered_method=True)
+        self.GetTimeframes = channel.unary_unary(
+                '/signal.SignalService/GetTimeframes',
+                request_serializer=signal__pb2.GetTimeframesRequest.SerializeToString,
+                response_deserializer=signal__pb2.GetTimeframesResponse.FromString,
                 _registered_method=True)
 
 
@@ -139,6 +154,24 @@ class SignalServiceServicer:
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetStrategies(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetSymbols(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetTimeframes(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_SignalServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -187,11 +220,26 @@ def add_SignalServiceServicer_to_server(servicer, server):
                     request_deserializer=signal__pb2.RefreshRegistriesRequest.FromString,
                     response_serializer=signal__pb2.RefreshRegistriesResponse.SerializeToString,
             ),
+            'GetStrategies': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetStrategies,
+                    request_deserializer=signal__pb2.GetStrategiesRequest.FromString,
+                    response_serializer=signal__pb2.GetStrategiesResponse.SerializeToString,
+            ),
+            'GetSymbols': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetSymbols,
+                    request_deserializer=signal__pb2.GetSymbolsRequest.FromString,
+                    response_serializer=signal__pb2.GetSymbolsResponse.SerializeToString,
+            ),
+            'GetTimeframes': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetTimeframes,
+                    request_deserializer=signal__pb2.GetTimeframesRequest.FromString,
+                    response_serializer=signal__pb2.GetTimeframesResponse.SerializeToString,
+            ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'SignalService', rpc_method_handlers)
+            'signal.SignalService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('SignalService', rpc_method_handlers)
+    server.add_registered_method_handlers('signal.SignalService', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
@@ -212,7 +260,7 @@ class SignalService:
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/SignalService/CreateConfiguration',
+            '/signal.SignalService/CreateConfiguration',
             signal__pb2.CreateConfigurationRequest.SerializeToString,
             signal__pb2.ConfigurationResponse.FromString,
             options,
@@ -239,7 +287,7 @@ class SignalService:
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/SignalService/GetConfigurations',
+            '/signal.SignalService/GetConfigurations',
             signal__pb2.GetConfigurationsRequest.SerializeToString,
             signal__pb2.ConfigurationListResponse.FromString,
             options,
@@ -266,7 +314,7 @@ class SignalService:
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/SignalService/DeleteConfiguration',
+            '/signal.SignalService/DeleteConfiguration',
             signal__pb2.DeleteConfigurationRequest.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
@@ -293,7 +341,7 @@ class SignalService:
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/SignalService/ToggleConfiguration',
+            '/signal.SignalService/ToggleConfiguration',
             signal__pb2.ToggleConfigurationRequest.SerializeToString,
             signal__pb2.ConfigurationResponse.FromString,
             options,
@@ -320,7 +368,7 @@ class SignalService:
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/SignalService/UpdateConfiguration',
+            '/signal.SignalService/UpdateConfiguration',
             signal__pb2.UpdateConfigurationRequest.SerializeToString,
             signal__pb2.ConfigurationResponse.FromString,
             options,
@@ -347,7 +395,7 @@ class SignalService:
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/SignalService/GetAnalysisStatus',
+            '/signal.SignalService/GetAnalysisStatus',
             signal__pb2.AnalysisStatusRequest.SerializeToString,
             signal__pb2.AnalysisStatusResponse.FromString,
             options,
@@ -374,7 +422,7 @@ class SignalService:
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/SignalService/ToggleAnalysis',
+            '/signal.SignalService/ToggleAnalysis',
             signal__pb2.ToggleAnalysisRequest.SerializeToString,
             signal__pb2.AnalysisStatusResponse.FromString,
             options,
@@ -401,7 +449,7 @@ class SignalService:
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/SignalService/GetSignals',
+            '/signal.SignalService/GetSignals',
             signal__pb2.GetSignalsRequest.SerializeToString,
             signal__pb2.GetSignalsResponse.FromString,
             options,
@@ -428,9 +476,90 @@ class SignalService:
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/SignalService/RefreshRegistries',
+            '/signal.SignalService/RefreshRegistries',
             signal__pb2.RefreshRegistriesRequest.SerializeToString,
             signal__pb2.RefreshRegistriesResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetStrategies(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/signal.SignalService/GetStrategies',
+            signal__pb2.GetStrategiesRequest.SerializeToString,
+            signal__pb2.GetStrategiesResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetSymbols(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/signal.SignalService/GetSymbols',
+            signal__pb2.GetSymbolsRequest.SerializeToString,
+            signal__pb2.GetSymbolsResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetTimeframes(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/signal.SignalService/GetTimeframes',
+            signal__pb2.GetTimeframesRequest.SerializeToString,
+            signal__pb2.GetTimeframesResponse.FromString,
             options,
             channel_credentials,
             insecure,

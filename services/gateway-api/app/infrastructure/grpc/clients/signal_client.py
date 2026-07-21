@@ -127,3 +127,27 @@ class SignalClient:
         
         except grpc.RpcError as e:
             map_grpc_error(e)
+
+    def get_strategies(self):
+        try:
+
+            return self.stub.GetStrategies(signal_pb2.GetStrategiesRequest())
+        
+        except grpc.RpcError as e:
+            map_grpc_error(e)
+
+    def get_symbols(self, search: str | None = None):
+        try:
+        
+            return self.stub.GetSymbols(signal_pb2.GetSymbolsRequest(search=search or ""))
+
+        except grpc.RpcError as e:
+            map_grpc_error(e)
+
+    def get_timeframes(self):
+        try:
+
+            return self.stub.GetTimeframes(signal_pb2.GetTimeframesRequest())
+        
+        except grpc.RpcError as e:
+            map_grpc_error(e)

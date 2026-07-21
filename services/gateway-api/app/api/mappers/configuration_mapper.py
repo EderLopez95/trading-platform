@@ -1,6 +1,7 @@
 class ConfigurationMapper:
     @staticmethod
     def to_dict(configuration):
+        
         return {
             "id": configuration.id,
             "user_id": configuration.user_id,

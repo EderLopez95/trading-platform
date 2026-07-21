@@ -29,3 +29,25 @@ def get_signals(
     )
 
     return response
+
+@router.get("/strategies")
+def get_strategies(
+    service: SignalService = Depends(get_service),
+):
+
+    return service.get_strategies()
+
+@router.get("/symbols")
+def get_symbols(
+    search: str | None = Query(default=None),
+    service: SignalService = Depends(get_service),
+):
+    
+    return service.get_symbols(search=search)
+
+@router.get("/timeframes")
+def get_timeframes(
+    service: SignalService = Depends(get_service),
+):
+    
+    return service.get_timeframes()

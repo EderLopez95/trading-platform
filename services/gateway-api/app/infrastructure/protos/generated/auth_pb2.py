@@ -24,25 +24,31 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\nauth.proto\"2\n\x0fRegisterRequest\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"/\n\x0cLoginRequest\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\" \n\x0fValidateRequest\x12\r\n\x05token\x18\x01 \x01(\t\"Z\n\x15UpdateTelegramRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\x12\x16\n\x0etelegram_token\x18\x02 \x01(\t\x12\x18\n\x10telegram_chat_id\x18\x03 \x01(\t\".\n\x0c\x41uthResponse\x12\x0f\n\x07user_id\x18\x01 \x01(\t\x12\r\n\x05token\x18\x02 \x01(\t\"A\n\x0cUserResponse\x12\x0f\n\x07user_id\x18\x01 \x01(\t\x12\r\n\x05\x65mail\x18\x02 \x01(\t\x12\x11\n\tis_active\x18\x03 \x01(\x08\x32\xc7\x01\n\x0b\x41uthService\x12+\n\x08Register\x12\x10.RegisterRequest\x1a\r.AuthResponse\x12%\n\x05Login\x12\r.LoginRequest\x1a\r.AuthResponse\x12+\n\x08Validate\x12\x10.ValidateRequest\x1a\r.UserResponse\x12\x37\n\x0eUpdateTelegram\x12\x16.UpdateTelegramRequest\x1a\r.UserResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\nauth.proto\x12\x04\x61uth\"2\n\x0fRegisterRequest\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"/\n\x0cLoginRequest\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\" \n\x0fValidateRequest\x12\r\n\x05token\x18\x01 \x01(\t\"Z\n\x15UpdateTelegramRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\x12\x16\n\x0etelegram_token\x18\x02 \x01(\t\x12\x18\n\x10telegram_chat_id\x18\x03 \x01(\t\"\x11\n\x0fGetUsersRequest\".\n\x0c\x41uthResponse\x12\x0f\n\x07user_id\x18\x01 \x01(\t\x12\r\n\x05token\x18\x02 \x01(\t\"A\n\x0cUserResponse\x12\x0f\n\x07user_id\x18\x01 \x01(\t\x12\r\n\x05\x65mail\x18\x02 \x01(\t\x12\x11\n\tis_active\x18\x03 \x01(\x08\"h\n\x14UserTelegramResponse\x12\x0f\n\x07user_id\x18\x01 \x01(\t\x12\r\n\x05\x65mail\x18\x02 \x01(\t\x12\x16\n\x0etelegram_token\x18\x03 \x01(\t\x12\x18\n\x10telegram_chat_id\x18\x04 \x01(\t\"=\n\x10GetUsersResponse\x12)\n\x05users\x18\x01 \x03(\x0b\x32\x1a.auth.UserTelegramResponse2\xaa\x02\n\x0b\x41uthService\x12\x35\n\x08Register\x12\x15.auth.RegisterRequest\x1a\x12.auth.AuthResponse\x12/\n\x05Login\x12\x12.auth.LoginRequest\x1a\x12.auth.AuthResponse\x12\x35\n\x08Validate\x12\x15.auth.ValidateRequest\x1a\x12.auth.UserResponse\x12\x41\n\x0eUpdateTelegram\x12\x1b.auth.UpdateTelegramRequest\x1a\x12.auth.UserResponse\x12\x39\n\x08GetUsers\x12\x15.auth.GetUsersRequest\x1a\x16.auth.GetUsersResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'auth_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
-  _globals['_REGISTERREQUEST']._serialized_start=14
-  _globals['_REGISTERREQUEST']._serialized_end=64
-  _globals['_LOGINREQUEST']._serialized_start=66
-  _globals['_LOGINREQUEST']._serialized_end=113
-  _globals['_VALIDATEREQUEST']._serialized_start=115
-  _globals['_VALIDATEREQUEST']._serialized_end=147
-  _globals['_UPDATETELEGRAMREQUEST']._serialized_start=149
-  _globals['_UPDATETELEGRAMREQUEST']._serialized_end=239
-  _globals['_AUTHRESPONSE']._serialized_start=241
-  _globals['_AUTHRESPONSE']._serialized_end=287
-  _globals['_USERRESPONSE']._serialized_start=289
-  _globals['_USERRESPONSE']._serialized_end=354
-  _globals['_AUTHSERVICE']._serialized_start=357
-  _globals['_AUTHSERVICE']._serialized_end=556
+  _globals['_REGISTERREQUEST']._serialized_start=20
+  _globals['_REGISTERREQUEST']._serialized_end=70
+  _globals['_LOGINREQUEST']._serialized_start=72
+  _globals['_LOGINREQUEST']._serialized_end=119
+  _globals['_VALIDATEREQUEST']._serialized_start=121
+  _globals['_VALIDATEREQUEST']._serialized_end=153
+  _globals['_UPDATETELEGRAMREQUEST']._serialized_start=155
+  _globals['_UPDATETELEGRAMREQUEST']._serialized_end=245
+  _globals['_GETUSERSREQUEST']._serialized_start=247
+  _globals['_GETUSERSREQUEST']._serialized_end=264
+  _globals['_AUTHRESPONSE']._serialized_start=266
+  _globals['_AUTHRESPONSE']._serialized_end=312
+  _globals['_USERRESPONSE']._serialized_start=314
+  _globals['_USERRESPONSE']._serialized_end=379
+  _globals['_USERTELEGRAMRESPONSE']._serialized_start=381
+  _globals['_USERTELEGRAMRESPONSE']._serialized_end=485
+  _globals['_GETUSERSRESPONSE']._serialized_start=487
+  _globals['_GETUSERSRESPONSE']._serialized_end=548
+  _globals['_AUTHSERVICE']._serialized_start=551
+  _globals['_AUTHSERVICE']._serialized_end=849
 # @@protoc_insertion_point(module_scope)

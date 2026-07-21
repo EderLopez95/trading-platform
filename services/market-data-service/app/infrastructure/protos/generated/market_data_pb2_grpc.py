@@ -35,9 +35,14 @@ class MarketDataServiceStub:
             channel: A grpc.Channel.
         """
         self.GetCandles = channel.unary_unary(
-                '/MarketDataService/GetCandles',
+                '/market_data.MarketDataService/GetCandles',
                 request_serializer=market__data__pb2.GetCandlesRequest.SerializeToString,
                 response_deserializer=market__data__pb2.GetCandlesResponse.FromString,
+                _registered_method=True)
+        self.GetSymbols = channel.unary_unary(
+                '/market_data.MarketDataService/GetSymbols',
+                request_serializer=market__data__pb2.GetSymbolsRequest.SerializeToString,
+                response_deserializer=market__data__pb2.GetSymbolsResponse.FromString,
                 _registered_method=True)
 
 
@@ -45,6 +50,12 @@ class MarketDataServiceServicer:
     """Missing associated documentation comment in .proto file."""
 
     def GetCandles(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetSymbols(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -58,11 +69,16 @@ def add_MarketDataServiceServicer_to_server(servicer, server):
                     request_deserializer=market__data__pb2.GetCandlesRequest.FromString,
                     response_serializer=market__data__pb2.GetCandlesResponse.SerializeToString,
             ),
+            'GetSymbols': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetSymbols,
+                    request_deserializer=market__data__pb2.GetSymbolsRequest.FromString,
+                    response_serializer=market__data__pb2.GetSymbolsResponse.SerializeToString,
+            ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'MarketDataService', rpc_method_handlers)
+            'market_data.MarketDataService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('MarketDataService', rpc_method_handlers)
+    server.add_registered_method_handlers('market_data.MarketDataService', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
@@ -83,9 +99,36 @@ class MarketDataService:
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/MarketDataService/GetCandles',
+            '/market_data.MarketDataService/GetCandles',
             market__data__pb2.GetCandlesRequest.SerializeToString,
             market__data__pb2.GetCandlesResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetSymbols(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/market_data.MarketDataService/GetSymbols',
+            market__data__pb2.GetSymbolsRequest.SerializeToString,
+            market__data__pb2.GetSymbolsResponse.FromString,
             options,
             channel_credentials,
             insecure,

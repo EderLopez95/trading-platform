@@ -57,3 +57,15 @@ class SignalService:
     def refresh_registries(self):
         
         return self.client.refresh_registries()
+
+    def get_strategies(self):
+        
+        return self.client.get_strategies()
+
+    def get_symbols(self, search: str | None = None):
+
+        return self.client.get_symbols(search=search or None)
+
+    def get_timeframes(self):
+
+        return self.client.get_timeframes()

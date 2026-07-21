@@ -1,15 +1,5 @@
 from enum import Enum
 
-class StrategyType(str, Enum):
-    RSI_CROSS_TREND = "rsi_cross_trend"
-    MULTI_SMAS_MOMENTUM = "multi_smas_momentum"
-    RSI_DIP_ACCUMULATION = "rsi_dip_accumulation"
-
-class StrategyNameType(str, Enum):
-    RSI_CROSS_TREND_name = "RSI Cross Trend"
-    MULTI_SMAS_MOMENTUM_name = "Multi SMAs Momentum"
-    RSI_DIP_ACCUMULATION_name = "RSI Dip Accumulation"
-
 class SignalType(str, Enum):
     BUY = "BUY"
     SELL = "SELL"

@@ -15,7 +15,7 @@ class UserRegistry:
         setting = self._settings.get(str(user_id))
 
         if not setting:
-            return True
+            return False
 
         return setting.analysis_enabled
 

@@ -5,7 +5,7 @@ from app.infrastructure.scheduler.utils import should_execute, get_candle_key
 from app.infrastructure.scheduler.registry_container import user_registry, configuration_registry
 from app.infrastructure.adapters.market_data_adapter import MarketDataAdapter
 from app.domain.enums.enums import SignalType
-from app.domain.strategies.strategy_registry import STRATEGIES
+from app.infrastructure.scheduler.strategy_container import strategy_registry
 from app.domain.formatters.signal_formatter import SignalFormatter
 from app.infrastructure.notifications.telegram_adapter import TelegramAdapter
 from app.application.services.notification_service import NotificationService
@@ -60,8 +60,8 @@ class SignalEngine:
                             candles = candles_response.candles
                             
                             for strategy_name in (configuration.strategies):
-                                strategy = STRATEGIES.get(strategy_name)
-
+                                strategy = strategy_registry.get(strategy_name)
+                                
                                 if not strategy:
                                     continue
 
@@ -94,7 +94,7 @@ class SignalEngine:
                                         symbol=symbol,
                                         strategy=strategy_name,
                                         signal=result.signal.value,
-                                        timeframe=configuration.entry_timeframe,
+                                        timeframe=configuration.trend_timeframe,
                                         price=candles[-1].close,
                                     )
                                 )
@@ -110,7 +110,7 @@ class SignalEngine:
                                 "Error in signal engine for configuration",
                                 extra={
                                     "configuration_id": configuration.id,
-                                    "symbol": configuration.symbols[0],
+                                    "symbol": symbol,
                                     "status": e.code().name,
                                     "details": e.details(),
                                 }
@@ -128,11 +128,11 @@ class SignalEngine:
                         }
                     )
 
-            except Exception as ex:
+            except Exception as e:
                 logger.error(
                     "Error in signal engine",
                     extra={
-                        "error": str(ex),
+                        "error": str(e),
                     }
                 )
                 metrics.errors += 1

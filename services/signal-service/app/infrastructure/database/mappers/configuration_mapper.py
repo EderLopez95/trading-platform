@@ -3,6 +3,7 @@ from app.domain.entities.configuration import Configuration
 class ConfigurationMapper:
     @staticmethod
     def to_domain(model) -> Configuration:
+        
         return Configuration(
             id=str(model.id),
             user_id=str(model.user_id),

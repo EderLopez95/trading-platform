@@ -3,10 +3,13 @@ from app.domain.entities.configuration import Configuration
 from app.domain.exceptions.exceptions import ConfigurationNotFoundError
 from app.infrastructure.scheduler.registry_container import configuration_registry
 from app.infrastructure.database.repositories.configuration_repository import ConfigurationRepository
+from app.application.services.strategy_service import StrategyService
+from app.domain.exceptions.exceptions import ValidationException
 
 class ConfigurationService:
     def __init__(self, repository: ConfigurationRepository):
         self.repository = repository
+        self.strategy_service = StrategyService()
 
     def get_configurations(self, user_id: str):
 
@@ -18,8 +21,10 @@ class ConfigurationService:
         if not configuration:
             raise ConfigurationNotFoundError()
         
-        configuration_registry.remove(configuration_id)
-        self.repository.delete(configuration_id)
+        result = self.repository.delete(configuration_id)
+
+        if result:
+            configuration_registry.remove(configuration_id)
 
     def toggle_configuration(
         self,
@@ -62,7 +67,14 @@ class ConfigurationService:
             created_at=None,
         )
 
-        configuration = self.repository.create(configuration)    
-        configuration_registry.register(configuration)
+        for strategy in configuration.strategies:
+
+            if not self.strategy_service.exists(strategy):
+                raise ValidationException(f"Strategy not supported: {strategy}")
+            
+        configuration = self.repository.create(configuration)
+        
+        if configuration.enabled:
+            configuration_registry.register(configuration)
         
         return configuration

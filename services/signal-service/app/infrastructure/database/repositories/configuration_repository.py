@@ -93,7 +93,7 @@ class ConfigurationRepositoryImpl(ConfigurationRepository):
 
         return ConfigurationMapper.to_domain(model)
 
-    def delete(self, configuration_id: str) -> None:
+    def delete(self, configuration_id: str):
         model = (
             self.db.query(ConfigurationModel)
             .filter(ConfigurationModel.id == UUID(configuration_id))
@@ -103,3 +103,5 @@ class ConfigurationRepositoryImpl(ConfigurationRepository):
         if model:
             self.db.delete(model)
             self.db.commit()
+
+            return True

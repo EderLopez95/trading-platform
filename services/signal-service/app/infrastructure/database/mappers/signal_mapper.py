@@ -4,6 +4,7 @@ from app.infrastructure.database.models.signal import SignalModel
 class SignalMapper:
     @staticmethod
     def to_model(signal: Signal):
+        
         return SignalModel(
             id=signal.id,
             user_id=signal.user_id,

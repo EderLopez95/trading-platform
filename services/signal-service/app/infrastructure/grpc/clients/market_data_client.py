@@ -32,3 +32,7 @@ class MarketDataClient:
         )
 
         return response
+
+    def get_symbols(self, search: str | None = None):
+
+        return self.stub.GetSymbols(market_data_pb2.GetSymbolsRequest(search=search or ""))

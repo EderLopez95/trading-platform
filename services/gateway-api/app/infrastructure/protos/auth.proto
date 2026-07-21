@@ -1,10 +1,13 @@
 syntax = "proto3";
 
+package auth;
+
 service AuthService {
   rpc Register (RegisterRequest) returns (AuthResponse);
   rpc Login (LoginRequest) returns (AuthResponse);
   rpc Validate (ValidateRequest) returns (UserResponse);
   rpc UpdateTelegram(UpdateTelegramRequest) returns (UserResponse);
+  rpc GetUsers(GetUsersRequest) returns (GetUsersResponse);
 }
 
 message RegisterRequest {
@@ -27,6 +30,9 @@ message UpdateTelegramRequest {
   string telegram_chat_id = 3;
 }
 
+message GetUsersRequest {
+}
+
 message AuthResponse {
   string user_id = 1;
   string token = 2;
@@ -36,4 +42,15 @@ message UserResponse {
   string user_id = 1;
   string email = 2;
   bool is_active = 3;
+}
+
+message UserTelegramResponse {
+  string user_id = 1;
+  string email = 2;
+  string telegram_token = 3;
+  string telegram_chat_id = 4;
+}
+
+message GetUsersResponse {
+  repeated UserTelegramResponse users = 1;
 }

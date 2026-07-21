@@ -6,6 +6,7 @@ class UserSettingsService:
         self.repository = repository
 
     def get_status(self, user_id: str):
+        
         return self._get_or_create(user_id)
 
     def toggle_analysis(self, user_id: str, enabled: bool):

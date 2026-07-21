@@ -16,6 +16,10 @@ from app.application.services.configuration_registry_service import Configuratio
 from app.application.services.user_profile_registry_service import UserProfileRegistryService
 from app.infrastructure.scheduler.registry_container import user_registry, configuration_registry, user_profile_registry
 from app.infrastructure.grpc.clients.auth_client import AuthClient
+from app.application.services.strategy_service import StrategyService
+from app.application.services.symbol_service import SymbolService
+from app.application.services.timeframe_service import TimeframeService
+from app.infrastructure.grpc.clients.market_data_client import MarketDataClient
 
 logger = logging.getLogger("signal")
 user_settings_repository = UserSettingsRepositoryImpl(SessionLocal())
@@ -226,18 +230,80 @@ class SignalGrpcService(signal_pb2_grpc.SignalServiceServicer):
             ).refresh()
 
             logger.info(
-                "refresh_registries_called",
+                "refresh_registries_completed",
                 extra={
                     "request_id": request_id,
-                    "configurations": configuration_registry.count(),
-                    "excluded_configurations": result["configurations"]["excluded"],
                     "users": user_registry.count(),
                     "profiles": user_profile_registry.count(),
+                    "configurations": result["configurations"]["loaded"],
+                    "excluded_configurations": result["configurations"]["excluded"],
                     "service": "signal",
                 }
             )
 
             return signal_pb2.RefreshRegistriesResponse(success=True)
+
+    def GetStrategies(self, request, context):
+        request_id = _get_request_id(context)
+        logger.info(
+            "get_strategies_called",
+            extra={
+                "request_id": request_id,
+                "service": "signal",
+            }
+        )
+
+        strategies = StrategyService().get_all()
+
+        return (
+            signal_pb2.GetStrategiesResponse(
+                strategies=[
+                    signal_pb2.StrategyDto(
+                        id=strategy["id"],
+                        name=strategy["name"],
+                    )
+                    for strategy in strategies
+                ]
+            )
+        )
+    
+    def GetSymbols(self, request, context):
+        request_id = _get_request_id(context)
+        logger.info(
+            "get_symbols_called",
+            extra={
+                "request_id": request_id,
+                "service": "signal",
+            }
+        )
+
+        symbols = SymbolService(MarketDataClient()).get_all(request.search or None)
+
+        return signal_pb2.GetSymbolsResponse(
+            symbols=[
+                signal_pb2.SymbolDto(symbol=symbol)
+                for symbol in symbols
+            ]
+        )
+
+    def GetTimeframes(self, request, context):
+        request_id = _get_request_id(context)
+        logger.info(
+            "get_timeframes_called",
+            extra={
+                "request_id": request_id,
+                "service": "signal",
+            }
+        )
+
+        timeframes = TimeframeService().get_all()
+
+        return signal_pb2.GetTimeframesResponse(
+            timeframes=[
+                signal_pb2.TimeframeDto(timeframe=timeframe)
+                for timeframe in timeframes
+            ]
+        )
 
 def _get_request_id(context):
     metadata = dict(context.invocation_metadata())

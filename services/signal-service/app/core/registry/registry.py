@@ -14,13 +14,6 @@ def load_registries():
         configuration_repository = ConfigurationRepositoryImpl(db)
         user_repository = UserSettingsRepositoryImpl(db)
 
-        configs_loaded = (
-            ConfigurationRegistryService(
-                configuration_repository,
-                configuration_registry,
-            ).load()
-        )
-
         users_loaded = (
             UserRegistryService(
                 user_repository,
@@ -35,6 +28,13 @@ def load_registries():
             ).load()
         )
 
-        print(f"Configurations: {configs_loaded}, Users: {users_loaded}, Profiles: {profiles_loaded}", flush=True)
+        configs_loaded = (
+            ConfigurationRegistryService(
+                configuration_repository,
+                configuration_registry,
+            ).load()
+        )
+
+        print(f"users: {users_loaded}, profiles: {profiles_loaded}, configurations: {configs_loaded}", flush=True)
         
     start_engine()

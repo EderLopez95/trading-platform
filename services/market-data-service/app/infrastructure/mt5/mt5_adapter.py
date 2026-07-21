@@ -60,3 +60,21 @@ class MT5Adapter(MarketDataProvider):
 
     def shutdown(self):
         mt5.shutdown()
+
+    def get_symbols(self, search: str | None = None):
+        symbols = mt5.symbols_get()
+
+        result = [
+            symbol.name
+            for symbol in symbols
+        ]
+
+        if search:
+            search = search.lower()
+            result = [
+                symbol
+                for symbol in result
+                if search in symbol.lower()
+            ]
+
+        return sorted(result)

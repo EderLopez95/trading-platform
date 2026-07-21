@@ -1,7 +1,10 @@
 syntax = "proto3";
 
+package market_data;
+
 service MarketDataService {
   rpc GetCandles(GetCandlesRequest) returns (GetCandlesResponse);
+  rpc GetSymbols(GetSymbolsRequest) returns (GetSymbolsResponse);
 }
 
 message CandleDto {
@@ -13,12 +16,24 @@ message CandleDto {
   double volume = 6;
 }
 
+message SymbolDto {
+  string symbol = 1;
+}
+
 message GetCandlesRequest {
   string symbol = 1;
   string timeframe = 2;
   int32 count = 3;
 }
 
+message GetSymbolsRequest {
+  string search = 1;
+}
+
 message GetCandlesResponse {
   repeated CandleDto candles = 1;
+}
+
+message GetSymbolsResponse {
+  repeated SymbolDto symbols = 1;
 }

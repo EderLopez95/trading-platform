@@ -43,8 +43,10 @@ def delete_configuration(
     configuration_id: str,
     service: SignalService = Depends(get_service)
 ):
-    service.delete_configuration(configuration_id)
-    service.refresh_registries()
+    result = service.delete_configuration(configuration_id)
+
+    if result:
+        service.refresh_registries()
 
     return {"message": "Configuration deleted successfully"}
 

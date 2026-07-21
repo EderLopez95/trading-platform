@@ -35,27 +35,27 @@ class AuthServiceStub:
             channel: A grpc.Channel.
         """
         self.Register = channel.unary_unary(
-                '/AuthService/Register',
+                '/auth.AuthService/Register',
                 request_serializer=auth__pb2.RegisterRequest.SerializeToString,
                 response_deserializer=auth__pb2.AuthResponse.FromString,
                 _registered_method=True)
         self.Login = channel.unary_unary(
-                '/AuthService/Login',
+                '/auth.AuthService/Login',
                 request_serializer=auth__pb2.LoginRequest.SerializeToString,
                 response_deserializer=auth__pb2.AuthResponse.FromString,
                 _registered_method=True)
         self.Validate = channel.unary_unary(
-                '/AuthService/Validate',
+                '/auth.AuthService/Validate',
                 request_serializer=auth__pb2.ValidateRequest.SerializeToString,
                 response_deserializer=auth__pb2.UserResponse.FromString,
                 _registered_method=True)
         self.UpdateTelegram = channel.unary_unary(
-                '/AuthService/UpdateTelegram',
+                '/auth.AuthService/UpdateTelegram',
                 request_serializer=auth__pb2.UpdateTelegramRequest.SerializeToString,
                 response_deserializer=auth__pb2.UserResponse.FromString,
                 _registered_method=True)
         self.GetUsers = channel.unary_unary(
-                '/AuthService/GetUsers',
+                '/auth.AuthService/GetUsers',
                 request_serializer=auth__pb2.GetUsersRequest.SerializeToString,
                 response_deserializer=auth__pb2.GetUsersResponse.FromString,
                 _registered_method=True)
@@ -124,9 +124,9 @@ def add_AuthServiceServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'AuthService', rpc_method_handlers)
+            'auth.AuthService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('AuthService', rpc_method_handlers)
+    server.add_registered_method_handlers('auth.AuthService', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
@@ -147,7 +147,7 @@ class AuthService:
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/AuthService/Register',
+            '/auth.AuthService/Register',
             auth__pb2.RegisterRequest.SerializeToString,
             auth__pb2.AuthResponse.FromString,
             options,
@@ -174,7 +174,7 @@ class AuthService:
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/AuthService/Login',
+            '/auth.AuthService/Login',
             auth__pb2.LoginRequest.SerializeToString,
             auth__pb2.AuthResponse.FromString,
             options,
@@ -201,7 +201,7 @@ class AuthService:
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/AuthService/Validate',
+            '/auth.AuthService/Validate',
             auth__pb2.ValidateRequest.SerializeToString,
             auth__pb2.UserResponse.FromString,
             options,
@@ -228,7 +228,7 @@ class AuthService:
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/AuthService/UpdateTelegram',
+            '/auth.AuthService/UpdateTelegram',
             auth__pb2.UpdateTelegramRequest.SerializeToString,
             auth__pb2.UserResponse.FromString,
             options,
@@ -255,7 +255,7 @@ class AuthService:
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/AuthService/GetUsers',
+            '/auth.AuthService/GetUsers',
             auth__pb2.GetUsersRequest.SerializeToString,
             auth__pb2.GetUsersResponse.FromString,
             options,
