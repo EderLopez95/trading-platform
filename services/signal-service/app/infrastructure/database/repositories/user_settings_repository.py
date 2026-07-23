@@ -22,7 +22,7 @@ class UserSettingsRepositoryImpl:
     def create(self, user_id: str):
         model = UserSettingsModel(
             user_id=uuid.UUID(user_id),
-            analysis_enabled=True,
+            analysis_enabled=False,
         )
         self.db.add(model)
         self.db.commit()

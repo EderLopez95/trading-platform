@@ -13,6 +13,7 @@ from app.infrastructure.scheduler.registry_container import user_profile_registr
 from app.application.services.signal_generation_service import SignalGenerationService
 from app.infrastructure.database.repositories.signal_repository import SignalRepositoryImpl
 from app.infrastructure.scheduler.metrics import SchedulerMetrics
+from app.domain.constants.timeframes import TIMEFRAMES
 
 logger = logging.getLogger("signal")
 
@@ -49,24 +50,68 @@ class SignalEngine:
                     
                     for symbol in (configuration.symbols):
                         try:
-                            candles_response = (
-                                self.market_data.get_candles(
-                                    symbol=symbol,
-                                    timeframe=configuration.entry_timeframe,
-                                    count=100,
+                            trend_candles_response = None
+                            context_candles_response = None
+                            entry_candles_response = None
+
+                            if configuration.trend_timeframe and configuration.trend_timeframe in TIMEFRAMES:
+                                trend_candles_response = (
+                                    self.market_data.get_candles(
+                                        symbol=symbol,
+                                        timeframe=configuration.trend_timeframe,
+                                        count=100,
+                                    )
                                 )
+
+                            if configuration.context_timeframe and configuration.context_timeframe in TIMEFRAMES:
+                                context_candles_response = (
+                                    self.market_data.get_candles(
+                                        symbol=symbol,
+                                        timeframe=configuration.context_timeframe,
+                                        count=100,
+                                    )
+                                )
+
+                            if configuration.entry_timeframe and configuration.entry_timeframe in TIMEFRAMES:
+                                entry_candles_response = (
+                                    self.market_data.get_candles(
+                                        symbol=symbol,
+                                        timeframe=configuration.entry_timeframe,
+                                        count=15,
+                                    )
+                                )
+
+                            trend_candles = trend_candles_response.candles if trend_candles_response else None
+                            context_candles = context_candles_response.candles if context_candles_response else None
+                            entry_candles = entry_candles_response.candles if entry_candles_response else None
+
+                            candle_time = (
+                                datetime.fromtimestamp(
+                                    trend_candles[-1].timestamp,
+                                    tz=timezone.utc
+                                )
+                                if trend_candles else now
                             )
 
-                            candles = candles_response.candles
-                            
                             for strategy_name in (configuration.strategies):
                                 strategy = strategy_registry.get(strategy_name)
                                 
                                 if not strategy:
                                     continue
 
-                                result = strategy.evaluate(candles)
+                                result = strategy.evaluate(trend_candles, context_candles, entry_candles)
                                 
+                                if result.reason:
+                                    logger.info(
+                                        "strategy_evaluation",
+                                        extra={
+                                            "configuration_id": configuration.id,
+                                            "symbol": symbol,
+                                            "strategy": strategy_name,
+                                            "reason": result.reason,
+                                        }
+                                    )
+
                                 if result.signal == SignalType.NONE:
                                     continue
 
@@ -76,8 +121,8 @@ class SignalEngine:
                                         symbol=symbol,
                                         strategy=strategy_name,
                                         result=result,
-                                        candle_time=now,
-                                        price=candles[-1].close,
+                                        candle_time=candle_time,
+                                        price=trend_candles[-1].close if trend_candles else 0,
                                     )
                                 )
 
@@ -95,7 +140,7 @@ class SignalEngine:
                                         strategy=strategy_name,
                                         signal=result.signal.value,
                                         timeframe=configuration.trend_timeframe,
-                                        price=candles[-1].close,
+                                        price=trend_candles[-1].close if trend_candles else 0,
                                     )
                                 )
 
@@ -124,7 +169,7 @@ class SignalEngine:
                         extra={
                             "signals": metrics.signals,
                             "errors": metrics.errors,
-                            "duration_s": round(duration, 2),
+                            "duration_ms": round(duration * 1000, 2),
                         }
                     )
 

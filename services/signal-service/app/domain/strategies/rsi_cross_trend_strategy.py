@@ -7,14 +7,14 @@ class RSICrossTrendStrategy:
     def __init__(self):
         self.rsi_cross = RSICross()
 
-    def evaluate(self, candles):
-        closes = [
+    def evaluate(self, trend_candles, context_candles, entry_candles):
+        trend_closes = [
             candle.close
-            for candle in candles
+            for candle in trend_candles
         ]
-        close_series = pd.Series(closes)
+        trend_close_series = pd.Series(trend_closes)
 
-        if len(closes) < 50:
+        if len(trend_closes) < 50:
 
             return StrategyResult(
                 signal=SignalType.NONE,
@@ -22,7 +22,7 @@ class RSICrossTrendStrategy:
             )
 
         # calculate RSI
-        rsi = self.rsi_cross.calculate_rsi(close_series, 14)
+        rsi = self.rsi_cross.calculate_rsi(trend_close_series, 14)
         rsi_ma = rsi.rolling(14).mean()
         bullish_cross = self.rsi_cross.crossover(rsi, rsi_ma)
         bearish_cross = self.rsi_cross.crossunder(rsi, rsi_ma)
