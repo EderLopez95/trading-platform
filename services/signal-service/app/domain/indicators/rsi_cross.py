@@ -1,7 +1,7 @@
 import pandas as pd
 
 class RSICross:
-    def __init__(self, rsi_min_distance=2): # minimum distance between two series to consider a crossover valid
+    def __init__(self, rsi_min_distance=1.5): # minimum distance between two series to consider a crossover valid
         self.rsi_min_distance = rsi_min_distance
 
     def calculate_rsi(self, series, period=14):
@@ -21,14 +21,18 @@ class RSICross:
 
             return False
 
-        if pd.isna(a.iloc[-1]) or pd.isna(b.iloc[-1]): # in case of invalid data
-
+        if ( # in case of invalid data
+            pd.isna(a.iloc[-1])
+            or pd.isna(b.iloc[-1])
+            or pd.isna(a.iloc[-2])
+            or pd.isna(b.iloc[-2])
+        ):
+            
             return False
-
+        
         crossed = (
             a.iloc[-2] <= b.iloc[-2]
-            and
-            a.iloc[-1] > b.iloc[-1]
+            and a.iloc[-1] > b.iloc[-1]
         )
         distance = abs(a.iloc[-1] - b.iloc[-1]) > self.rsi_min_distance # check for enough min distance
 
@@ -41,14 +45,18 @@ class RSICross:
 
             return False
 
-        if pd.isna(a.iloc[-1]) or pd.isna(b.iloc[-1]):
-
+        if ( # in case of invalid data
+            pd.isna(a.iloc[-1])
+            or pd.isna(b.iloc[-1])
+            or pd.isna(a.iloc[-2])
+            or pd.isna(b.iloc[-2])
+        ):
+            
             return False
 
         crossed = (
             a.iloc[-2] >= b.iloc[-2]
-            and
-            a.iloc[-1] < b.iloc[-1]
+            and a.iloc[-1] < b.iloc[-1]
         )
         distance = abs(a.iloc[-1] - b.iloc[-1]) > self.rsi_min_distance
 

@@ -4,8 +4,16 @@ from app.domain.indicators.rsi_cross import RSICross
 import pandas as pd
 
 class MultiSMAsMomentumStrategy:
-    def __init__(self):
+    def __init__(
+        self,
+        min_sma_distance=0.002,
+        volume_multiplier=1.2,
+        min_slope_strength=0.001
+    ):
         self.rsi_cross = RSICross()
+        self.min_sma_distance = min_sma_distance
+        self.volume_multiplier = volume_multiplier
+        self.min_slope_strength = min_slope_strength
 
     def evaluate(self, trend_candles, context_candles, entry_candles):
         trend_closes = [
@@ -45,32 +53,24 @@ class MultiSMAsMomentumStrategy:
         # determine trend based on SMA order
         bullish_trend = (
             sma20_v > sma40_v
-            and
-            sma40_v > sma100_v
+            and sma40_v > sma100_v
         )
         bearish_trend = (
             sma20_v < sma40_v
-            and
-            sma40_v < sma100_v
+            and sma40_v < sma100_v
         )
 
         # trend strength, avoid laterality
-        min_distance = 0.002
         distance_20_40 = abs(sma20_v - sma40_v) / sma40_v
         distance_40_100 = abs(sma40_v - sma100_v) / sma100_v
         trend_strength = (
-            distance_20_40 > min_distance
-            and
-            distance_40_100 > min_distance
+            distance_20_40 > self.min_sma_distance
+            and distance_40_100 > self.min_sma_distance
         )
 
         # trend slope
         sma20_slope = sma20_v - sma20.iloc[-4]
-        trend_direction_ok = abs(sma20_slope) > 0
-
-        # calculate RSI trend
-        trend_rsi = self.rsi_cross.calculate_rsi(trend_close_series, 14)
-        trend_rsi_v = trend_rsi.iloc[-1]
+        trend_direction_ok = abs(sma20_slope) > sma20_v * self.min_slope_strength
 
         # calculate RSI entry
         entry_rsi = self.rsi_cross.calculate_rsi(entry_close_series, 14)
@@ -88,26 +88,24 @@ class MultiSMAsMomentumStrategy:
         
         volume_v = trend_candles[-1].volume
         volume_avg_v = volume_avg.iloc[-1]
-        volume_ok = volume_v > (volume_avg_v * 1.2) # considerable movement, increase it to filter more deeply
+        volume_ok = volume_v > (volume_avg_v * self.volume_multiplier) # considerable movement, increase it to filter more deeply
 
         if (
-            bullish_trend and
-            bullish_cross and
-            trend_strength and
-            trend_direction_ok and
-            volume_ok and
-            trend_rsi_v > 52
+            bullish_trend
+            and bullish_cross
+            and trend_strength
+            and trend_direction_ok
+            and volume_ok
         ):
 
             return StrategyResult(signal=SignalType.BUY)
 
         if (
-            bearish_trend and
-            bearish_cross and
-            trend_strength and
-            trend_direction_ok and
-            volume_ok and
-            trend_rsi_v < 48
+            bearish_trend
+            and bearish_cross
+            and trend_strength
+            and trend_direction_ok
+            and volume_ok
         ):
 
             return StrategyResult(signal=SignalType.SELL)

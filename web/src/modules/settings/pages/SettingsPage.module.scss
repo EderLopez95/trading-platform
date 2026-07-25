@@ -1,0 +1,22 @@
+@use '../../../styles/variables' as *;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.header {
+  color: $text-primary-color;
+}
+
+.card {
+  padding: 32px;
+
+  .description {
+    color: $text-secondary-color;
+    padding-bottom: 16px;
+  }
+}
