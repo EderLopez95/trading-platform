@@ -20,7 +20,7 @@ input {
   padding: 15px 8px;
   outline: none;
   width: 100%;
-  background-color: $input-background-color;
+  background-color: $background-color;
   color: $text-primary-color;
 
   &:hover, &:focus {
@@ -31,7 +31,7 @@ input {
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0px 1000px $input-background-color inset;
+  -webkit-box-shadow: 0 0 0px 1000px $background-color inset;
   -webkit-text-fill-color: $text-primary-color;
 }
 

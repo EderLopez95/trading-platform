@@ -4,6 +4,7 @@ import RegisterPage from "@/modules/auth/pages/RegisterPage";
 import ProtectedRoute from "@/shared/components/ProtectedRoute";
 import MainLayout from "@/shared/layouts/MainLayout";
 import SettingsPage from "@/modules/settings/pages/SettingsPage";
+import SignalsPage from "@/modules/signals/pages/SignalsPage";
 
 export const router = createBrowserRouter([
   {
@@ -19,7 +20,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/signals",
-        element: <div>Signals</div>,
+        element: <SignalsPage />,
       },
       {
         path: "/bot",
