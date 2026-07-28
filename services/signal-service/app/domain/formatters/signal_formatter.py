@@ -9,9 +9,9 @@ class SignalFormatter:
     ):
 
         return (
-            f"Symbol: <b>{symbol}</b>\n"
-            f"Strategy: <b>{strategy}</b>\n"
-            f"Signal: <b>{signal}</b>\n"
-            f"Timeframe: <b>{timeframe}</b>\n"
-            f"Price: <b>{price}</b>"
+            f"<b>{symbol}</b>\n"
+            f"<b>{strategy}</b>\n"
+            f"<b>{signal}</b>\n"
+            f"<b>{timeframe}</b>\n"
+            f"<b>{price}</b>"
         )

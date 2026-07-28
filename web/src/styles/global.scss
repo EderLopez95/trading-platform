@@ -43,14 +43,13 @@ button {
   background-color: $button-primary-color;
   color: $text-primary-color;
   border-radius: $button-border-radius;
-  outline: 1px solid $input-border-color;
-  border: none;
+  border: 1px solid $input-border-color;
+  outline: none;
   width: 100%;
   text-align: center;
 
   &:hover, &:focus {
     background-color: $button-primary-hover-color;
-    outline: 1px solid $button-primary-color;
   }
 
   &:active {
@@ -91,4 +90,24 @@ h2 {
   color: $text-primary-color;
   border-radius: $card-border-radius;
   box-shadow: $card-box-shadow;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 6px 0;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: $input-border-color;
+  border-radius: $button-border-radius;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
 }

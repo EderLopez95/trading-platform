@@ -1,0 +1,44 @@
+@use '../../../styles/variables' as *;
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.countButton {
+  width: auto;
+  padding: 6px 4px;
+  background-color: transparent;
+  color: $text-primary-color;
+  border: none;
+  outline: none;
+  font-weight: 500;
+  text-align: right;
+  margin-top: 0;
+
+  &:hover,
+  &:focus {
+    background-color: $background-color;
+    border-color: transparent;
+  }
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.state {
+  padding: 24px 8px;
+  text-align: center;
+  color: $text-secondary-color;
+}

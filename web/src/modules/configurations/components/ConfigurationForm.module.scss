@@ -1,0 +1,30 @@
+@use '../../../styles/variables' as *;
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.field label {
+  color: $text-primary-color;
+  font-weight: 500;
+}
+
+.error {
+  min-height: 16px;
+  color: $text-error-color;
+}
+
+.loading {
+  padding: 24px;
+  text-align: center;
+  color: $text-secondary-color;
+}

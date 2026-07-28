@@ -14,7 +14,7 @@ class ConfigurationRegistryService:
             configuration
             for configuration in configurations
 
-            if user_registry.is_analysis_enabled(configuration.user_id)
+            if user_registry.is_analysis_enabled(configuration.user_id) and configuration.enabled
         ]
         self.registry.load(active_configurations)
 

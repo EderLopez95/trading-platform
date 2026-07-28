@@ -1,0 +1,51 @@
+@use '../../../styles/variables' as *;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.search {
+  width: 100%;
+}
+
+.list {
+  max-height: 160px;
+  overflow-y: auto;
+  border: 1px solid $input-border-color;
+  border-radius: $button-border-radius;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background-color: $background-color;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  margin-bottom: 0;
+  border-radius: $button-border-radius;
+  color: $text-primary-color;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $card-color;
+  }
+}
+
+.checkbox {
+  width: auto;
+  margin: 0;
+  accent-color: $button-primary-color;
+  cursor: pointer;
+}
+
+.empty {
+  padding: 8px;
+  color: $text-secondary-color;
+  text-align: center;
+}

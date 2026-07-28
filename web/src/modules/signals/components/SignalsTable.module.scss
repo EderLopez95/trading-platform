@@ -29,6 +29,11 @@
     white-space: nowrap;
   }
 
+  td.state {
+    text-align: center;
+    color: $text-secondary-color;
+  }
+
   thead th {
     position: sticky;
     top: 0;
@@ -67,12 +72,6 @@
 
 .sell {
   color: $danger-color;
-}
-
-.state {
-  text-align: center;
-  padding: 32px 16px;
-  color: $text-secondary-color;
 }
 
 .pagination {

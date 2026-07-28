@@ -14,9 +14,9 @@ class RegistryRefreshService:
         self.profile_service = profile_service
 
     def refresh(self):
-        configurations = self.configuration_service.load()
         users = self.user_service.load()
         profiles = self.profile_service.load()
+        configurations = self.configuration_service.load()
 
         return {
             "users": users,

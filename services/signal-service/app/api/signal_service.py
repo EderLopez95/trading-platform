@@ -225,8 +225,8 @@ class SignalGrpcService(signal_pb2_grpc.SignalServiceServicer):
 
             result = RegistryRefreshService(
                 user_service=UserRegistryService(user_settings_repository, user_registry),
-                configuration_service=ConfigurationRegistryService(configuration_repository, configuration_registry),
                 profile_service=UserProfileRegistryService(AuthClient(), user_profile_registry),
+                configuration_service=ConfigurationRegistryService(configuration_repository, configuration_registry),
             ).refresh()
 
             logger.info(

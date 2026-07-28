@@ -3,5 +3,5 @@ from app.infrastructure.scheduler.configuration_registry import ConfigurationReg
 from app.infrastructure.scheduler.user_profile_registry import UserProfileRegistry
 
 user_registry = UserRegistry()
-configuration_registry = (ConfigurationRegistry())
 user_profile_registry = UserProfileRegistry()
+configuration_registry = (ConfigurationRegistry())

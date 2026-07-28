@@ -7,7 +7,7 @@ class MultiSMAsMomentumStrategy:
     def __init__(
         self,
         min_sma_distance=0.002,
-        volume_multiplier=1.2,
+        volume_multiplier=0.7,
         min_slope_strength=0.001
     ):
         self.rsi_cross = RSICross()
@@ -16,24 +16,25 @@ class MultiSMAsMomentumStrategy:
         self.min_slope_strength = min_slope_strength
 
     def evaluate(self, trend_candles, context_candles, entry_candles):
+        if len(trend_candles) < 100:
+
+            return StrategyResult(
+                signal=SignalType.NONE,
+                reason="Not enough candles for trend timeframe",
+            )
+
+        if len(entry_candles) < 20:
+        
+            return StrategyResult(
+                signal=SignalType.NONE,
+                reason="Not enough candles for entry timeframe",
+            )
+
         trend_closes = [
             candle.close
             for candle in trend_candles
         ]
         trend_close_series = pd.Series(trend_closes)
-
-        entry_closes = [
-            candle.close
-            for candle in entry_candles
-        ]
-        entry_close_series = pd.Series(entry_closes)
-
-        if len(trend_closes) < 100:
-
-            return StrategyResult(
-                signal=SignalType.NONE,
-                reason="Not enough candles",
-            )
 
         # calculate SMAs (averages, last value)
         sma20 = trend_close_series.rolling(20).mean()
@@ -70,15 +71,15 @@ class MultiSMAsMomentumStrategy:
 
         # trend slope
         sma20_slope = sma20_v - sma20.iloc[-4]
-        trend_direction_ok = abs(sma20_slope) > sma20_v * self.min_slope_strength
+        trend_direction_ok = abs(sma20_slope) > (sma20_v * self.min_slope_strength)
 
         # calculate RSI entry
-        entry_rsi = self.rsi_cross.calculate_rsi(entry_close_series, 14)
-        entry_rsi_ma = entry_rsi.rolling(14).mean()
-        bullish_cross = self.rsi_cross.crossover(entry_rsi, entry_rsi_ma)
-        bearish_cross = self.rsi_cross.crossunder(entry_rsi, entry_rsi_ma)
+        # entry_rsi = self.rsi_cross.calculate_rsi(entry_close_series, 14)
+        # entry_rsi_ma = entry_rsi.rolling(14).mean()
+        # bullish_cross = self.rsi_cross.crossover(entry_rsi, entry_rsi_ma)
+        # bearish_cross = self.rsi_cross.crossunder(entry_rsi, entry_rsi_ma)
         
-        volume_avg = pd.Series([candle.volume for candle in trend_candles]).rolling(20).mean()
+        volume_avg = pd.Series([candle.volume for candle in entry_candles]).rolling(20).mean()
         if pd.isna(volume_avg.iloc[-1]): # in case of invalid data
 
             return StrategyResult(
@@ -86,26 +87,26 @@ class MultiSMAsMomentumStrategy:
                 reason="Invalid volume values",
             )
         
-        volume_v = trend_candles[-1].volume
+        volume_v = entry_candles[-1].volume
         volume_avg_v = volume_avg.iloc[-1]
-        volume_ok = volume_v > (volume_avg_v * self.volume_multiplier) # considerable movement, increase it to filter more deeply
+        volume_low = volume_v < (volume_avg_v * self.volume_multiplier)
 
         if (
             bullish_trend
-            and bullish_cross
+            # and bullish_cross
             and trend_strength
             and trend_direction_ok
-            and volume_ok
+            and not volume_low
         ):
 
             return StrategyResult(signal=SignalType.BUY)
 
         if (
             bearish_trend
-            and bearish_cross
+            # and bearish_cross
             and trend_strength
             and trend_direction_ok
-            and volume_ok
+            and not volume_low
         ):
 
             return StrategyResult(signal=SignalType.SELL)

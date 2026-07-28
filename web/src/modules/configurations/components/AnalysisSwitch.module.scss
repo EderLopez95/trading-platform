@@ -1,0 +1,71 @@
+@use '../../../styles/variables' as *;
+
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  width: auto;
+  padding: 8px 12px;
+  border-radius: $button-border-radius;
+  font-weight: 700;
+  background-color: $background-color;
+  margin-top: 0;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.label {
+  min-width: 26px;
+  text-align: left;
+}
+
+.track {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 18px;
+  border-radius: 999px;
+  background-color: $input-border-color;
+  transition: background-color 0.15s ease;
+}
+
+.thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: $text-primary-color;
+  transition: transform 0.15s ease;
+}
+
+.on {
+  color: $success-color;
+  border: 1px solid $success-color;
+
+  .track {
+    background-color: $success-color;
+  }
+
+  .thumb {
+    transform: translateX(22px);
+  }
+
+  &:hover, &:focus {
+    background-color: $card-color;
+    border-color: $success-color;
+  }
+}
+
+.off {
+  color: $text-secondary-color;
+
+  &:hover, &:focus {
+    background-color: $card-color;
+    border-color: $input-border-color;
+  }
+}
