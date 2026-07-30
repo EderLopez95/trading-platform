@@ -78,7 +78,7 @@
 }
 
 .badge {
-  background-color: rgba($text-secondary-color, 0.12);
+  background-color: $card-color;
   color: $text-primary-color;
   padding: 2px 8px;
   border-radius: $button-border-radius;

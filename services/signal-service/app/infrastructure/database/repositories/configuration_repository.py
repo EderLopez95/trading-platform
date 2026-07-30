@@ -35,6 +35,7 @@ class ConfigurationRepositoryImpl(ConfigurationRepository):
         )
 
         if not model:
+            
             return None
 
         return ConfigurationMapper.to_domain(model)
@@ -46,6 +47,10 @@ class ConfigurationRepositoryImpl(ConfigurationRepository):
             .order_by(ConfigurationModel.created_at.desc())
             .all()
         )
+
+        for model in models:
+            model.symbols = sorted(model.symbols) if model.symbols else []
+            model.strategies = sorted(model.strategies) if model.strategies else []
 
         return [
             ConfigurationMapper.to_domain(model)

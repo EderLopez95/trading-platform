@@ -16,6 +16,7 @@ class MultiSMAsMomentumStrategy:
         self.min_slope_strength = min_slope_strength
 
     def evaluate(self, trend_candles, context_candles, entry_candles):
+        
         if len(trend_candles) < 100:
 
             return StrategyResult(
@@ -35,6 +36,12 @@ class MultiSMAsMomentumStrategy:
             for candle in trend_candles
         ]
         trend_close_series = pd.Series(trend_closes)
+
+        entry_closes = [
+            candle.close
+            for candle in entry_candles
+        ]
+        entry_close_series = pd.Series(entry_closes)
 
         # calculate SMAs (averages, last value)
         sma20 = trend_close_series.rolling(20).mean()
@@ -74,11 +81,12 @@ class MultiSMAsMomentumStrategy:
         trend_direction_ok = abs(sma20_slope) > (sma20_v * self.min_slope_strength)
 
         # calculate RSI entry
-        # entry_rsi = self.rsi_cross.calculate_rsi(entry_close_series, 14)
-        # entry_rsi_ma = entry_rsi.rolling(14).mean()
-        # bullish_cross = self.rsi_cross.crossover(entry_rsi, entry_rsi_ma)
-        # bearish_cross = self.rsi_cross.crossunder(entry_rsi, entry_rsi_ma)
-        
+        entry_rsi = self.rsi_cross.calculate_rsi(entry_close_series, 14)
+        entry_rsi_ma = entry_rsi.rolling(14).mean()
+        bullish_cross = self.rsi_cross.crossover(entry_rsi, entry_rsi_ma)
+        bearish_cross = self.rsi_cross.crossunder(entry_rsi, entry_rsi_ma)
+
+        # calculate volume average and check if current volume is low
         volume_avg = pd.Series([candle.volume for candle in entry_candles]).rolling(20).mean()
         if pd.isna(volume_avg.iloc[-1]): # in case of invalid data
 
@@ -93,7 +101,7 @@ class MultiSMAsMomentumStrategy:
 
         if (
             bullish_trend
-            # and bullish_cross
+            and bullish_cross
             and trend_strength
             and trend_direction_ok
             and not volume_low
@@ -103,7 +111,7 @@ class MultiSMAsMomentumStrategy:
 
         if (
             bearish_trend
-            # and bearish_cross
+            and bearish_cross
             and trend_strength
             and trend_direction_ok
             and not volume_low

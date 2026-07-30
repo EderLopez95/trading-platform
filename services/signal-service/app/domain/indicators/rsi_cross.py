@@ -8,8 +8,8 @@ class RSICross:
         delta = series.diff() # price change between candles
         gain = delta.clip(lower=0) # only positive movements
         loss = -delta.clip(upper=0) # only negative movements
-        avg_gain = gain.ewm(alpha=1/period, adjust=False).mean() # earnings average (wilder ema)
-        avg_loss = loss.ewm(alpha=1/period, adjust=False).mean() # losses average (wilder ema)
+        avg_gain = gain.ewm(alpha=1/period, adjust=False, min_periods=period).mean() # earnings average (wilder ema)
+        avg_loss = loss.ewm(alpha=1/period, adjust=False, min_periods=period).mean() # losses average (wilder ema)
         rs = avg_gain / avg_loss # correlation
         rsi = 100 - (100 / (1 + rs)) # scale 0-100
 

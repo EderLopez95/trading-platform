@@ -28,12 +28,11 @@
 .signalsCard {
   display: flex;
   flex-direction: column;
-  flex: 1 1 0;
-  min-height: 0;
   overflow: hidden;
 
   @include respond-to("desktop") {
     flex: 1 1 0;
+    min-height: 0;
     min-width: 0;
   }
 }

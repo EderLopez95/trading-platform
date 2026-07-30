@@ -4,6 +4,7 @@ import AuthLayout from "@/shared/layouts/AuthLayout";
 import RegisterForm from "../components/RegisterForm";
 import { authApi } from "../api/authApi";
 import { type RegisterFormData } from "../services/registerSchema";
+import { isAxiosError } from "axios";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -22,9 +23,13 @@ export default function RegisterPage() {
       navigate("/login");
     } catch (error) {
       console.error(error);
-      toast.error(
-        "Failed to create user"
-      );
+      if (isAxiosError(error) && error.response?.status === 409) {
+        toast.error("User already exists");
+      } else {
+        toast.error(
+          "Failed to create user"
+        );
+      }
     }
   };
 

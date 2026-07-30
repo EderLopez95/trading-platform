@@ -4,14 +4,16 @@ class SignalFormatter:
         symbol: str,
         strategy: str,
         signal: str,
-        timeframe: str,
+        trend_timeframe: str,
+        context_timeframe: str,
+        entry_timeframe: str,
         price: float,
     ):
 
         return (
-            f"<b>{symbol}</b>\n"
-            f"<b>{strategy}</b>\n"
-            f"<b>{signal}</b>\n"
-            f"<b>{timeframe}</b>\n"
-            f"<b>{price}</b>"
+            f"Symbol: <b>{symbol}</b>\n"
+            f"Strategy: <b>{strategy}</b>\n"
+            f"Signal: <b>{signal}</b>\n"
+            f"Timeframes: <b>{trend_timeframe}{f' - {context_timeframe}' if context_timeframe else ''}- {entry_timeframe}</b>\n"
+            f"Price: <b>{price}</b>"
         )

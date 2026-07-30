@@ -8,18 +8,19 @@ class RSICrossTrendStrategy:
         self.rsi_cross = RSICross()
 
     def evaluate(self, trend_candles, context_candles, entry_candles):
+
+        if len(trend_candles) < 20:
+
+            return StrategyResult(
+                signal=SignalType.NONE,
+                reason="Not enough candles for trend timeframe",
+            )
+
         trend_closes = [
             candle.close
             for candle in trend_candles
         ]
         trend_close_series = pd.Series(trend_closes)
-
-        if len(trend_closes) < 50:
-
-            return StrategyResult(
-                signal=SignalType.NONE,
-                reason="Not enough candles",
-            )
 
         # calculate RSI
         rsi = self.rsi_cross.calculate_rsi(trend_close_series, 14)

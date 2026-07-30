@@ -139,7 +139,9 @@ class SignalEngine:
                                         symbol=symbol,
                                         strategy=strategy_name,
                                         signal=result.signal.value,
-                                        timeframe=configuration.trend_timeframe,
+                                        trend_timeframe=configuration.trend_timeframe,
+                                        context_timeframe=configuration.context_timeframe if configuration.context_timeframe else "",
+                                        entry_timeframe=configuration.entry_timeframe,
                                         price=trend_candles[-1].close if trend_candles else 0,
                                     )
                                 )

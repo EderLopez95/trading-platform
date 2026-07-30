@@ -3,7 +3,6 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: 4px;
 }
 
 .field {
@@ -15,11 +14,10 @@
 
 .field label {
   color: $text-primary-color;
-  font-weight: 500;
 }
 
 .error {
-  min-height: 16px;
+  min-height: 8px;
   color: $text-error-color;
 }
 

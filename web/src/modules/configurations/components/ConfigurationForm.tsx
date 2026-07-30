@@ -20,8 +20,7 @@ export default function ConfigurationForm({
   initialValue,
   onSubmit,
 }: Props) {
-  const { symbols, strategies, timeframes, isLoading } =
-    useFormOptions(true);
+  const { symbols, strategies, timeframes, isLoading } = useFormOptions(true);
 
   const {
     control,
@@ -108,7 +107,7 @@ export default function ConfigurationForm({
       <div className={styles.field}>
         <label>Context timeframe (optional)</label>
         <Select {...register("context_timeframe")}>
-          <option value="">None</option>
+          <option value="">Select timeframe</option>
           {timeframes.map((timeframe) => (
             <option key={timeframe} value={timeframe}>
               {timeframe}

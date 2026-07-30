@@ -52,12 +52,13 @@ export default function SignalsTable() {
               <th>Timeframes</th>
               <th>Strategy</th>
               <th>Time</th>
+              <th>Price</th>
             </tr>
           </thead>
           <tbody>
             {isLoading && (
               <tr>
-                <td colSpan={5} className={styles.state}>
+                <td colSpan={6} className={styles.state}>
                   Loading...
                 </td>
               </tr>
@@ -65,7 +66,7 @@ export default function SignalsTable() {
 
             {isError && !isLoading && (
               <tr>
-                <td colSpan={5} className={styles.state}>
+                <td colSpan={6} className={styles.state}>
                   Failed to load signals
                 </td>
               </tr>
@@ -73,7 +74,7 @@ export default function SignalsTable() {
 
             {!isLoading && !isError && signals.length === 0 && (
               <tr>
-                <td colSpan={5} className={styles.state}>
+                <td colSpan={6} className={styles.state}>
                   No signals yet
                 </td>
               </tr>
@@ -98,6 +99,7 @@ export default function SignalsTable() {
                   <td className={styles.time}>
                     {formatTime(signal.signal_time)}
                   </td>
+                  <td>{signal.price}</td>
                 </tr>
               ))}
           </tbody>
