@@ -29,6 +29,17 @@ class SignalService:
         
         return self.client.toggle_configuration(configuration_id, enabled)
 
+    def update_configuration(self, configuration_id, data):
+
+        return self.client.update_configuration(
+            configuration_id=configuration_id,
+            symbols=data.symbols,
+            strategies=data.strategies,
+            trend_timeframe=data.trend_timeframe,
+            context_timeframe=data.context_timeframe,
+            entry_timeframe=data.entry_timeframe,
+        )
+
     def get_analysis_status(self, user_id: str):
         
         return self.client.get_analysis_status(user_id)

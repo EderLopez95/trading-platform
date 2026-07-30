@@ -14,9 +14,10 @@ export const optionsApi = {
     return response.data.strategies;
   },
 
-  getSymbols: async () => {
+  getSymbols: async (search?: string) => {
     const response = await apiClient.get<SymbolsResponse>(
-      "/signals/symbols"
+      "/signals/symbols",
+      { params: search ? { search } : undefined }
     );
 
     return response.data.symbols.map((item) => item.symbol);

@@ -72,6 +72,30 @@ class SignalClient:
         except grpc.RpcError as e:
             map_grpc_error(e)
 
+    def update_configuration(
+        self,
+        configuration_id: str,
+        symbols: list[str],
+        strategies: list[str],
+        trend_timeframe: str,
+        context_timeframe: str | None,
+        entry_timeframe: str,
+    ):
+        try:
+            request = signal_pb2.UpdateConfigurationRequest(
+                configuration_id=configuration_id,
+                symbols=symbols,
+                strategies=strategies,
+                trend_timeframe=trend_timeframe,
+                context_timeframe=context_timeframe,
+                entry_timeframe=entry_timeframe,
+            )
+
+            return self.stub.UpdateConfiguration(request)
+        
+        except grpc.RpcError as e:
+            map_grpc_error(e)
+
     def get_analysis_status(self, user_id: str):
         try:
             request = signal_pb2.AnalysisStatusRequest(user_id=user_id)

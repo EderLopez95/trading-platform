@@ -62,3 +62,13 @@ def toggle_configuration(
         service.refresh_registries()
 
     return ConfigurationMapper.to_dict(result.configuration)
+
+@router.patch("/{configuration_id}")
+def update_configuration(
+    configuration_id: str,
+    data: CreateConfigurationRequest,
+    service: SignalService = Depends(get_service)
+):
+    result = service.update_configuration(configuration_id, data)
+
+    return ConfigurationMapper.to_dict(result.configuration)

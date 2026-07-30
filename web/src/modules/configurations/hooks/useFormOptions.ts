@@ -9,13 +9,6 @@ export function useFormOptions(enabled: boolean) {
     staleTime: 5 * 60_000,
   });
 
-  const symbols = useQuery({
-    queryKey: ["symbols"],
-    queryFn: optionsApi.getSymbols,
-    enabled,
-    staleTime: 5 * 60_000,
-  });
-
   const timeframes = useQuery({
     queryKey: ["timeframes"],
     queryFn: optionsApi.getTimeframes,
@@ -25,9 +18,7 @@ export function useFormOptions(enabled: boolean) {
 
   return {
     strategies: strategies.data ?? [],
-    symbols: symbols.data ?? [],
     timeframes: timeframes.data ?? [],
-    isLoading:
-      strategies.isLoading || symbols.isLoading || timeframes.isLoading,
+    isLoading: strategies.isLoading || timeframes.isLoading,
   };
 }

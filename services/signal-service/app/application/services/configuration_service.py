@@ -78,3 +78,31 @@ class ConfigurationService:
             configuration_registry.register(configuration)
         
         return configuration
+
+    def update_configuration(
+        self,
+        configuration_id: str,
+        symbols: list[str],
+        strategies: list[str],
+        trend_timeframe: str,
+        context_timeframe: str | None,
+        entry_timeframe: str,
+    ):
+        configuration = self.repository.get_by_id(configuration_id)
+
+        if not configuration:
+            raise ConfigurationNotFoundError()
+
+        for strategy in strategies:
+
+            if not self.strategy_service.exists(strategy):
+                raise ValidationException(f"Strategy not supported: {strategy}")
+
+        configuration.symbols = symbols
+        configuration.strategies = strategies
+        configuration.trend_timeframe = trend_timeframe
+        configuration.context_timeframe = context_timeframe
+        configuration.entry_timeframe = entry_timeframe
+        configuration = self.repository.update(configuration)
+        
+        return configuration

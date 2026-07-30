@@ -7,6 +7,7 @@ import {
 import { type Configuration } from "../types/configuration.types";
 import { useFormOptions } from "../hooks/useFormOptions";
 import MultiSelect from "./MultiSelect";
+import AsyncSymbolSelect from "./AsyncSymbolSelect";
 import Select from "@/shared/components/ui/Select/Select";
 import Button from "@/shared/components/ui/Button/Button";
 import styles from "./ConfigurationForm.module.scss";
@@ -20,7 +21,7 @@ export default function ConfigurationForm({
   initialValue,
   onSubmit,
 }: Props) {
-  const { symbols, strategies, timeframes, isLoading } = useFormOptions(true);
+  const { strategies, timeframes, isLoading } = useFormOptions(true);
 
   const {
     control,
@@ -37,11 +38,6 @@ export default function ConfigurationForm({
       entry_timeframe: initialValue?.entry_timeframe ?? "",
     },
   });
-
-  const symbolOptions = symbols.map((symbol) => ({
-    value: symbol,
-    label: symbol,
-  }));
 
   const strategyOptions = strategies.map((strategy) => ({
     value: strategy.id,
@@ -63,11 +59,9 @@ export default function ConfigurationForm({
           control={control}
           name="symbols"
           render={({ field }) => (
-            <MultiSelect
-              options={symbolOptions}
-              selected={field.value}
+            <AsyncSymbolSelect
+              value={field.value}
               onChange={field.onChange}
-              searchable
               placeholder="Search symbols..."
             />
           )}

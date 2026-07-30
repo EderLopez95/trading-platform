@@ -29,12 +29,17 @@ class RSICross:
         ):
             
             return False
+
+        a_current = float(a.iloc[-1])
+        b_current = float(b.iloc[-1])
+        a_prev = float(a.iloc[-2])
+        b_prev = float(b.iloc[-2])
         
         crossed = (
-            a.iloc[-2] <= b.iloc[-2]
-            and a.iloc[-1] > b.iloc[-1]
+            a_prev <= b_prev
+            and a_current > b_current
         )
-        distance = abs(a.iloc[-1] - b.iloc[-1]) > self.rsi_min_distance # check for enough min distance
+        distance = abs(a_current - b_current) > self.rsi_min_distance # check for enough min distance
 
         return crossed and distance # only valid if both are true
 
@@ -54,10 +59,15 @@ class RSICross:
             
             return False
 
+        a_current = float(a.iloc[-1])
+        b_current = float(b.iloc[-1])
+        a_prev = float(a.iloc[-2])
+        b_prev = float(b.iloc[-2])
+
         crossed = (
-            a.iloc[-2] >= b.iloc[-2]
-            and a.iloc[-1] < b.iloc[-1]
+            a_prev >= b_prev
+            and a_current < b_current
         )
-        distance = abs(a.iloc[-1] - b.iloc[-1]) > self.rsi_min_distance
+        distance = abs(a_current - b_current) > self.rsi_min_distance
 
         return crossed and distance

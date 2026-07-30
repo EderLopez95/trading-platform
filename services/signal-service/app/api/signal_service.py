@@ -85,6 +85,37 @@ class SignalGrpcService(signal_pb2_grpc.SignalServiceServicer):
                 )
             )
 
+    def UpdateConfiguration(self, request, context):
+        request_id = _get_request_id(context)
+        logger.info(
+            "update_configuration_called",
+            extra={
+                "request_id": request_id,
+                "service": "signal",
+            }
+        )
+
+        with SessionLocal() as db:
+            repository = ConfigurationRepositoryImpl(db)
+            use_case = ConfigurationService(repository)
+
+            configuration = (
+                use_case.update_configuration(
+                    configuration_id=request.configuration_id,
+                    symbols=list(request.symbols),
+                    strategies=list(request.strategies),
+                    trend_timeframe=request.trend_timeframe,
+                    context_timeframe=request.context_timeframe,
+                    entry_timeframe=request.entry_timeframe,
+                )
+            )
+
+            return (
+                signal_pb2.ConfigurationResponse(
+                    configuration=ConfigurationGrpcMapper.to_proto(configuration)
+                )
+            )
+
     def DeleteConfiguration(self, request, context):
         request_id = _get_request_id(context)
         logger.info(

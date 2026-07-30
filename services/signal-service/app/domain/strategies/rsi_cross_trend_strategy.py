@@ -9,7 +9,7 @@ class RSICrossTrendStrategy:
 
     def evaluate(self, trend_candles, context_candles, entry_candles):
 
-        if len(trend_candles) < 20:
+        if len(trend_candles) < 28:
 
             return StrategyResult(
                 signal=SignalType.NONE,
@@ -29,9 +29,11 @@ class RSICrossTrendStrategy:
         bearish_cross = self.rsi_cross.crossunder(rsi, rsi_ma)
 
         if bullish_cross:
+
             return StrategyResult(signal=SignalType.BUY)
 
         if bearish_cross:
+            
             return StrategyResult(signal=SignalType.SELL)
 
         return StrategyResult(signal=SignalType.NONE)
