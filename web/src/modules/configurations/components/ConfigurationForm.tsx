@@ -53,84 +53,92 @@ export default function ConfigurationForm({
       className={styles.form}
       onSubmit={handleSubmit(onSubmit)}
     >
-      <div className={styles.field}>
-        <label>Symbols</label>
-        <Controller
-          control={control}
-          name="symbols"
-          render={({ field }) => (
-            <AsyncSymbolSelect
-              value={field.value}
-              onChange={field.onChange}
-              placeholder="Search symbols..."
-            />
-          )}
-        />
-        <p className={styles.error}>{errors.symbols?.message}</p>
+      <div className={styles.fields}>
+        <div className={styles.field}>
+          <label>Symbols</label>
+          <Controller
+            control={control}
+            name="symbols"
+            render={({ field }) => (
+              <div className={styles.symbolSelectWrapper}>
+                <AsyncSymbolSelect
+                  value={field.value}
+                  onChange={field.onChange}
+                  placeholder="Search symbols..."
+                />
+              </div>
+            )}
+          />
+          <p className={styles.error}>{errors.symbols?.message}</p>
+        </div>
+
+        <div className={styles.field}>
+          <label>Strategies</label>
+          <Controller
+            control={control}
+            name="strategies"
+            render={({ field }) => (
+              <div className={styles.strategySelectWrapper}>
+                <MultiSelect
+                  options={strategyOptions}
+                  selected={field.value}
+                  onChange={field.onChange}
+                />
+              </div>
+            )}
+          />
+          <p className={styles.error}>{errors.strategies?.message}</p>
+        </div>
+
+        <div className={styles.field}>
+          <label>Trend timeframe</label>
+          <Select {...register("trend_timeframe")}>
+            <option value="">Select timeframe</option>
+            {timeframes.map((timeframe) => (
+              <option key={timeframe} value={timeframe}>
+                {timeframe}
+              </option>
+            ))}
+          </Select>
+          <p className={styles.error}>{errors.trend_timeframe?.message}</p>
+        </div>
+
+        <div className={styles.field}>
+          <label>Context timeframe (optional)</label>
+          <Select {...register("context_timeframe")}>
+            <option value="">Select timeframe</option>
+            {timeframes.map((timeframe) => (
+              <option key={timeframe} value={timeframe}>
+                {timeframe}
+              </option>
+            ))}
+          </Select>
+          <p className={styles.error}>{errors.context_timeframe?.message}</p>
+        </div>
+
+        <div className={styles.field}>
+          <label>Entry timeframe</label>
+          <Select {...register("entry_timeframe")}>
+            <option value="">Select timeframe</option>
+            {timeframes.map((timeframe) => (
+              <option key={timeframe} value={timeframe}>
+                {timeframe}
+              </option>
+            ))}
+          </Select>
+          <p className={styles.error}>{errors.entry_timeframe?.message}</p>
+        </div>
       </div>
 
-      <div className={styles.field}>
-        <label>Strategies</label>
-        <Controller
-          control={control}
-          name="strategies"
-          render={({ field }) => (
-            <MultiSelect
-              options={strategyOptions}
-              selected={field.value}
-              onChange={field.onChange}
-            />
-          )}
-        />
-        <p className={styles.error}>{errors.strategies?.message}</p>
+      <div className={styles.footer}>
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting
+            ? "Saving..."
+            : initialValue
+              ? "Update configuration"
+              : "Create configuration"}
+        </Button>
       </div>
-
-      <div className={styles.field}>
-        <label>Trend timeframe</label>
-        <Select {...register("trend_timeframe")}>
-          <option value="">Select timeframe</option>
-          {timeframes.map((timeframe) => (
-            <option key={timeframe} value={timeframe}>
-              {timeframe}
-            </option>
-          ))}
-        </Select>
-        <p className={styles.error}>{errors.trend_timeframe?.message}</p>
-      </div>
-
-      <div className={styles.field}>
-        <label>Context timeframe (optional)</label>
-        <Select {...register("context_timeframe")}>
-          <option value="">Select timeframe</option>
-          {timeframes.map((timeframe) => (
-            <option key={timeframe} value={timeframe}>
-              {timeframe}
-            </option>
-          ))}
-        </Select>
-        <p className={styles.error}>{errors.context_timeframe?.message}</p>
-      </div>
-
-      <div className={styles.field}>
-        <label>Entry timeframe</label>
-        <Select {...register("entry_timeframe")}>
-          <option value="">Select timeframe</option>
-          {timeframes.map((timeframe) => (
-            <option key={timeframe} value={timeframe}>
-              {timeframe}
-            </option>
-          ))}
-        </Select>
-        <p className={styles.error}>{errors.entry_timeframe?.message}</p>
-      </div>
-
-      <Button type="submit" disabled={isSubmitting}>
-        {isSubmitting
-          ? "Saving..."
-          : initialValue
-            ? "Update configuration"
-            : "Create configuration"}
-      </Button>
     </form>
   );
 }

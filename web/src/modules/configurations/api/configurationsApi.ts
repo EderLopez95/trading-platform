@@ -23,6 +23,18 @@ export const configurationsApi = {
     return response.data;
   },
 
+  updateConfiguration: async (
+    id: string,
+    data: ConfigurationPayload
+  ) => {
+    const response = await apiClient.patch<Configuration>(
+      `/configurations/${id}`,
+      data
+    );
+
+    return response.data;
+  },
+
   deleteConfiguration: async (id: string) => {
     await apiClient.delete(`/configurations/${id}`);
   },

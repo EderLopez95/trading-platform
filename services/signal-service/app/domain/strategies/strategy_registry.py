@@ -13,9 +13,9 @@ class StrategyRegistry:
         return self._strategies.get(strategy_name)
 
     def get_all(self):
-        
-        return self._strategies
 
+        return {k: self._strategies[k] for k in sorted(self._strategies)}
+        
     def get_names(self):
         
-        return list(self._strategies.keys())
+        return sorted(self._strategies.keys())

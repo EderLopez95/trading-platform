@@ -28,6 +28,23 @@ export function useCreateConfiguration() {
   });
 }
 
+export function useUpdateConfiguration() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: string;
+      data: ConfigurationPayload;
+    }) => configurationsApi.updateConfiguration(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: CONFIGURATIONS_KEY });
+    },
+  });
+}
+
 export function useDeleteConfiguration() {
   const queryClient = useQueryClient();
 

@@ -17,7 +17,6 @@ type Props = {
 const MIN_QUERY_LENGTH = 1;
 const DEBOUNCE_MS = 300;
 
-// Theme tokens mirrored from styles/_variables.scss
 const colors = {
   background: "#1E222D",
   card: "#262B3B",
@@ -36,14 +35,14 @@ const selectStyles: StylesConfig<Option, true> = {
     borderColor: state.isFocused ? colors.borderHover : colors.border,
     borderRadius: 8,
     boxShadow: "none",
-    minHeight: 40,
+    minHeight: 45,
     "&:hover": {
       borderColor: colors.borderHover,
     },
   }),
   valueContainer: (base) => ({
     ...base,
-    padding: "4px 8px",
+    padding: "12px",
     gap: 4,
   }),
   input: (base) => ({
@@ -54,7 +53,7 @@ const selectStyles: StylesConfig<Option, true> = {
   }),
   placeholder: (base) => ({
     ...base,
-    color: colors.textSecondary,
+    color: colors.textPrimary,
   }),
   menu: (base) => ({
     ...base,
@@ -79,16 +78,16 @@ const selectStyles: StylesConfig<Option, true> = {
   }),
   noOptionsMessage: (base) => ({
     ...base,
-    color: colors.textSecondary,
+    color: colors.textPrimary,
   }),
   loadingMessage: (base) => ({
     ...base,
-    color: colors.textSecondary,
+    color: colors.textPrimary,
   }),
   multiValue: (base) => ({
     ...base,
     backgroundColor: colors.border,
-    borderRadius: 6,
+    borderRadius: 8,
     overflow: "hidden",
   }),
   multiValueLabel: (base) => ({
@@ -99,7 +98,7 @@ const selectStyles: StylesConfig<Option, true> = {
   }),
   multiValueRemove: (base) => ({
     ...base,
-    color: colors.textSecondary,
+    color: colors.textPrimary,
     width: 0,
     paddingLeft: 0,
     paddingRight: 0,
@@ -123,14 +122,14 @@ const selectStyles: StylesConfig<Option, true> = {
   }),
   dropdownIndicator: (base) => ({
     ...base,
-    color: colors.textSecondary,
+    color: colors.textPrimary,
     "&:hover": {
       color: colors.textPrimary,
     },
   }),
   clearIndicator: (base) => ({
     ...base,
-    color: colors.textSecondary,
+    color: colors.textPrimary,
     "&:hover": {
       color: colors.danger,
     },
@@ -180,7 +179,9 @@ export default function AsyncSymbolSelect({
   ).current;
 
   const handleChange = (next: MultiValue<Option>) => {
-    onChange(next.map((option) => option.value));
+    const rawValues = next.map((option) => option.value);
+    const sortedValues = [...rawValues].sort((a, b) => a.localeCompare(b));
+    onChange(sortedValues);
   };
 
   return (

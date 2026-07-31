@@ -7,7 +7,9 @@ export default function SignalsPage() {
   return (
     <div className={styles.page}>
       <div className={`card ${styles.configCard}`}>
-        <ConfigurationsPanel />
+        <div className={styles.configWrapper}>
+          <ConfigurationsPanel />
+        </div>
       </div>
       <div className={`card ${styles.signalsCard}`}>
         <SignalsTable />

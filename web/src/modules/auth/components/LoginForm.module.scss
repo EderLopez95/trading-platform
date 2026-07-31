@@ -5,19 +5,16 @@
 }
 
 .error {
-    position: absolute;
-    bottom: 0;
-    left: 5px;
     color: $text-error-color;
 }
 
 label {
     display: block;
-    margin-bottom: 8px;
+    margin: 8px 0 8px 0;
 }
 
 input {
-    margin-bottom: 20px;
+    margin-bottom: 8px;
 }
 
 button {

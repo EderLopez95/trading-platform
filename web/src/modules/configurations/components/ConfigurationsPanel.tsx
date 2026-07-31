@@ -7,8 +7,7 @@ import Modal from "@/shared/components/ui/Modal/Modal";
 import {
   useConfigurations,
   useCreateConfiguration,
-  useDeleteConfiguration,
-  useToggleConfiguration,
+  useUpdateConfiguration,
 } from "../hooks/useConfigurations";
 import { type Configuration } from "../types/configuration.types";
 import { type ConfigurationFormData } from "../services/configurationSchema";
@@ -17,8 +16,7 @@ import styles from "./ConfigurationsPanel.module.scss";
 export default function ConfigurationsPanel() {
   const { data: configurations = [], isLoading } = useConfigurations();
   const createConfiguration = useCreateConfiguration();
-  const toggleConfiguration = useToggleConfiguration();
-  const deleteConfiguration = useDeleteConfiguration();
+  const updateConfiguration = useUpdateConfiguration();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editing, setEditing] = useState<Configuration | null>(null);
@@ -49,16 +47,10 @@ export default function ConfigurationsPanel() {
 
     try {
       if (editing) {
-        const created = await createConfiguration.mutateAsync(payload);
-
-        if (created.enabled !== editing.enabled) {
-          await toggleConfiguration.mutateAsync({
-            id: created.id,
-            enabled: editing.enabled,
-          });
-        }
-
-        await deleteConfiguration.mutateAsync(editing.id);
+        await updateConfiguration.mutateAsync({
+          id: editing.id,
+          data: payload,
+        });
         toast.success("Configuration updated");
       } else {
         await createConfiguration.mutateAsync(payload);

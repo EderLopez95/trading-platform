@@ -91,6 +91,7 @@ class ConfigurationRepositoryImpl(ConfigurationRepository):
         model.trend_timeframe = configuration.trend_timeframe
         model.context_timeframe = configuration.context_timeframe
         model.entry_timeframe = configuration.entry_timeframe
+        model.enabled = configuration.enabled
         self.db.commit()
         self.db.refresh(model)
 
