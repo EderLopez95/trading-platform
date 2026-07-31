@@ -73,3 +73,15 @@ class AuthClient:
         
         except grpc.RpcError as e:
             map_grpc_error(e)
+
+    def get_user(self, user_id: str, request_id: str | None = None):
+        try:
+            metadata = [("request-id", request_id)] if request_id else []
+
+            return self.stub.GetUser(
+                auth_pb2.GetUserRequest(user_id=user_id),
+                metadata=metadata
+            )
+
+        except grpc.RpcError as e:
+            map_grpc_error(e)

@@ -16,3 +16,7 @@ class AuthPort(ABC):
     @abstractmethod
     def update_telegram(self, user_id: str, token: str, chat_id: str):
         pass
+
+    @abstractmethod
+    def get_user(self, user_id: str):
+        pass

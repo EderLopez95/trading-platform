@@ -1,4 +1,4 @@
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import styles from "./Modal.module.scss";
 
 type Props = {
@@ -8,12 +8,39 @@ type Props = {
   children: ReactNode;
 };
 
+const ANIMATION_MS = 300;
+
 export default function Modal({
   isOpen,
   onClose,
   title,
   children,
 }: Props) {
+  const [isRendered, setIsRendered] = useState(isOpen);
+  const [isClosing, setIsClosing] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setIsRendered(true);
+      setIsClosing(false);
+
+      return;
+    }
+
+    if (!isRendered) {
+      return;
+    }
+
+    setIsClosing(true);
+
+    const timer = setTimeout(() => {
+      setIsRendered(false);
+      setIsClosing(false);
+    }, ANIMATION_MS);
+
+    return () => clearTimeout(timer);
+  }, [isOpen, isRendered]);
+
   useEffect(() => {
     if (!isOpen) {
       return;
@@ -32,14 +59,22 @@ export default function Modal({
     };
   }, [isOpen, onClose]);
 
-  if (!isOpen) {
+  if (!isRendered) {
     return null;
   }
 
+  const overlayClass = isClosing
+    ? `${styles.overlay} ${styles.overlayClosing}`
+    : styles.overlay;
+
+  const modalClass = isClosing
+    ? `${styles.modal} ${styles.modalClosing}`
+    : styles.modal;
+
   return (
-    <div className={styles.overlay} onMouseDown={onClose}>
+    <div className={overlayClass} onMouseDown={onClose}>
       <div
-        className={styles.modal}
+        className={modalClass}
         role="dialog"
         aria-modal="true"
         onMouseDown={(event) => event.stopPropagation()}

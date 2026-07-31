@@ -1,17 +1,62 @@
 @use '../../../../styles/variables' as *;
 
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes overlayFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes modalPopIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes modalPopOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+}
+
 .overlay {
   position: fixed;
   inset: 0;
   z-index: 1000;
   display: flex;
   background-color: $overlay-color;
+  animation: overlayFadeIn 180ms ease-out;
 
   @include respond-to("tablet") {
     align-items: center;
     justify-content: center;
     padding: 32px 0;
   }
+}
+
+.overlayClosing {
+  animation: overlayFadeOut 300ms ease-in forwards;
 }
 
 .modal {
@@ -22,6 +67,7 @@
   background-color: $card-color;
   color: $text-primary-color;
   overflow: hidden;
+  animation: modalPopIn 300ms cubic-bezier(0.16, 1, 0.3, 1);
 
   @include respond-to("tablet") {
     width: 50%;
@@ -31,6 +77,19 @@
     max-height: 100%;
     border-radius: $card-border-radius;
     box-shadow: $card-box-shadow;
+  }
+}
+
+.modalClosing {
+  animation: modalPopOut 300ms ease-in forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .overlayClosing,
+  .modal,
+  .modalClosing {
+    animation: none;
   }
 }
 

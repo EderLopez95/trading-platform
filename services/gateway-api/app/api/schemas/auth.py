@@ -23,3 +23,7 @@ class CurrentUserResponse(BaseModel):
     id: str
     email: str
     is_active: bool
+
+class TelegramSettingsResponse(BaseModel):
+    telegram_token: str
+    telegram_chat_id: str

@@ -19,3 +19,7 @@ class AuthService:
     def update_telegram(self, user_id: str, token: str, chat_id: str, request_id=None):
         
         return self.auth_client.update_telegram(user_id, token, chat_id, request_id)
+
+    def get_user(self, user_id: str, request_id=None):
+
+        return self.auth_client.get_user(user_id, request_id)

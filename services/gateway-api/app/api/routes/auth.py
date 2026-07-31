@@ -2,7 +2,15 @@ from fastapi import APIRouter, Depends, Request
 from app.infrastructure.grpc.clients.auth_client import AuthClient
 from app.application.services.auth_service import AuthService
 from app.api.dependencies.auth import get_current_user
-from app.api.schemas.auth import RegisterRequest, LoginRequest, UpdateTelegramRequest, AuthResponse, UserResponse, CurrentUserResponse
+from app.api.schemas.auth import (
+    RegisterRequest,
+    LoginRequest,
+    UpdateTelegramRequest,
+    AuthResponse,
+    UserResponse,
+    CurrentUserResponse,
+    TelegramSettingsResponse
+)
 from app.infrastructure.grpc.clients.signal_client import SignalClient
 
 router = APIRouter()
@@ -71,4 +79,18 @@ def me(user=Depends(get_current_user)):
         id=user.user_id,
         email=user.email,
         is_active=user.is_active
+    )
+
+@router.get("/telegram", response_model=TelegramSettingsResponse)
+def get_telegram(
+    request: Request,
+    user=Depends(get_current_user),
+    service: AuthService = Depends(get_service),
+):
+    request_id = request.state.request_id
+    res = service.get_user(user.user_id, request_id)
+
+    return TelegramSettingsResponse(
+        telegram_token=res.telegram_token,
+        telegram_chat_id=res.telegram_chat_id,
     )

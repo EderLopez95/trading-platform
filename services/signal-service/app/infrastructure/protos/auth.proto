@@ -8,6 +8,7 @@ service AuthService {
   rpc Validate (ValidateRequest) returns (UserResponse);
   rpc UpdateTelegram(UpdateTelegramRequest) returns (UserResponse);
   rpc GetUsers(GetUsersRequest) returns (GetUsersResponse);
+  rpc GetUser(GetUserRequest) returns (UserTelegramResponse);
 }
 
 message RegisterRequest {
@@ -31,6 +32,10 @@ message UpdateTelegramRequest {
 }
 
 message GetUsersRequest {
+}
+
+message GetUserRequest {
+  string user_id = 1;
 }
 
 message AuthResponse {

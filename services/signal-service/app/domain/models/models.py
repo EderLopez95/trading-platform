@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field
 from uuid import UUID
 from typing import Optional
 from datetime import datetime
-from app.domain.enums.enums import SignalType, StrategyType, Timeframe
+from app.domain.enums.enums import SignalType, Timeframe
 
 class TimeframesModel(BaseModel):
     trend: Timeframe
@@ -13,7 +13,7 @@ class ConfigurationModel(BaseModel):
     id: UUID | None = None
     user_id: UUID
     symbols: list[str] = Field(min_length=1)
-    strategies: list[StrategyType] = Field(min_length=1)
+    strategies: list[str] = Field(min_length=1)
     params: dict | None = None
     timeframes: TimeframesModel
     enabled: bool = True
@@ -23,7 +23,7 @@ class SignalModel(BaseModel):
     id: UUID | None = None
     user_id: UUID
     symbol: str
-    strategy: StrategyType
+    strategy: str
     signal: SignalType
     trend_timeframe: Timeframe
     context_timeframe: Timeframe | None = None

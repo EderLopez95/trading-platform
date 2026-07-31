@@ -219,6 +219,34 @@ class AuthServiceServicer(auth_pb2_grpc.AuthServiceServicer):
             context.set_details("Internal server error: " + str(e))
 
             return auth_pb2.GetUsersResponse()
+        
+    def GetUser(self, request, context):
+        request_id = _get_request_id(context)
+        logger.info(
+            "get_user_called",
+            extra={
+                "request_id": request_id,
+                "service": "auth",
+            }
+        )
+
+        try:
+            with SessionLocal() as db:
+                repository = UserRepositoryImpl(db)
+                user = repository.get_by_id(request.user_id)
+
+                return auth_pb2.UserTelegramResponse(
+                    user_id=str(user.id),
+                    email=user.email,
+                    telegram_token=decrypt(user.telegram_token) if user.telegram_token else "",
+                    telegram_chat_id=decrypt(user.telegram_chat_id) if user.telegram_chat_id else "",
+                )
+
+        except Exception as e:
+            context.set_code(grpc.StatusCode.INTERNAL)
+            context.set_details("Internal server error: " + str(e))
+
+            return auth_pb2.UserTelegramResponse()
             
 def _get_request_id(context):
     metadata = dict(context.invocation_metadata())

@@ -1,20 +1,20 @@
 import toast from "react-hot-toast";
 import TelegramForm from "../components/TelegramForm";
 import { settingsApi } from "../api/settingsApi";
+import { useTelegramSettings } from "../hooks/useTelegramSettings";
 import { type TelegramFormData } from "../services/telegramSchema";
 import styles from "./SettingsPage.module.scss";
 
 export default function SettingsPage() {
+  const { data, isLoading } = useTelegramSettings();
 
-  const handleSubmit = async (
-    data: TelegramFormData
-  ) => {
+  const handleSubmit = async (formData: TelegramFormData) => {
     try {
-      await settingsApi.updateTelegram(data);
+      await settingsApi.updateTelegram(formData);
       toast.success("Telegram settings updated");
     } catch (error) {
       console.error(error);
-      toast.error("Failed to update settings");
+      toast.error("Failed to update telegram settings");
     }
   };
 
@@ -25,8 +25,14 @@ export default function SettingsPage() {
       </div>
       <div className={`card ${styles.card}`}>
         <h2>Notifications</h2>
-        <p className={styles.description}>Configure your Telegram bot to receive signal alerts</p>
-        <TelegramForm onSubmit={handleSubmit} />
+        <p className={styles.description}>
+          Configure your Telegram bot to receive alerts
+        </p>
+        {isLoading ? (
+          <p className={styles.description}>Loading...</p>
+        ) : (
+          <TelegramForm initialValue={data} onSubmit={handleSubmit} />
+        )}
       </div>
     </div>
   );

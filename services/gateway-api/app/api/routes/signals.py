@@ -94,7 +94,6 @@ def get_symbols(
 def get_timeframes(
     service: SignalService = Depends(get_service),
 ):
-    
     response = service.get_timeframes()
 
     return TimeframesResponse(

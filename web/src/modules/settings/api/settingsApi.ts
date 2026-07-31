@@ -1,15 +1,17 @@
 import { apiClient } from "@/shared/services/apiClient";
-
-export interface UpdateTelegramRequest {
-  telegram_token: string;
-  telegram_chat_id: string;
-}
-
-export interface UpdateTelegramResponse {
-  user_id: string;
-}
+import {
+  type TelegramSettings,
+  type UpdateTelegramRequest,
+  type UpdateTelegramResponse,
+} from "../types/settings.types";
 
 export const settingsApi = {
+  getTelegram: async () => {
+    const response = await apiClient.get<TelegramSettings>("/auth/telegram");
+
+    return response.data;
+  },
+
   updateTelegram: async (data: UpdateTelegramRequest) => {
     const response = await apiClient.put<UpdateTelegramResponse>(
       "/auth/telegram",

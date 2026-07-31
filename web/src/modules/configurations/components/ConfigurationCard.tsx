@@ -111,7 +111,6 @@ export default function ConfigurationCard({
         >
           Edit
         </button>
-
         <button
           type="button"
           className={

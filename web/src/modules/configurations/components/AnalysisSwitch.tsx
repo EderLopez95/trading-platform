@@ -8,7 +8,6 @@ import styles from "./AnalysisSwitch.module.scss";
 export default function AnalysisSwitch() {
   const { data, isLoading } = useAnalysisStatus();
   const toggle = useToggleAnalysis();
-
   const enabled = data?.enabled ?? false;
 
   const handleToggle = () => {
