@@ -72,7 +72,7 @@ export default function ConfigurationsPanel() {
           className={styles.countButton}
           onClick={openCreate}
         >
-          {configurations.length} Configurations
+          {configurations.length} {configurations.length === 1 ? "Configuration" : "Configurations"}
         </button>
       </div>
 

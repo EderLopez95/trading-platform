@@ -53,6 +53,12 @@
     background-color: $background-color;
   }
 
+  tbody tr {
+    &.isToday {
+      font-weight: 700;
+    }
+  }
+
   tbody tr:last-child td {
     border-bottom: 1px solid transparent;
   }

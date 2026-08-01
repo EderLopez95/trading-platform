@@ -26,6 +26,31 @@ function formatTime(value: string) {
   return date.toLocaleString();
 }
 
+function formatPrice(value: number | string) {
+  const num = typeof value === "string" ? parseFloat(value) : value;
+  if (num === null || num === undefined || Number.isNaN(num)) {
+    return value;
+  }
+
+  return new Intl.NumberFormat("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 4,
+  }).format(num);
+}
+
+function isToday(dateString: string): boolean {
+  const date = new Date(dateString);
+  const today = new Date();
+  
+  if (Number.isNaN(date.getTime())) return false;
+  
+  return (
+    date.getDate() === today.getDate() &&
+    date.getMonth() === today.getMonth() &&
+    date.getFullYear() === today.getFullYear()
+  );
+}
+
 export default function SignalsTable() {
   const [page, setPage] = useState(1);
 
@@ -40,6 +65,9 @@ export default function SignalsTable() {
 
   const canPrev = page > 1;
   const canNext = page < totalPages;
+
+  const fromItem = total === 0 ? 0 : (page - 1) * PAGE_SIZE + 1;
+  const toItem = Math.min(page * PAGE_SIZE, total);
 
   return (
     <div className={styles.wrapper}>
@@ -81,34 +109,41 @@ export default function SignalsTable() {
             )}
 
             {!isError &&
-              signals.map((signal) => (
-                <tr key={signal.id}>
-                  <td className={styles.symbol}>{signal.symbol}</td>
-                  <td>
-                    <span
-                      className={
-                        signal.signal === "BUY" ? `${styles.badge} ${styles.buy}`
-                        : signal.signal === "SELL" ? `${styles.badge} ${styles.sell}` : ""
-                      }
-                    >
-                      {signal.signal}
-                    </span>
-                  </td>
-                  <td>{formatTimeframes(signal)}</td>
-                  <td>{signal.strategy}</td>
-                  <td className={styles.time}>
-                    {formatTime(signal.signal_time)}
-                  </td>
-                  <td>{signal.price}</td>
-                </tr>
-              ))}
+              signals.map((signal) => {
+                const rowIsToday = isToday(signal.signal_time);
+
+                return (
+                  <tr
+                    key={signal.id}
+                    className={rowIsToday ? styles.isToday : ""}
+                  >
+                    <td className={styles.symbol}>{signal.symbol}</td>
+                    <td>
+                      <span
+                        className={
+                          signal.signal === "BUY" ? `${styles.badge} ${styles.buy}`
+                          : signal.signal === "SELL" ? `${styles.badge} ${styles.sell}` : ""
+                        }
+                      >
+                        {signal.signal}
+                      </span>
+                    </td>
+                    <td>{formatTimeframes(signal)}</td>
+                    <td>{signal.strategy}</td>
+                    <td className={styles.time}>
+                      {formatTime(signal.signal_time)}
+                    </td>
+                    <td>{formatPrice(signal.price)}</td>
+                  </tr>
+                );
+              })}
           </tbody>
         </table>
       </div>
 
       <div className={styles.pagination}>
         <span className={styles.pageInfo}>
-          Page {page} of {totalPages} {isFetching ? " · updating..." : ""}
+          Page {page} of {totalPages} ({fromItem}-{toItem} of {total}) {isFetching ? " · updating..." : ""}
         </span>
         <div className={styles.pageButtons}>
           <button
