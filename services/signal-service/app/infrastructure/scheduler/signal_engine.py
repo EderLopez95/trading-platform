@@ -68,7 +68,7 @@ class SignalEngine:
                                     self.market_data.get_candles(
                                         symbol=symbol,
                                         timeframe=configuration.context_timeframe,
-                                        count=100,
+                                        count=70,
                                     )
                                 )
 
@@ -77,7 +77,7 @@ class SignalEngine:
                                     self.market_data.get_candles(
                                         symbol=symbol,
                                         timeframe=configuration.entry_timeframe,
-                                        count=20,
+                                        count=30,
                                     )
                                 )
 

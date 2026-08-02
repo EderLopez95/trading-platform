@@ -4,15 +4,26 @@ class RSICross:
     def __init__(self, rsi_min_distance=1.5): # minimum distance between two series to consider a crossover valid
         self.rsi_min_distance = rsi_min_distance
 
-    def calculate_rsi(self, series, period=14):
-        delta = series.diff() # price change between candles
-        gain = delta.clip(lower=0) # only positive movements
-        loss = -delta.clip(upper=0) # only negative movements
-        avg_gain = gain.ewm(alpha=1/period, adjust=False, min_periods=period).mean() # earnings average (wilder ema)
-        avg_loss = loss.ewm(alpha=1/period, adjust=False, min_periods=period).mean() # losses average (wilder ema)
-        rs = avg_gain / avg_loss # correlation
-        rsi = 100 - (100 / (1 + rs)) # scale 0-100
+    def calculate_rsi_ema(self, series, period=14):
+        delta = series.diff()
+        gain = delta.clip(lower=0)
+        loss = -delta.clip(upper=0)
+        avg_gain = gain.ewm(alpha=1/period, adjust=False, min_periods=period).mean()
+        avg_loss = loss.ewm(alpha=1/period, adjust=False, min_periods=period).mean()
+        rs = avg_gain / avg_loss
+        rsi = 100 - (100 / (1 + rs))
 
+        return rsi
+
+    def calculate_rsi_sma(self, series, period=14):
+        delta = series.diff()
+        gain = delta.clip(lower=0)
+        loss = -delta.clip(upper=0)
+        avg_gain = gain.rolling(window=period, min_periods=period).mean()
+        avg_loss = loss.rolling(window=period, min_periods=period).mean()
+        rs = avg_gain / avg_loss
+        rsi = 100 - (100 / (1 + rs))
+        
         return rsi
 
     def crossover(self, a, b):

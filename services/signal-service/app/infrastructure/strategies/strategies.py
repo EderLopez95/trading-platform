@@ -5,7 +5,7 @@ class MultiSMAsMomentumStrategy(StrategyPort):
 
         return None
     
-class RSICrossTrendStrategy(StrategyPort):
+class RSICrossSMATrendStrategy(StrategyPort):
     def evaluate(self, trend_candles, context_candles, entry_candles):
         
         return None

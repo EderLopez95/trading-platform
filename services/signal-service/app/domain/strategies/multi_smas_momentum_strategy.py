@@ -24,7 +24,7 @@ class MultiSMAsMomentumStrategy:
                 reason="Not enough candles for trend timeframe",
             )
 
-        if len(entry_candles) < 20:
+        if len(entry_candles) < 28:
         
             return StrategyResult(
                 signal=SignalType.NONE,
@@ -51,7 +51,7 @@ class MultiSMAsMomentumStrategy:
         sma40_v = sma40.iloc[-1]
         sma100_v = sma100.iloc[-1]
 
-        if pd.isna(sma100_v): # in case of invalid data
+        if pd.isna(sma100_v) or pd.isna(sma20.iloc[-4]): # in case of invalid data
             
             return StrategyResult(
                 signal=SignalType.NONE,
@@ -81,13 +81,25 @@ class MultiSMAsMomentumStrategy:
         trend_direction_ok = abs(sma20_slope) > (sma20_v * self.min_slope_strength)
 
         # calculate RSI entry
-        entry_rsi = self.rsi_cross.calculate_rsi(entry_close_series, 14)
-        entry_rsi_ma = entry_rsi.rolling(14).mean()
+        entry_rsi = self.rsi_cross.calculate_rsi_ema(entry_close_series, 14)
+        entry_rsi_ma = entry_rsi.ewm(span=14, adjust=False, min_periods=1).mean()
+
+        if (
+            pd.isna(entry_rsi.iloc[-1]) or pd.isna(entry_rsi.iloc[-2])
+            or pd.isna(entry_rsi_ma.iloc[-1]) or pd.isna(entry_rsi_ma.iloc[-2])
+        ):
+            
+            return StrategyResult(
+                signal=SignalType.NONE,
+                reason="Calculated entry RSI indicators contain NaN at evaluation indices",
+            )
+
         bullish_cross = self.rsi_cross.crossover(entry_rsi, entry_rsi_ma)
         bearish_cross = self.rsi_cross.crossunder(entry_rsi, entry_rsi_ma)
 
         # calculate volume average and check if current volume is low
         volume_avg = pd.Series([candle.volume for candle in entry_candles]).rolling(20).mean()
+        
         if pd.isna(volume_avg.iloc[-1]): # in case of invalid data
 
             return StrategyResult(
