@@ -35,7 +35,7 @@ class MT5Adapter(MarketDataProvider):
         rates = mt5.copy_rates_from_pos(
             symbol,
             mt5_timeframe,
-            0,
+            1, # start at 1 to skip the currently-forming candle, only return closed candles
             count,
         )
 

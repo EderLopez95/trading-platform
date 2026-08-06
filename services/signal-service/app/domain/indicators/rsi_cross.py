@@ -28,11 +28,11 @@ class RSICross:
 
     def crossover(self, a, b):
 
-        if len(a) < 2 or len(b) < 2: # in case of insufficient data, at least 2 values
+        if len(a) < 2 or len(b) < 2:
 
             return False
 
-        if ( # in case of invalid data
+        if (
             pd.isna(a.iloc[-1])
             or pd.isna(b.iloc[-1])
             or pd.isna(a.iloc[-2])
@@ -50,18 +50,17 @@ class RSICross:
             a_prev <= b_prev
             and a_current > b_current
         )
-        distance = abs(a_current - b_current) > self.rsi_min_distance # check for enough min distance
+        distance = abs(a_current - b_current) > self.rsi_min_distance
 
-        return crossed and distance # only valid if both are true
-
-    # same as crossover but backwards validation
+        return crossed and distance
+    
     def crossunder(self, a, b):
         
         if len(a) < 2 or len(b) < 2:
 
             return False
 
-        if ( # in case of invalid data
+        if (
             pd.isna(a.iloc[-1])
             or pd.isna(b.iloc[-1])
             or pd.isna(a.iloc[-2])

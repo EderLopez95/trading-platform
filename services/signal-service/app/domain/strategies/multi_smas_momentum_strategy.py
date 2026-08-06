@@ -17,19 +17,28 @@ class MultiSMAsMomentumStrategy:
 
     def evaluate(self, trend_candles, context_candles, entry_candles):
         
-        if len(trend_candles) < 100:
+        if len(trend_candles) < 149:
 
             return StrategyResult(
                 signal=SignalType.NONE,
                 reason="Not enough candles for trend timeframe",
             )
+        
+        if context_candles and len(context_candles) < 99: # optional
+        
+            return StrategyResult(
+                signal=SignalType.NONE,
+                reason="Not enough candles for context timeframe",
+            )
 
-        if len(entry_candles) < 28:
+        if len(entry_candles) < 49:
         
             return StrategyResult(
                 signal=SignalType.NONE,
                 reason="Not enough candles for entry timeframe",
             )
+
+        # TREND TIMEFRAME
 
         trend_closes = [
             candle.close
@@ -37,13 +46,6 @@ class MultiSMAsMomentumStrategy:
         ]
         trend_close_series = pd.Series(trend_closes)
 
-        entry_closes = [
-            candle.close
-            for candle in entry_candles
-        ]
-        entry_close_series = pd.Series(entry_closes)
-
-        # calculate SMAs (averages, last value)
         sma20 = trend_close_series.rolling(20).mean()
         sma40 = trend_close_series.rolling(40).mean()
         sma100 = trend_close_series.rolling(100).mean()
@@ -51,24 +53,22 @@ class MultiSMAsMomentumStrategy:
         sma40_v = sma40.iloc[-1]
         sma100_v = sma100.iloc[-1]
 
-        if pd.isna(sma100_v) or pd.isna(sma20.iloc[-4]): # in case of invalid data
+        if pd.isna(sma100_v) or pd.isna(sma20.iloc[-4]):
             
             return StrategyResult(
                 signal=SignalType.NONE,
-                reason="Invalid SMA values",
+                reason="Invalid trend SMA values",
             )
-
-        # determine trend based on SMA order
-        bullish_trend = (
+        
+        trend_bullish = (
             sma20_v > sma40_v
             and sma40_v > sma100_v
         )
-        bearish_trend = (
+        trend_bearish = (
             sma20_v < sma40_v
             and sma40_v < sma100_v
         )
 
-        # trend strength, avoid laterality
         distance_20_40 = abs(sma20_v - sma40_v) / sma40_v
         distance_40_100 = abs(sma40_v - sma100_v) / sma100_v
         trend_strength = (
@@ -76,11 +76,21 @@ class MultiSMAsMomentumStrategy:
             and distance_40_100 > self.min_sma_distance
         )
 
-        # trend slope
-        sma20_slope = sma20_v - sma20.iloc[-4]
-        trend_direction_ok = abs(sma20_slope) > (sma20_v * self.min_slope_strength)
+        if (
+            (not trend_bullish and not trend_bearish)
+            or not trend_strength
+        ):
 
-        # calculate RSI entry
+            return StrategyResult(signal=SignalType.NONE)
+        
+        # ENTRY TIMEFRAME
+
+        entry_closes = [
+            candle.close
+            for candle in entry_candles
+        ]
+        entry_close_series = pd.Series(entry_closes)
+
         entry_rsi = self.rsi_cross.calculate_rsi_ema(entry_close_series, 14)
         entry_rsi_ma = entry_rsi.ewm(span=14, adjust=False, min_periods=1).mean()
 
@@ -94,39 +104,70 @@ class MultiSMAsMomentumStrategy:
                 reason="Calculated entry RSI indicators contain NaN at evaluation indices",
             )
 
-        bullish_cross = self.rsi_cross.crossover(entry_rsi, entry_rsi_ma)
-        bearish_cross = self.rsi_cross.crossunder(entry_rsi, entry_rsi_ma)
+        entry_bullish_cross = self.rsi_cross.crossover(entry_rsi, entry_rsi_ma)
+        entry_bearish_cross = self.rsi_cross.crossunder(entry_rsi, entry_rsi_ma)
 
-        # calculate volume average and check if current volume is low
         volume_avg = pd.Series([candle.volume for candle in entry_candles]).rolling(20).mean()
         
-        if pd.isna(volume_avg.iloc[-1]): # in case of invalid data
+        if pd.isna(volume_avg.iloc[-1]):
 
             return StrategyResult(
                 signal=SignalType.NONE,
-                reason="Invalid volume values",
+                reason="Invalid entry volume values",
             )
         
         volume_v = entry_candles[-1].volume
         volume_avg_v = volume_avg.iloc[-1]
-        volume_low = volume_v < (volume_avg_v * self.volume_multiplier)
+        entry_volume_low = volume_v < (volume_avg_v * self.volume_multiplier)
+
+        # CONTEXT TIMEFRAME
+        
+        context_bullish = True
+        context_bearish = True
+
+        if context_candles:
+
+            context_closes = [
+                candle.close
+                for candle in context_candles
+            ]
+            context_close_series = pd.Series(context_closes)
+
+            context_sma20 = context_close_series.rolling(20).mean()
+            context_sma40 = context_close_series.rolling(40).mean()
+            context_sma20_v = context_sma20.iloc[-1]
+            context_sma40_v = context_sma40.iloc[-1]
+
+            if pd.isna(context_sma40_v):
+
+                return StrategyResult(
+                    signal=SignalType.NONE,
+                    reason="Invalid context SMA values",
+                )
+
+            context_bullish = context_sma20_v > context_sma40_v
+            context_bearish = context_sma20_v < context_sma40_v
+
+            if not context_bullish and not context_bearish:
+
+                return StrategyResult(signal=SignalType.NONE)
 
         if (
-            bullish_trend
-            and bullish_cross
+            trend_bullish
             and trend_strength
-            and trend_direction_ok
-            and not volume_low
+            and context_bullish
+            and entry_bullish_cross
+            and not entry_volume_low
         ):
 
             return StrategyResult(signal=SignalType.BUY)
 
         if (
-            bearish_trend
-            and bearish_cross
+            trend_bearish
             and trend_strength
-            and trend_direction_ok
-            and not volume_low
+            and context_bearish
+            and entry_bearish_cross
+            and not entry_volume_low
         ):
 
             return StrategyResult(signal=SignalType.SELL)
