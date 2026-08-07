@@ -14,8 +14,8 @@ type Props = {
 function getTimeframesArray(configuration: Configuration): string[] {
   
   return [
-    configuration.trend_timeframe,
     configuration.context_timeframe,
+    configuration.trend_timeframe,
     configuration.entry_timeframe,
   ].filter((val): val is string => 
     val !== null && val !== undefined && val.trim() !== "" && val !== "string"

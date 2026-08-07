@@ -15,21 +15,21 @@ class MultiSMAsMomentumStrategy:
 
     def evaluate(self, trend_candles, context_candles, entry_candles):
         
-        if not trend_candles or len(trend_candles) < 149:
+        if not trend_candles or len(trend_candles) < 90:
 
             return StrategyResult(
                 signal=SignalType.NONE,
                 reason="Not enough candles for trend timeframe",
             )
         
-        if context_candles and len(context_candles) < 99: # optional
+        if context_candles and len(context_candles) < 90: # optional
         
             return StrategyResult(
                 signal=SignalType.NONE,
                 reason="Not enough candles for context timeframe",
             )
 
-        if not entry_candles or len(entry_candles) < 49:
+        if not entry_candles or len(entry_candles) < 40:
         
             return StrategyResult(
                 signal=SignalType.NONE,

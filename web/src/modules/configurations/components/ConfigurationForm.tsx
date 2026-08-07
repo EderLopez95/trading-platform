@@ -54,6 +54,7 @@ export default function ConfigurationForm({
       onSubmit={handleSubmit(onSubmit)}
     >
       <div className={styles.fields}>
+        
         <div className={styles.field}>
           <label>Symbols</label>
           <Controller
@@ -91,19 +92,6 @@ export default function ConfigurationForm({
         </div>
 
         <div className={styles.field}>
-          <label>Trend timeframe</label>
-          <Select {...register("trend_timeframe")}>
-            <option value="">Select timeframe</option>
-            {timeframes.map((timeframe) => (
-              <option key={timeframe} value={timeframe}>
-                {timeframe}
-              </option>
-            ))}
-          </Select>
-          <p className={styles.error}>{errors.trend_timeframe?.message}</p>
-        </div>
-
-        <div className={styles.field}>
           <label>Context timeframe (optional)</label>
           <Select {...register("context_timeframe")}>
             <option value="">Select timeframe</option>
@@ -114,6 +102,19 @@ export default function ConfigurationForm({
             ))}
           </Select>
           <p className={styles.error}>{errors.context_timeframe?.message}</p>
+        </div>
+
+        <div className={styles.field}>
+          <label>Trend timeframe</label>
+          <Select {...register("trend_timeframe")}>
+            <option value="">Select timeframe</option>
+            {timeframes.map((timeframe) => (
+              <option key={timeframe} value={timeframe}>
+                {timeframe}
+              </option>
+            ))}
+          </Select>
+          <p className={styles.error}>{errors.trend_timeframe?.message}</p>
         </div>
 
         <div className={styles.field}>

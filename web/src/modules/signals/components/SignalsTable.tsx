@@ -8,8 +8,8 @@ const PAGE_SIZE = 20;
 function formatTimeframes(signal: Signal) {
 
   return [
-    signal.trend_timeframe,
     signal.context_timeframe,
+    signal.trend_timeframe,
     signal.entry_timeframe,
   ]
     .filter(val => val && val.trim() !== "" && val !== "string")
