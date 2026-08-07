@@ -6,18 +6,16 @@ import pandas as pd
 class MultiSMAsMomentumStrategy:
     def __init__(
         self,
-        min_sma_distance=0.002,
+        min_sma_distance=0.003,
         volume_multiplier=0.7,
-        min_slope_strength=0.001
     ):
         self.rsi_cross = RSICross()
         self.min_sma_distance = min_sma_distance
         self.volume_multiplier = volume_multiplier
-        self.min_slope_strength = min_slope_strength
 
     def evaluate(self, trend_candles, context_candles, entry_candles):
         
-        if len(trend_candles) < 149:
+        if not trend_candles or len(trend_candles) < 149:
 
             return StrategyResult(
                 signal=SignalType.NONE,
@@ -31,7 +29,7 @@ class MultiSMAsMomentumStrategy:
                 reason="Not enough candles for context timeframe",
             )
 
-        if len(entry_candles) < 49:
+        if not entry_candles or len(entry_candles) < 49:
         
             return StrategyResult(
                 signal=SignalType.NONE,
@@ -148,9 +146,7 @@ class MultiSMAsMomentumStrategy:
             context_bullish = context_sma20_v > context_sma40_v
             context_bearish = context_sma20_v < context_sma40_v
 
-            if not context_bullish and not context_bearish:
-
-                return StrategyResult(signal=SignalType.NONE)
+        # VALIDATE CONDITIONS
 
         if (
             trend_bullish
