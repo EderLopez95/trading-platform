@@ -28,3 +28,11 @@ class ValidationException(GatewayAPIException):
 class ConflictException(GatewayAPIException):
     def __init__(self, message="Conflict"):
         super().__init__(message)
+
+class ServiceUnavailableException(GatewayAPIException):
+    def __init__(self, message="Service temporarily unavailable"):
+        super().__init__(message)
+
+class RateLimitExceededException(GatewayAPIException):
+    def __init__(self, message="Too many requests"):
+        super().__init__(message)

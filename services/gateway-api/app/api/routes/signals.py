@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Depends, Query
 from app.api.dependencies.auth import get_current_user
-from app.infrastructure.grpc.clients.signal_client import SignalClient
 from app.application.services.signal_service import SignalService
 from app.api.schemas.signal import (
     SignalResponse,
@@ -12,12 +11,13 @@ from app.api.schemas.signal import (
     TimeframeResponse,
     TimeframesResponse,
 )
+from app.infrastructure.grpc.clients.providers import get_signal_client
 
 router = APIRouter()
 
 def get_service():
 
-    return SignalService(SignalClient())
+    return SignalService(get_signal_client())
 
 @router.get("/signals")
 def get_signals(

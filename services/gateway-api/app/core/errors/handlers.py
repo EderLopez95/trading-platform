@@ -6,7 +6,9 @@ from app.domain.exceptions import (
     ConflictException,
     ValidationException,
     NotFoundException,
-    InvalidTokenException
+    InvalidTokenException,
+    ServiceUnavailableException,
+    RateLimitExceededException
 )
 
 def register_exception_handlers(app):
@@ -55,6 +57,22 @@ def register_exception_handlers(app):
 
         return JSONResponse(
             status_code=409,
+            content={"detail": str(exc)}
+        )
+
+    @app.exception_handler(RateLimitExceededException)
+    async def rate_limit_handler(request: Request, exc: RateLimitExceededException):
+
+        return JSONResponse(
+            status_code=429,
+            content={"detail": str(exc)}
+        )
+
+    @app.exception_handler(ServiceUnavailableException)
+    async def service_unavailable_handler(request: Request, exc: ServiceUnavailableException):
+
+        return JSONResponse(
+            status_code=503,
             content={"detail": str(exc)}
         )
     

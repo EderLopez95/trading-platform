@@ -90,6 +90,12 @@ services:
       SIGNAL_SERVICE_HOST: signal_service
       SIGNAL_SERVICE_PORT: 5052
       JWT_SECRET: trading-secret-key
+      JWT_ALGORITHM: HS256
+      CORS_ORIGINS: http://localhost:3002
+      CORS_ALLOW_METHODS: "*"
+      CORS_ALLOW_HEADERS: "*"
+      LOGIN_RATE_LIMIT_MAX: 5
+      LOGIN_RATE_LIMIT_WINDOW: 60
     ports:
       - "8080:8080"
     volumes:

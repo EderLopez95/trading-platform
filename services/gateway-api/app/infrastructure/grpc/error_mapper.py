@@ -5,7 +5,7 @@ from app.domain.exceptions import (
     ConflictException,
     ValidationException,
     NotFoundException,
-    InvalidTokenException
+    ServiceUnavailableException
 )
 
 def map_grpc_error(error: grpc.RpcError):
@@ -26,8 +26,8 @@ def map_grpc_error(error: grpc.RpcError):
         
     if status_code == grpc.StatusCode.ALREADY_EXISTS:
         raise ConflictException(details)
-    
-    if status_code == grpc.StatusCode.INTERNAL:
-        raise InvalidTokenException(details)
+
+    if status_code in (grpc.StatusCode.UNAVAILABLE, grpc.StatusCode.DEADLINE_EXCEEDED):
+        raise ServiceUnavailableException(details or "Service temporarily unavailable")
     
     raise Exception(f"gRPC error: {details}")

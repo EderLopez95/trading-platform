@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Depends, Request
-from app.infrastructure.grpc.clients.auth_client import AuthClient
+from fastapi import APIRouter, Depends, Request, BackgroundTasks
+from fastapi.security import HTTPAuthorizationCredentials
 from app.application.services.auth_service import AuthService
-from app.api.dependencies.auth import get_current_user
+from app.api.dependencies.auth import get_current_user, security
 from app.api.schemas.auth import (
     RegisterRequest,
     LoginRequest,
@@ -11,26 +11,30 @@ from app.api.schemas.auth import (
     CurrentUserResponse,
     TelegramSettingsResponse
 )
-from app.infrastructure.grpc.clients.signal_client import SignalClient
+from app.api.background import refresh_registries_safe
+from app.core.security.rate_limiter import RateLimiter
+from app.config.settings import LOGIN_RATE_LIMIT_MAX, LOGIN_RATE_LIMIT_WINDOW
+from app.infrastructure.grpc.clients.providers import get_auth_client
 
 router = APIRouter()
-signal_client = SignalClient()
+login_rate_limiter = RateLimiter(LOGIN_RATE_LIMIT_MAX, LOGIN_RATE_LIMIT_WINDOW)
 
 def get_service():
 
-    return AuthService(AuthClient())
+    return AuthService(get_auth_client())
 
 @router.post("/register", response_model=AuthResponse)
 def register(
     request: Request,
     data: RegisterRequest,
+    background_tasks: BackgroundTasks,
     service: AuthService = Depends(get_service)
 ):
     request_id = request.state.request_id
     res = service.register(data.email, data.password, request_id)
 
     if res:
-        signal_client.refresh_registries()
+        background_tasks.add_task(refresh_registries_safe)
 
     return AuthResponse(
         user_id=res.user_id,
@@ -41,7 +45,8 @@ def register(
 def login(
     request: Request,
     data: LoginRequest,
-    service: AuthService = Depends(get_service)
+    service: AuthService = Depends(get_service),
+    _: None = Depends(login_rate_limiter),
 ):
     request_id = request.state.request_id
     res = service.login(data.email, data.password, request_id)
@@ -55,6 +60,7 @@ def login(
 def update_telegram(
     request: Request,
     data: UpdateTelegramRequest,
+    background_tasks: BackgroundTasks,
     user=Depends(get_current_user),
     service: AuthService = Depends(get_service),
 ):
@@ -68,17 +74,22 @@ def update_telegram(
     )
 
     if res:
-        signal_client.refresh_registries()
+        background_tasks.add_task(refresh_registries_safe)
 
     return UserResponse(user_id=res.user_id)
 
 @router.get("/me", response_model=CurrentUserResponse)
-def me(user=Depends(get_current_user)):
-    
+def me(
+    _user=Depends(get_current_user),
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    service: AuthService = Depends(get_service),
+):
+    res = service.validate(credentials.credentials)
+
     return CurrentUserResponse(
-        id=user.user_id,
-        email=user.email,
-        is_active=user.is_active
+        id=res.user_id,
+        email=res.email,
+        is_active=res.is_active
     )
 
 @router.get("/telegram", response_model=TelegramSettingsResponse)
