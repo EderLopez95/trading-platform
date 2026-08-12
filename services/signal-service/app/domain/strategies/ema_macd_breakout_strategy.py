@@ -10,12 +10,13 @@ class EMAMACDBreakoutStrategy:
         ema_mid=21,
         ema_slow=50,
         context_ema=50,
-        breakout_lookback=20,
-        min_body_ratio=0.5,
+        breakout_lookback=10,
+        min_body_ratio=0.4,
         pip_size=0.0001,        # EURUSD / non-JPY 5-digit pairs; JPY pairs would use 0.01
-        min_macd_pips=0.5,      # MACD histogram must clear this many pips to confirm real momentum
-        volume_multiplier=1.2,  # breakout tick volume vs recent average (MT5 forex volume = tick volume)
+        min_macd_pips=0.2,      # MACD histogram must clear this many pips to confirm real momentum (M5 histograms are small)
+        volume_multiplier=1.0,  # breakout tick volume at/above recent average (MT5 forex volume = tick volume)
         volume_lookback=20,
+        trigger_window=3,       # breakout + momentum may build within the last N entry candles (not one exact bar)
     ):
         self.macd = MACD()
         self.ema_fast = ema_fast
@@ -28,6 +29,7 @@ class EMAMACDBreakoutStrategy:
         self.min_macd_pips = min_macd_pips
         self.volume_multiplier = volume_multiplier
         self.volume_lookback = volume_lookback
+        self.trigger_window = trigger_window
 
     def evaluate(self, trend_candles, context_candles, entry_candles):
         trend_min = self.ema_slow
@@ -48,7 +50,7 @@ class EMAMACDBreakoutStrategy:
                 reason="Not enough candles for context timeframe",
             )
 
-        if not entry_candles or len(entry_candles) < max(entry_min, self.breakout_lookback + 1, self.volume_lookback):
+        if not entry_candles or len(entry_candles) < max(entry_min, self.breakout_lookback + self.trigger_window, self.volume_lookback):
 
             return StrategyResult(
                 signal=SignalType.NONE,
@@ -116,34 +118,23 @@ class EMAMACDBreakoutStrategy:
 
         macd_v = float(macd_line.iloc[-1])
         signal_v = float(signal_line.iloc[-1])
-        hist_v = float(histogram.iloc[-1])
 
         macd_threshold = self.min_macd_pips * self.pip_size
 
-        momentum_bullish = (
-            macd_v > signal_v
-            and hist_v > macd_threshold
-            and self.macd.rising(histogram)
-        )
-        momentum_bearish = (
-            macd_v < signal_v
-            and hist_v < -macd_threshold
-            and self.macd.falling(histogram)
-        )
+        recent_hist = histogram.iloc[-self.trigger_window:] # momentum can build anywhere within the trigger window
+        hist_max = float(recent_hist.max())
+        hist_min = float(recent_hist.min())
 
-        window = entry_candles[-(self.breakout_lookback + 1):-1] # breakout of the recent range, excluding the current (last) candle
-        recent_high = max(candle.high for candle in window)
-        recent_low = min(candle.low for candle in window)
+        momentum_bullish = macd_v > signal_v and hist_max > macd_threshold
+        momentum_bearish = macd_v < signal_v and hist_min < -macd_threshold
 
-        last = entry_candles[-1]
-        breakout_up = last.close > recent_high
-        breakout_down = last.close < recent_low
+        prior = entry_candles[-(self.breakout_lookback + self.trigger_window):-self.trigger_window] # range before the trigger window
+        recent_high = max(candle.high for candle in prior)
+        recent_low = min(candle.low for candle in prior)
 
-        candle_range = last.high - last.low # decisive candle body confirms conviction behind the breakout
-        body = abs(last.close - last.open)
-        body_ratio = (body / candle_range) if candle_range > 0 else 0.0
-        bullish_candle = last.close > last.open and body_ratio >= self.min_body_ratio
-        bearish_candle = last.close < last.open and body_ratio >= self.min_body_ratio
+        trigger_slice = entry_candles[-self.trigger_window:]
+        breakout_up = max(candle.close for candle in trigger_slice) > recent_high
+        breakout_down = min(candle.close for candle in trigger_slice) < recent_low
 
         volume_avg = pd.Series([candle.volume for candle in entry_candles]).rolling(self.volume_lookback).mean() # tick volume on forex
 
@@ -154,7 +145,25 @@ class EMAMACDBreakoutStrategy:
                 reason="Invalid entry volume values",
             )
 
-        volume_confirms = last.volume >= float(volume_avg.iloc[-1]) * self.volume_multiplier
+        volume_avg_v = float(volume_avg.iloc[-1])
+
+        def decisive(candle, bullish): # decisive body + volume on any candle in the trigger window
+            candle_range = candle.high - candle.low
+            body = abs(candle.close - candle.open)
+            body_ratio = (body / candle_range) if candle_range > 0 else 0.0
+
+            if body_ratio < self.min_body_ratio:
+
+                return False
+
+            if candle.volume < volume_avg_v * self.volume_multiplier:
+
+                return False
+
+            return candle.close > candle.open if bullish else candle.close < candle.open
+
+        bullish_trigger = any(decisive(candle, True) for candle in trigger_slice)
+        bearish_trigger = any(decisive(candle, False) for candle in trigger_slice)
 
         # CONTEXT TIMEFRAME
 
@@ -190,10 +199,8 @@ class EMAMACDBreakoutStrategy:
             trend_bullish
             and trend_rising
             and context_bullish
-            and momentum_bullish
-            and breakout_up
-            and bullish_candle
-            and volume_confirms
+            and (momentum_bullish or breakout_up)
+            and bullish_trigger
         ):
 
             return StrategyResult(signal=SignalType.BUY)
@@ -202,10 +209,8 @@ class EMAMACDBreakoutStrategy:
             trend_bearish
             and trend_falling
             and context_bearish
-            and momentum_bearish
-            and breakout_down
-            and bearish_candle
-            and volume_confirms
+            and (momentum_bearish or breakout_down)
+            and bearish_trigger
         ):
 
             return StrategyResult(signal=SignalType.SELL)

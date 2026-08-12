@@ -6,12 +6,14 @@ import pandas as pd
 class MultiSMAsMomentumStrategy:
     def __init__(
         self,
-        min_sma_distance=0.003,
+        min_sma_distance=0.0015,
         volume_multiplier=0.7,
+        cross_window=3,
     ):
         self.rsi_cross = RSICross()
         self.min_sma_distance = min_sma_distance
         self.volume_multiplier = volume_multiplier
+        self.cross_window = cross_window
 
     def evaluate(self, trend_candles, context_candles, entry_candles):
         
@@ -102,8 +104,8 @@ class MultiSMAsMomentumStrategy:
                 reason="Calculated entry RSI indicators contain NaN at evaluation indices",
             )
 
-        entry_bullish_cross = self.rsi_cross.crossover(entry_rsi, entry_rsi_ma)
-        entry_bearish_cross = self.rsi_cross.crossunder(entry_rsi, entry_rsi_ma)
+        entry_bullish_cross = self.rsi_cross.crossover_within(entry_rsi, entry_rsi_ma, self.cross_window)
+        entry_bearish_cross = self.rsi_cross.crossunder_within(entry_rsi, entry_rsi_ma, self.cross_window)
 
         volume_avg = pd.Series([candle.volume for candle in entry_candles]).rolling(20).mean()
         

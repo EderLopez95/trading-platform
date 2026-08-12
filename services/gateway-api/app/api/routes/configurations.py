@@ -71,4 +71,7 @@ def update_configuration(
 ):
     result = service.update_configuration(configuration_id, data)
 
+    if result:
+        service.refresh_registries()
+
     return ConfigurationMapper.to_dict(result.configuration)

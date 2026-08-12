@@ -81,3 +81,27 @@ class RSICross:
         distance = abs(a_current - b_current) > self.rsi_min_distance
 
         return crossed and distance
+
+    def crossover_within(self, a, b, window):
+
+        for k in range(window):
+            sliced_a = a if k == 0 else a.iloc[:-k]
+            sliced_b = b if k == 0 else b.iloc[:-k]
+
+            if self.crossover(sliced_a, sliced_b):
+
+                return True
+
+        return False
+
+    def crossunder_within(self, a, b, window):
+
+        for k in range(window):
+            sliced_a = a if k == 0 else a.iloc[:-k]
+            sliced_b = b if k == 0 else b.iloc[:-k]
+
+            if self.crossunder(sliced_a, sliced_b):
+
+                return True
+
+        return False

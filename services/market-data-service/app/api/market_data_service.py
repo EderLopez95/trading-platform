@@ -4,7 +4,6 @@ from app.infrastructure.grpc.mappers.candle_mapper import CandleMapper
 from app.infrastructure.protos.generated import market_data_pb2, market_data_pb2_grpc
 from app.core.errors.handlers import handle_grpc_exception
 from app.application.services.symbol_service import SymbolService
-from app.infrastructure.mt5.mt5_adapter import MT5Adapter
 
 class MarketDataGrpcService(market_data_pb2_grpc.MarketDataServiceServicer):
     def GetCandles(self, request, context):
@@ -30,7 +29,7 @@ class MarketDataGrpcService(market_data_pb2_grpc.MarketDataServiceServicer):
 
     def GetSymbols(self, request, context):
         try:
-            symbols = SymbolService(MT5Adapter()).get_all(request.search or None)
+            symbols = SymbolService(MT5Container.get_adapter()).get_all(request.search or None)
 
             return market_data_pb2.GetSymbolsResponse(
                 symbols=[
