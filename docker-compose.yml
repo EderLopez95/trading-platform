@@ -116,7 +116,7 @@ services:
         condition: service_healthy
     environment:
       HOST: 0.0.0.0
-      VITE_API_URL: http://localhost:8080
+      API_URL: http://localhost:8080
     ports:
       - "3002:80"
     healthcheck:

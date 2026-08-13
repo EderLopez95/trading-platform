@@ -1,8 +1,10 @@
 import axios from "axios";
 import { v4 as uuid } from "uuid";
+import { queryClient } from "@/app/providers/queryClient";
+import { router } from "@/app/router/router";
 
 export const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: window.__APP_CONFIG__?.API_URL ?? import.meta.env.VITE_API_URL,
   timeout: 10000,
 });
 
