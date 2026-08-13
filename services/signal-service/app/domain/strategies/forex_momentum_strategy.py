@@ -3,7 +3,7 @@ from app.domain.entities.strategy_result import StrategyResult
 from app.domain.indicators.macd import MACD
 import pandas as pd
 
-class EMAMACDBreakoutStrategy:
+class ForexMomentumStrategy:
     def __init__(
         self,
         ema_fast=9,

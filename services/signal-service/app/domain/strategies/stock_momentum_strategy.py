@@ -3,7 +3,7 @@ from app.domain.entities.strategy_result import StrategyResult
 from app.domain.indicators.rsi_cross import RSICross
 import pandas as pd
 
-class MultiSMAsMomentumStrategy:
+class StockMomentumStrategy:
     def __init__(
         self,
         min_sma_distance=0.0015,

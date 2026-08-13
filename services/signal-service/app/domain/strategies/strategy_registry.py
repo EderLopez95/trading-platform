@@ -1,11 +1,11 @@
-from app.domain.strategies.multi_smas_momentum_strategy import MultiSMAsMomentumStrategy
-from app.domain.strategies.ema_macd_breakout_strategy import EMAMACDBreakoutStrategy
+from app.domain.strategies.stock_momentum_strategy import StockMomentumStrategy
+from app.domain.strategies.forex_momentum_strategy import ForexMomentumStrategy
 
 class StrategyRegistry:
     def __init__(self):
         self._strategies = {
-            "multi_smas_momentum": MultiSMAsMomentumStrategy(),
-            "ema_macd_breakout": EMAMACDBreakoutStrategy(),
+            "stock_momentum": StockMomentumStrategy(),
+            "forex_momentum": ForexMomentumStrategy(),
         }
 
     def get(self, strategy_name: str):
