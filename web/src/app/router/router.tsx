@@ -23,10 +23,6 @@ export const router = createBrowserRouter([
         element: <SignalsPage />,
       },
       {
-        path: "/bot",
-        element: <div>Bot</div>,
-      },
-      {
         path: "/settings",
         element: <SettingsPage />,
       },

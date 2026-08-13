@@ -107,9 +107,6 @@ export default function Header() {
         <NavLink to="/signals" className={tabClassName}>
           Signals
         </NavLink>
-        <NavLink to="/bot" className={tabClassName}>
-          Bot
-        </NavLink>
       </nav>
     </header>
   );
