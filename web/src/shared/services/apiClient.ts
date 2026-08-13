@@ -40,7 +40,11 @@ apiClient.interceptors.response.use(
       !shouldIgnore
     ) {
       localStorage.removeItem("token");
-      window.location.href = "/login";
+      queryClient.clear();
+
+      if (router.state.location.pathname !== "/login") {
+        router.navigate("/login", { replace: true });
+      }
     }
 
     return Promise.reject(error);

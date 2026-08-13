@@ -7,6 +7,7 @@ import {
 } from "react";
 import { authApi } from "@/modules/auth/api/authApi";
 import { type User } from "@/modules/auth/types/auth.types";
+import { queryClient } from "./queryClient";
 
 type AuthContextType = {
   user: User | null;
@@ -59,6 +60,7 @@ export function AuthProvider({ children }: Props) {
 
   const logout = () => {
     localStorage.removeItem("token");
+    queryClient.clear();
     setUser(null);
     setIsAuthenticated(false);
   };
