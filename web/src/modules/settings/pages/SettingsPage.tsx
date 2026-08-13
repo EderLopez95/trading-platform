@@ -1,16 +1,19 @@
 import toast from "react-hot-toast";
 import TelegramForm from "../components/TelegramForm";
-import { settingsApi } from "../api/settingsApi";
-import { useTelegramSettings } from "../hooks/useTelegramSettings";
+import {
+  useTelegramSettings,
+  useUpdateTelegramSettings,
+} from "../hooks/useTelegramSettings";
 import { type TelegramFormData } from "../services/telegramSchema";
 import styles from "./SettingsPage.module.scss";
 
 export default function SettingsPage() {
   const { data, isLoading } = useTelegramSettings();
+  const updateTelegram = useUpdateTelegramSettings();
 
   const handleSubmit = async (formData: TelegramFormData) => {
     try {
-      await settingsApi.updateTelegram(formData);
+      await updateTelegram.mutateAsync(formData);
       toast.success("Telegram settings updated");
     } catch (error) {
       console.error(error);
