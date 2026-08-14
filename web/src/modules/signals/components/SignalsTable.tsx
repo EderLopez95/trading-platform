@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useSignals } from "../hooks/useSignals";
+import { useSignalsSocket } from "../hooks/useSignalsSocket";
 import { type Signal } from "../types/signal.types";
 import styles from "./SignalsTable.module.scss";
 
@@ -53,6 +54,8 @@ function isToday(dateString: string): boolean {
 
 export default function SignalsTable() {
   const [page, setPage] = useState(1);
+
+  useSignalsSocket();
 
   const { data, isLoading, isError, isFetching } = useSignals({
     page,

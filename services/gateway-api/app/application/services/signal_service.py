@@ -65,6 +65,10 @@ class SignalService:
             page_size=page_size,
         )
 
+    def stream_signals(self, user_id: str):
+
+        return self.client.stream_signals(user_id)
+
     def refresh_registries(self):
         
         return self.client.refresh_registries()

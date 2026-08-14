@@ -2,6 +2,8 @@ import logging
 from google.protobuf.empty_pb2 import Empty
 from app.infrastructure.database.connection import SessionLocal
 from app.infrastructure.protos.generated import signal_pb2, signal_pb2_grpc
+import queue
+from app.infrastructure.streaming.signal_broadcaster import signal_broadcaster
 from app.infrastructure.database.repositories.configuration_repository import ConfigurationRepositoryImpl
 from app.infrastructure.grpc.mappers.configuration_grpc_mapper import ConfigurationGrpcMapper
 from app.application.services.configuration_service import ConfigurationService
@@ -240,7 +242,30 @@ class SignalGrpcService(signal_pb2_grpc.SignalServiceServicer):
                     total=result["total"],
                 )
             )
-        
+
+    def StreamSignals(self, request, context):
+        request_id = _get_request_id(context)
+        logger.info(
+            "stream_signals_called",
+            extra={
+                "request_id": request_id,
+                "service": "signal",
+            }
+        )
+
+        subscriber_id, subscriber_queue = signal_broadcaster.subscribe(request.user_id)
+
+        try:
+            while context.is_active():
+                try:
+                    signal = subscriber_queue.get(timeout=1)
+                except queue.Empty:
+                    continue
+
+                yield SignalMapper.to_proto(signal)
+        finally:
+            signal_broadcaster.unsubscribe(subscriber_id)
+
     def RefreshRegistries(self, request, context):
         request_id = _get_request_id(context)
         logger.info(

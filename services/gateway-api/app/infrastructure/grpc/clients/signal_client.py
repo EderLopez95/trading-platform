@@ -142,13 +142,19 @@ class SignalClient:
         except grpc.RpcError as e:
             map_grpc_error(e)
 
+    def stream_signals(self, user_id: str):
+
+        return self.stub.StreamSignals(
+            signal_pb2.StreamSignalsRequest(user_id=user_id)
+        )
+
     def refresh_registries(self):
         try:
 
             return self.stub.RefreshRegistries(
                 signal_pb2.RefreshRegistriesRequest()
             )
-        
+
         except grpc.RpcError as e:
             map_grpc_error(e)
 

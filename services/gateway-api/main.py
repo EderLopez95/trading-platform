@@ -4,6 +4,7 @@ from app.api.routes.auth import router as auth
 from app.api.routes.configurations import router as configurations
 from app.api.routes.analysis import router as analysis
 from app.api.routes.signals import router as signals
+from app.api.routes.signals_ws import router as signals_ws
 from app.core.errors.handlers import register_exception_handlers
 from app.config.settings import validate_settings, PORT, ENV, CORS_ORIGINS, CORS_ALLOW_METHODS, CORS_ALLOW_HEADERS
 from app.core.logging.middleware import logging_middleware
@@ -33,6 +34,8 @@ app.include_router(configurations, prefix="/configurations", tags=["Configuratio
 app.include_router(analysis, prefix="/analysis", tags=["Analysis"])
 
 app.include_router(signals, prefix="/signals", tags=["Signals"])
+
+app.include_router(signals_ws, prefix="/ws", tags=["WebSocket"])
 
 register_exception_handlers(app)
 

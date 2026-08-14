@@ -16,6 +16,7 @@ from app.application.services.user_profile_provider import UserProfileProvider
 from app.application.services.signal_generation_service import SignalGenerationService
 from app.infrastructure.database.repositories.signal_repository import SignalRepositoryImpl
 from app.infrastructure.scheduler.metrics import SchedulerMetrics
+from app.infrastructure.streaming.signal_broadcaster import signal_broadcaster
 from app.domain.constants.timeframes import TIMEFRAMES
 
 logger = logging.getLogger("signal")
@@ -136,6 +137,8 @@ class SignalEngine:
                                         continue
 
                                     metrics.signals += 1
+
+                                    signal_broadcaster.publish(signal)
 
                                     if not user or not user.telegram_token or not user.telegram_chat_id:
                                         continue

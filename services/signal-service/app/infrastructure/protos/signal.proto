@@ -13,6 +13,7 @@ service SignalService {
   rpc GetAnalysisStatus(AnalysisStatusRequest) returns (AnalysisStatusResponse);
   rpc ToggleAnalysis(ToggleAnalysisRequest) returns (AnalysisStatusResponse);
   rpc GetSignals(GetSignalsRequest) returns (GetSignalsResponse);
+  rpc StreamSignals(StreamSignalsRequest) returns (stream SignalDto);
   rpc RefreshRegistries(RefreshRegistriesRequest) returns (RefreshRegistriesResponse);
   rpc GetStrategies(GetStrategiesRequest) returns (GetStrategiesResponse);
   rpc GetSymbols(GetSymbolsRequest) returns (GetSymbolsResponse);
@@ -101,6 +102,10 @@ message GetSignalsRequest {
   string strategy = 3;
   int32 page = 4;
   int32 page_size = 5;
+}
+
+message StreamSignalsRequest {
+  string user_id = 1;
 }
 
 message RefreshRegistriesRequest {

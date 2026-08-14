@@ -7,7 +7,7 @@ from app.api.signal_service import SignalGrpcService
 
 def create_server():
     server = grpc.server(
-        futures.ThreadPoolExecutor(max_workers=10)
+        futures.ThreadPoolExecutor(max_workers=32)
     )
     signal_pb2_grpc.add_SignalServiceServicer_to_server(
         SignalGrpcService(),

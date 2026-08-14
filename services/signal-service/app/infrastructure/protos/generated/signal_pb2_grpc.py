@@ -75,6 +75,11 @@ class SignalServiceStub:
                 request_serializer=signal__pb2.GetSignalsRequest.SerializeToString,
                 response_deserializer=signal__pb2.GetSignalsResponse.FromString,
                 _registered_method=True)
+        self.StreamSignals = channel.unary_stream(
+                '/signal.SignalService/StreamSignals',
+                request_serializer=signal__pb2.StreamSignalsRequest.SerializeToString,
+                response_deserializer=signal__pb2.SignalDto.FromString,
+                _registered_method=True)
         self.RefreshRegistries = channel.unary_unary(
                 '/signal.SignalService/RefreshRegistries',
                 request_serializer=signal__pb2.RefreshRegistriesRequest.SerializeToString,
@@ -148,6 +153,12 @@ class SignalServiceServicer:
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def StreamSignals(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def RefreshRegistries(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -214,6 +225,11 @@ def add_SignalServiceServicer_to_server(servicer, server):
                     servicer.GetSignals,
                     request_deserializer=signal__pb2.GetSignalsRequest.FromString,
                     response_serializer=signal__pb2.GetSignalsResponse.SerializeToString,
+            ),
+            'StreamSignals': grpc.unary_stream_rpc_method_handler(
+                    servicer.StreamSignals,
+                    request_deserializer=signal__pb2.StreamSignalsRequest.FromString,
+                    response_serializer=signal__pb2.SignalDto.SerializeToString,
             ),
             'RefreshRegistries': grpc.unary_unary_rpc_method_handler(
                     servicer.RefreshRegistries,
@@ -452,6 +468,33 @@ class SignalService:
             '/signal.SignalService/GetSignals',
             signal__pb2.GetSignalsRequest.SerializeToString,
             signal__pb2.GetSignalsResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def StreamSignals(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(
+            request,
+            target,
+            '/signal.SignalService/StreamSignals',
+            signal__pb2.StreamSignalsRequest.SerializeToString,
+            signal__pb2.SignalDto.FromString,
             options,
             channel_credentials,
             insecure,
