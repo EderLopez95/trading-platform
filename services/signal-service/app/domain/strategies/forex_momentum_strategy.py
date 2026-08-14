@@ -9,12 +9,12 @@ class ForexMomentumStrategy:
         ema_fast=9,
         ema_mid=21,
         ema_slow=50,
-        context_ema=50,
+        context_ema=21,         # H1 directional bias only; EMA50 on H1 was too slow for a 2-3h day trade
         breakout_lookback=10,
         min_body_ratio=0.4,
         pip_size=0.0001,        # EURUSD / non-JPY 5-digit pairs; JPY pairs would use 0.01
         min_macd_pips=0.2,      # MACD histogram must clear this many pips to confirm real momentum (M5 histograms are small)
-        volume_multiplier=1.0,  # breakout tick volume at/above recent average (MT5 forex volume = tick volume)
+        volume_multiplier=1.0,  # breakout tick volume at/above recent average (tick volume is a valid activity proxy on forex)
         volume_lookback=20,
         trigger_window=3,       # breakout + momentum may build within the last N entry candles (not one exact bar)
     ):
@@ -72,7 +72,7 @@ class ForexMomentumStrategy:
         ema_mid_v = ema_mid.iloc[-1]
         ema_slow_v = ema_slow.iloc[-1]
 
-        if pd.isna(ema_slow_v) or pd.isna(ema_fast.iloc[-3]):
+        if pd.isna(ema_slow_v):
 
             return StrategyResult(
                 signal=SignalType.NONE,
@@ -87,10 +87,6 @@ class ForexMomentumStrategy:
             ema_fast_v < ema_mid_v
             and ema_mid_v < ema_slow_v
         )
-
-        ema_fast_prev = ema_fast.iloc[-3] # slope of the fast EMA confirms the move is in progress (not flat)
-        trend_rising = ema_fast_v > ema_fast_prev
-        trend_falling = ema_fast_v < ema_fast_prev
 
         if not trend_bullish and not trend_bearish:
 
@@ -181,7 +177,7 @@ class ForexMomentumStrategy:
             context_ema = context_close_series.ewm(span=self.context_ema, adjust=False, min_periods=self.context_ema).mean()
             context_ema_v = context_ema.iloc[-1]
 
-            if pd.isna(context_ema_v) or pd.isna(context_ema.iloc[-3]):
+            if pd.isna(context_ema_v):
 
                 return StrategyResult(
                     signal=SignalType.NONE,
@@ -189,15 +185,13 @@ class ForexMomentumStrategy:
                 )
 
             context_price = context_candles[-1].close
-            context_ema_prev = context_ema.iloc[-3]
-            context_bullish = context_price > context_ema_v and context_ema_v >= context_ema_prev
-            context_bearish = context_price < context_ema_v and context_ema_v <= context_ema_prev
+            context_bullish = context_price > context_ema_v # directional bias only, no slope gate
+            context_bearish = context_price < context_ema_v
 
         # VALIDATE CONDITIONS
 
         if (
             trend_bullish
-            and trend_rising
             and context_bullish
             and (momentum_bullish or breakout_up)
             and bullish_trigger
@@ -207,7 +201,6 @@ class ForexMomentumStrategy:
 
         if (
             trend_bearish
-            and trend_falling
             and context_bearish
             and (momentum_bearish or breakout_down)
             and bearish_trigger
