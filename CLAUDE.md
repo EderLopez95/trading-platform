@@ -56,7 +56,7 @@ Each `.proto` is authored in its owning service, then **copied** into consumers:
 
 ### RPCs defined
 - **AuthService**: `Register`, `Login`, `Validate`, `UpdateTelegram`, `GetUser`, `GetUsers`
-- **SignalService**: `CreateConfiguration`, `GetConfigurations`, `UpdateConfiguration`, `DeleteConfiguration`, `ToggleConfiguration`, `GetAnalysisStatus`, `ToggleAnalysis`, `GetSignals`, `RefreshRegistries`, `GetStrategies`, `GetSymbols`, `GetTimeframes`
+- **SignalService**: `CreateConfiguration`, `GetConfigurations`, `UpdateConfiguration`, `DeleteConfiguration`, `ToggleConfiguration`, `GetAnalysisStatus`, `ToggleAnalysis`, `GetSignals`, `StreamSignals` (server-streaming; powers the real-time WebSocket), `RefreshRegistries`, `GetStrategies`, `GetSymbols`, `GetTimeframes`
 - **MarketDataService**: `GetCandles`, `GetSymbols`
 
 ### ⚠️ Regenerating stubs (required after ANY `.proto` change)
@@ -85,6 +85,7 @@ Each module slice follows: `api/` (raw axios calls) → `hooks/` (react-query wr
 
 Key facts:
 - **Data fetching:** `@tanstack/react-query`. Provider in [web/src/app/providers/QueryProvider.tsx](web/src/app/providers/QueryProvider.tsx).
+- **Real-time signals:** [web/src/modules/signals/hooks/useSignalsSocket.ts](web/src/modules/signals/hooks/useSignalsSocket.ts) opens a WebSocket to the gateway at `ws(s)://<API_URL>/ws/signals?token=<jwt>`; on each message it calls `invalidateQueries(["signals"])` so the table refetches. The gateway bridges this to the `StreamSignals` gRPC server-stream (see §4).
 - **HTTP client:** single axios instance in [web/src/shared/services/apiClient.ts](web/src/shared/services/apiClient.ts). `baseURL = VITE_API_URL`; request interceptor injects `Authorization: Bearer <token>` (from `localStorage`) and an `X-Request-Id` uuid; response interceptor clears token and redirects to `/login` on 401 (except auth endpoints).
 - **Routing:** [web/src/app/router/router.tsx](web/src/app/router/router.tsx), mounted via `RouterProvider` in [web/src/App.tsx](web/src/App.tsx).
 - **Forms:** `react-hook-form` + `zod` via `@hookform/resolvers`. Schema per feature under `services/`.

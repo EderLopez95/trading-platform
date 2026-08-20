@@ -18,7 +18,7 @@ class SignalBroadcaster:
         with self._lock:
             subscriber_id = self._next_id
             self._next_id += 1
-            self._subscribers[subscriber_id] = (user_id, subscriber_queue)
+            self._subscribers[subscriber_id] = (str(user_id), subscriber_queue)
 
         return subscriber_id, subscriber_queue
 
@@ -27,11 +27,13 @@ class SignalBroadcaster:
             self._subscribers.pop(subscriber_id, None)
 
     def publish(self, signal: Signal) -> None:
+        signal_user_id = str(signal.user_id)
+
         with self._lock:
             targets = [
                 subscriber_queue
                 for user_id, subscriber_queue in self._subscribers.values()
-                if user_id == signal.user_id
+                if user_id == signal_user_id
             ]
 
         for subscriber_queue in targets:
